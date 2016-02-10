@@ -1,0 +1,29 @@
+{
+  "name": "eats-api",
+  "version": "0.1.0",
+  "description": "An Express/SocketIO-application that functions as a backend API for the Eats client (webapp)",
+  "main": "index.js",
+  "dependencies": {
+    "express": "~4.13.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChooseMeetDine/eats-api.git"
+  },
+  "keywords": [
+    "eats",
+    "api",
+    "express",
+    "socketio"
+  ],
+  "author": "David Josefson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChooseMeetDine/eats-api/issues"
+  },
+  "homepage": "https://github.com/ChooseMeetDine/eats-api"
+}
