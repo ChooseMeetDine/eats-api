@@ -2,12 +2,14 @@
   "name": "eats-api",
   "version": "0.1.0",
   "description": "An Express/SocketIO-application that functions as a backend API for the Eats client (webapp)",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
-    "express": "~4.13.4"
+    "express": "~4.13.4",
+    "socket.io": "~1.4.5"
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
