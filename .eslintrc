@@ -57,10 +57,7 @@
       2,
       "always"
     ],
-    "space-after-keywords": [
-      2,
-      "always"
-    ],
-    "space-unary-ops": 2
+    "keyword-spacing": [2, {"before": true, "after": true, "overrides": {}}],
+    "space-unary-ops": 2,
   }
 }
