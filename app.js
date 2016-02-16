@@ -2,11 +2,8 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-// Exempelanvändning av environment variables som ligger i .env
-console.log(process.env.MONGO_DB_USER);
-
 app.get('/', function(req, res) {
-  res.send('<p>Du gick till rooten i API:et</p>');
+  res.send('<p>Du gick till rooten i API:et, och här är environment variabeln MONGO_DB_USER i .env: ' + process.env.MONGO_DB_USER + '</p>');
 });
 
 io.on('connection', function() {
