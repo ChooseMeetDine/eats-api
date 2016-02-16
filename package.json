@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "express": "~4.13.4",
+    "foreman": "1.4.1",
     "socket.io": "~1.4.5"
   },
   "devDependencies": {
@@ -15,7 +16,7 @@
     "mocha-lcov-reporter": "~1.0.0"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "nf start",
     "test": "mocha --recursive test",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --recursive test",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
