@@ -1,0 +1,280 @@
+# eats-api goal documentation
+An Express/SocketIO-application that functions as a backend API for the Eats client (web app).
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /restaurants
+
+## Any user [/restaurants]
+
+### Retrieve restaurants [GET]
+
++ Response 200 (application/json)
+
+        Get all restaurants.
+
+### Add a restaurant [POST]
+
++ Request (application/json)
+
+        Add restaurant.
+
++ Response 201
+
+## Only registered users & admin [/restaurants]
+
+### Update restaurant rating [PUT]
+
++ Request (application/json)
+
+        Update restaurant rating.
+
++ Response 201
+
+## Only Admin [/restaurants]
+
+### Delete restaurant [DELETE]
+
++ Request (application/json)
+
+        Your restaurant is deleted.
+
++ Response 201
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /restaurants/:id
+
+## Only registered users & admin [/restaurants/:id]
+
+## Retrieve specific restaurant [GET]
+
++ Response 200 (application/json)
+
+        Get specific restaurant.
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /restaurants/update
+
+## Any user [/restaurant/update]
+
+### Update restaurant info [POST]
+
++ Response 200 (application/json)
+
+        Request to update a restaurant.
+
+## Only admin [/restaurants/update]
+
+### Retrieve all restaurants pending update [GET]
+
++ Response 200 (application/json)
+
+        Retrieve all restaurants pending update.
+
+### Accept pending restaurant update [PUT]
+
++ Request (application/json)
+
+        Accept pending restaurant update.
+
++ Response 201
+
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /users
+
+## Only registered users [/users]
+
+### Retrieve users with basic info [GET]
+
++ Response 200 (application/json)
+
+        Get all users but only name, photo and id.
+
+## Only admin [/users]
+
+### Retrieve users with full info [GET]
+
++ Response 200 (application/json)
+
+        Get all users with full information.
+
+## Unregistered user [/users]
+
+### Register for user account [POST]
+
++ Request (application/json)
+
+        Register user.
+
++ Response 201
+
+## Only registered user [/users]
+
+### Update own user information [PUT]
+
++ Request (application/json)
+
+        Update own user information.
+
++ Response 201
+
+### Delete your own account [DELETE]
+
++ Request (application/json)
+
+        Delete yourself a user.
+
++ Response 201
+
+
+## Only admin [/users]
+
+### Update any user information[PUT]
+
++ Request (application/json)
+
+        Update own user information.
+
++ Response 201
+
+### Delete user [DELETE]
+
++ Request (application/json)
+
+        Delete any user.
+
++ Response 201
+
+
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /users/:id
+
+## Only registered users & admin [/users/:id]
+
+### Retrieve own user info [GET]
+
++ Response 200 (application/json)
+
+        Get all your own user information.
+
+## Only admin [/users/:id]
+
+### Retrieve full info from any user[GET]
+
++ Response 200 (application/json)
+
+        Get all information about a specific user.
+
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /polls
+
+## Only registered users [/polls]
+
+### Retrieve all user accessed polls [GET]
+
++ Response 200 (application/json)
+
+        Retrieve all the polls that you can access.
+
+### Create poll [POST]
+
++ Request (application/json)
+
+        Create poll.
+
++ Response 201
+
+### Add restaurants to poll [PUT]
+
++ Request (application/json)
+
+        Add restaurants to poll if user has access to poll.
+
++ Response 201
+
+### Delete poll [DELETE]
+
++ Request (application/json)
+
+        Delete poll can only be done by the creator of the poll.
+
++ Response 201
+
+
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /polls/:id
+
+## Only registered users [/polls/:id]
+
+### Retrieve specific poll if user has access [GET]
+
++ Response 200 (application/json)
+
+        Retrieve specific poll if user has access to the poll.
+
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /groups
+
+## Only registered user & admin [/groups]
+
+### Retrieve all user accessed groups [GET]
+
++ Response 200 (application/json)
+
+        Retrieve all the groups that you can access.
+
+### Create group [POST]
+
++ Request (application/json)
+
+        Create a group.
+
++ Response 201
+
+### Add users to group [PUT]
+
++ Request (application/json)
+
+        Add users to group if creator.
+
++ Response 201
+
+### Remove yourself from group [PUT]
+
++ Request (application/json)
+
+        Remove yourself from a group.
+
++ Response 201
+
+### Delete group [DELETE]
+
++ Request (application/json)
+
+        Delete group can only be done by the creator of the group.
+
++ Response 201
+
+[comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group /groups/:id
+
+## Only registered users [/groups/:id]
+
+### Retrieve specific group if user has access [GET]
+
++ Response 200 (application/json)
+
+        Retrieve specific group if user has access to the group.

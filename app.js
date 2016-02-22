@@ -22,9 +22,29 @@ app.get('/docs', function (req, res) {
         return console.log(err);
       }
       if (warnings) {
-        console.log(warnings);
+        //console.log(warnings);
       }
       res.sendFile(__dirname + '/public/docs/documentation.html');
+    });
+});
+
+app.get('/goaldocs', function (req, res) {
+  var options = {
+    themeTemplate: 'default',
+    locals: {
+      myVariable: 125
+    }
+  };
+
+  aglio.renderFile('./public/docs/GOALS.apib', './public/docs/goaldocs.html', options,
+    function (err, warnings) {
+      if (err) {
+        return console.log(err);
+      }
+      if (warnings) {
+        //console.log(warnings);
+      }
+      res.sendFile(__dirname + '/public/docs/goaldocs.html');
     });
 });
 
