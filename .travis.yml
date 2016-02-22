@@ -1,11 +1,23 @@
 language: node_js
 node_js:
-  - "4.1"
-  - "4.0"
-  - "0.12"
-  - "0.11"
-  - "0.10"
-  - "iojs"
+- '5'
+- '4'
+- '0.12'
+- iojs
+env:
+- CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
 after_script:
 - npm run-script coverage
 - npm run-script coveralls
+deploy:
+  provider: heroku
+  api_key:
+    secure: SJXA/YHVEb/U8RVRkq5QFegA+8sfOH6RguvBZgEsJ6o1O485HQfNyicRFzM5bmaZRQ897IyS+ZcC345DljxWUGqpjqXBnkW6NTau9ugpS0s5M9kJ3tBMbMfG/ybixf4AZpai+1OuvvzfFW+pnxnDWtw5whPbRFlTTrb7z+iJIJ53hqURjRAII5LInfXz8waySooCHc3bcrno0REy2lk9pMD6O0vdp2ozEOtH3HcOGgkUD9zjl2Mm0FziejtPpyc25w9845l2isF/PCyjqC/uzYEm7t+5ZgmDsMq1gBGG33YbmgKf6DNmhB+QUEZqC5HcU3pvUyUMDNPo8vy43nkTOxges9cZz7qsi3Sg8rf6W4DH38GpKt+7fYaHvJ4o/XhMNVlgI+gPGG4M83hsYrwLHZohynuSPQyz10hGDQ4iIWdDk7Vw9/NY9zA5fvi8ve9eE6dQ040+ivCfeJMVF7P1gZV5fOBA0Hlx0yN7jZ7j52qEWdjK1Z3Wjw4ikYZBlWFhGLJKS6uVKDQPN3ORG+vVJHb5/IZKPY8G+k/2MBURYXOEeeNulnCR1VFwURQJ/SeLTfyI+/2eLGOaxLdlZ+G+koMpatHtdSmIn7PEhH7bdV1ofvj+pAzCOEqiEgPZfBRY0ljvygpyBb7VttMQeyGq8+Gds6yiehQHztvdt7chXdw=
+  app:
+    develop: eats-api-develop
