@@ -3,12 +3,12 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var aglio = require('aglio');
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.send('<p>Du gick till rooten i API:et och här är env-variabeln MONGO_DB_USER i .env: ' +
     process.env.MONGO_DB_USER + '</p>');
 });
 
-app.get('/docs', function (req, res) {
+app.get('/docs', function(req, res) {
   var options = {
     themeTemplate: 'default',
     locals: {
@@ -17,7 +17,7 @@ app.get('/docs', function (req, res) {
   };
 
   aglio.renderFile('./public/docs/README.apib', './public/docs/documentation.html', options,
-    function (err, warnings) {
+    function(err, warnings) {
       if (err) {
         return console.log(err);
       }
@@ -29,7 +29,7 @@ app.get('/docs', function (req, res) {
 });
 
 
-app.get('/goaldocs', function (req, res) {
+app.get('/goaldocs', function(req, res) {
   var options = {
     themeTemplate: 'default',
     locals: {
@@ -38,7 +38,7 @@ app.get('/goaldocs', function (req, res) {
   };
 
   aglio.renderFile('./public/docs/GOALS.apib', './public/docs/goaldocs.html', options,
-    function (err, warnings) {
+    function(err, warnings) {
       if (err) {
         return console.log(err);
       }
@@ -49,14 +49,14 @@ app.get('/goaldocs', function (req, res) {
     });
 });
 
-io.on('connection', function () {
+io.on('connection', function() {
   console.log('Someone connected to the API via socketIO!');
 });
 
 var port = process.env.PORT || 3001;
 
-http.listen(port, function () {
-  console.log('Eats API-server listening on port: ' + port);
+http.listen(port, function() {
+  console.log('Eats API-server listening on port ' + port);
 });
 
 module.exports = app;
