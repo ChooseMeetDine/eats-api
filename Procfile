@@ -1,1 +1,1 @@
-web: nf start
+web: node app.js

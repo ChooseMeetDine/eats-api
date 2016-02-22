@@ -31,8 +31,9 @@ app.get('/', function(req, res) {
 // io.on('connection', function() {
 //   console.log('Someone connected to the API via socketIO!');
 // });
+var port = process.env.PORT || 3000;
 
-http.listen(process.env.PORT || 3001, function() {
+http.listen(port, function() {
   console.log('Eats API-server listening on port 3001..');
 });
 
