@@ -32,10 +32,10 @@ io.on('connection', function() {
   console.log('Someone connected to the API via socketIO!');
 });
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3001;
 
 http.listen(port, function() {
-  console.log('Eats API-server listening on port 3001..');
+  console.log('Eats API-server listening on port: ' + port);
 });
 
 module.exports = app;
