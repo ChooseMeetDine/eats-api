@@ -4,7 +4,7 @@
   "description": "An Express/SocketIO-application that functions as a backend API for the Eats client (webapp)",
   "main": "app.js",
   "dependencies": {
-    "aglio": "^2.2.0",
+    "aglio": "~2.2.0",
     "express": "~4.13.4",
     "foreman": "1.4.1",
     "socket.io": "~1.4.5"
