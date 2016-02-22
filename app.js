@@ -35,3 +35,5 @@ io.on('connection', function () {
 http.listen(3001, function () {
   console.log('Eats API-server listening on port 3001..');
 });
+
+module.exports = app;

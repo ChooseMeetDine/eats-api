@@ -2,8 +2,8 @@
 
 var expect = require('chai').expect;
 
-describe('Testing something simple', function()  {
-  it('should be true when it is true', function()  {
+describe('Testing something simple', function ()  {
+  it('should be true when it is true', function ()  {
     expect(true).to.be.true;
   });
 });
