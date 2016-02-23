@@ -5,6 +5,38 @@ var app = rewire('../../app');
 describe('Testing Eats-API HTTP requests', function () {
   describe('Testing endpoints', function () {
 
+    beforeEach(function () {
+      this.defs = [
+        {
+          term: 'One',
+          defined: 'Term one defined'
+        },
+        {
+          term: 'Two',
+          defined: 'Term two defined'
+        },
+        {
+          term: 'Three',
+          defined: 'Term three defined'
+        }
+      ];
+
+      app.__set__('skierTerms', this.defs);
+    });
+
+    it('should return valid json data', function (done) {
+      var defs = this.defs;
+      request(app)
+        .get('/json')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function (err, res) {
+          var terms = JSON.parse(res.text);
+          expect(terms).to.deep.equal(defs);
+          done();
+        });
+    });
+
     it('Should load the root page for GET /', function (done) {
       request(app)
         .get('/')
