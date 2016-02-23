@@ -3,31 +3,20 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var aglio = require('aglio');
 
-var skierTerms = [
-  {
-    term: 'One',
-    defined: 'Term one defined'
-  },
-  {
-    term: 'Two',
-    defined: 'Term two defined'
-  },
-  {
-    term: 'Three',
-    defined: 'Term three defined'
-  }
-];
-
-app.post('/json', function (req, res) {
-  skierTerms.push(req.body);
-  res.json(skierTerms);
+//Fake endpoint
+app.get('/users', function (req, res) {
+  res.json({
+    name: 'Musse',
+    age: 8
+  });
 });
 
-app.get('/json', function (req, res) {
-  skierTerms = skierTerms.filter(function (definition) {
-    return definition.term.toLowerCase() !== req.params.term.toLowerCase();
-  });
-  res.json(skierTerms);
+app.post('/users', function (req, res) {
+  var json = {
+    name: req.body.name,
+    age: req.body.age
+  };
+  res.send(json);
 });
 
 app.get('/', function (req, res) {

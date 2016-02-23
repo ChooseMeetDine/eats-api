@@ -1,38 +1,49 @@
 var request = require('supertest');
 var rewire = require('rewire');
 var app = rewire('../../app');
+var expect = require('chai').expect;
+var chai = require('chai');
+chai.use(require('chai-json-schema'));
+
+//defined user json object
+var userSchema = {
+  'title': 'user schema',
+  'type': 'object',
+  'properties': {
+    'name': {
+      'type': 'string'
+    },
+    'age': {
+      'type': 'number',
+      'minimum': 5
+    }
+  }
+};
 
 describe('Testing Eats-API HTTP requests', function () {
   describe('Testing endpoints', function () {
-
-    beforeEach(function () {
-      this.defs = [
-        {
-          term: 'One',
-          defined: 'Term one defined'
-        },
-        {
-          term: 'Two',
-          defined: 'Term two defined'
-        },
-        {
-          term: 'Three',
-          defined: 'Term three defined'
-        }
-      ];
-
-      app.__set__('skierTerms', this.defs);
+    it('should return valid json data', function (done) {
+      request(app)
+        .get('/users')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function (err, res) {
+          var response = JSON.parse(res.text);
+          expect(response).to.be.jsonSchema(userSchema);
+          done();
+        });
     });
 
-    it('should return valid json data', function (done) {
-      var defs = this.defs;
+    it('Should post stuff', function () {
       request(app)
-        .get('/json')
-        .expect('Content-Type', /json/)
+        .post('/users')
         .expect(200)
+        .expect('Content-Type', /json/)
         .end(function (err, res) {
-          var terms = JSON.parse(res.text);
-          expect(terms).to.deep.equal(defs);
+          var response = JSON.parse(res.text);
+          expect(response).to.deep.equal({
+            message: 'done'
+          });
           done();
         });
     });
@@ -41,6 +52,7 @@ describe('Testing Eats-API HTTP requests', function () {
       request(app)
         .get('/')
         .expect(200)
+        .expect('Content-Type', /html/)
         .end(done);
     });
 
