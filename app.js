@@ -7,18 +7,11 @@ var aglio = require('aglio');
 app.get('/users', function (req, res) {
   res.json({
     name: 'Musse',
-    age: 8
+    age: 30
   });
 });
 
-app.post('/users', function (req, res) {
-  var json = {
-    name: req.body.name,
-    age: req.body.age
-  };
-  res.send(json);
-});
-
+//----------------------------------------
 app.get('/', function (req, res) {
   res.send('<p>Du gick till rooten i API:et och här är env-variabeln MONGO_DB_USER i .env: ' +
     process.env.MONGO_DB_USER + '</p>');

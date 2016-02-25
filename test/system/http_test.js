@@ -5,8 +5,7 @@ var expect = require('chai').expect;
 var chai = require('chai');
 chai.use(require('chai-json-schema'));
 
-//defined user json object
-var userSchema = {
+var jsonSchema = {
   'title': 'user schema',
   'type': 'object',
   'properties': {
@@ -29,24 +28,24 @@ describe('Testing Eats-API HTTP requests', function () {
         .expect('Content-Type', /json/)
         .end(function (err, res) {
           var response = JSON.parse(res.text);
-          expect(response).to.be.jsonSchema(userSchema);
+          expect(response).to.be.jsonSchema(jsonSchema);
           done();
         });
     });
-
-    it('Should post stuff', function () {
-      request(app)
-        .post('/users')
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function (err, res) {
-          var response = JSON.parse(res.text);
-          expect(response).to.deep.equal({
-            message: 'done'
-          });
-          done();
-        });
-    });
+    /*
+        it('Should post stuff', function () {
+          request(app)
+            .post('/users')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end(function (err, res) {
+              var response = JSON.parse(res.text);
+              expect(response).to.deep.equal({
+                message: 'done'
+              });
+              done();
+            });
+        });*/
 
     it('Should load the root page for GET /', function (done) {
       request(app)
