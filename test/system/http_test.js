@@ -3,7 +3,7 @@ var rewire = require('rewire');
 var app = rewire('../../app');
 var expect = require('chai').expect;
 var chai = require('chai');
-chai.use(require('chai-json-schema'));
+chai.use(require('chai3-json-schema'));
 
 var jsonSchema = {
   'title': 'user schema',
@@ -19,14 +19,14 @@ var jsonSchema = {
   }
 };
 
-describe('Testing Eats-API HTTP requests', function () {
-  describe('Testing endpoints', function () {
-    it('should return valid json data', function (done) {
+describe('Testing Eats-API HTTP requests', function() {
+  describe('Testing endpoints', function() {
+    it('should return valid json data', function(done) {
       request(app)
         .get('/users')
         .expect(200)
         .expect('Content-Type', /json/)
-        .end(function (err, res) {
+        .end(function(err, res) {
           var response = JSON.parse(res.text);
           expect(response).to.be.jsonSchema(jsonSchema);
           done();
@@ -47,7 +47,7 @@ describe('Testing Eats-API HTTP requests', function () {
             });
         });*/
 
-    it('Should load the root page for GET /', function (done) {
+    it('Should load the root page for GET /', function(done) {
       request(app)
         .get('/')
         .expect(200)
@@ -55,7 +55,7 @@ describe('Testing Eats-API HTTP requests', function () {
         .end(done);
     });
 
-    it('Should return API docs for GET /docs', function (done) {
+    it('Should return API docs for GET /docs', function(done) {
       request(app)
         .get('/docs')
         .expect('Content-Type', /html/)
@@ -63,7 +63,7 @@ describe('Testing Eats-API HTTP requests', function () {
         .end(done);
     });
 
-    it('Should return API docs for GET /goaldocs', function (done) {
+    it('Should return API docs for GET /goaldocs', function(done) {
       request(app)
         .get('/goaldocs')
         .expect('Content-Type', /html/)

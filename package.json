@@ -10,6 +10,7 @@
     "aglio": "~2.2.0",
     "express": "~4.13.4",
     "foreman": "1.4.1",
+    "chai3-json-schema": "~1.2.0",
     "socket.io": "~1.4.5"
   },
   "devDependencies": {
