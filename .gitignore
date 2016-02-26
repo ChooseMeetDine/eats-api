@@ -38,3 +38,4 @@ node_modules
 # .html
 public/docs/documentation.html
 public/docs/goaldocs.html
+*.html
