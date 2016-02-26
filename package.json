@@ -14,7 +14,8 @@
     "socket.io": "~1.4.5"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^1.6.1",
+    "chai-json-schema": "^1.2.0",
     "coveralls": "~2.11.6",
     "istanbul": "~0.4.2",
     "mocha": "~2.4.5",
