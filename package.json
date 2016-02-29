@@ -26,6 +26,8 @@
     "mocha": "~2.4.5",
     "mocha-lcov-reporter": "~1.0.0",
     "rewire": "^2.5.1",
+    "node-mocks-http": "~1.4.3",
+    "mock-knex": "~0.3.0",
     "supertest": "^1.2.0"
   },
   "scripts": {
