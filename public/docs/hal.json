@@ -1,0 +1,149 @@
+{
+  "_links": {
+    "self": {
+      "href": "/polls/POLL_ID_1"
+    },
+  },
+  "_embedded": {
+    "creator": {
+      "_links": {
+        "self": {
+          "href": "/users/USER_ID_1"
+        },
+      },
+      "id": "USER_ID_1",
+      "name": "Per Persson",
+      "photo": "https://imgur.com/erqwfdsco92.jpg"
+    },
+    "restaurants": [{
+      "_links": {
+        "self": {
+          "href": "/restaurants/RESTAURANT_ID_1"
+        }
+      },
+      "id": "RESTAURANT_ID_1",
+      "name": "Din Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "info": "Informationstext om restaurangen",
+      "photo": "http://photo.com/1234.jpg",
+      "numberVotes": 345,
+      "numberWonVotes": 234,
+      "temporary": false,
+      "priceRate": 3
+    },   {
+      "_links": {
+        "self": {
+          "href": "/restaurants/RESTAURANT_ID_2"
+        }
+      },
+      "id": "RESTAURANT_ID_2",
+      "name": "Vår Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "info": "Informationstext om restaurangen",
+      "photo": "http://photo.com/1234.jpg",
+      "numberVotes": 345,
+      "numberWonVotes": 234,
+      "temporary": false,
+      "priceRate": 3
+    }],
+    "users": [{
+      "_links": {
+        "self": {
+          "href": "/users/USER_ID_1"
+        }
+      },
+      "id": "USER_ID_1",
+      "name": "Per Persson",
+      "photo": "http://photo.com/1234.jpg"
+    }, {
+      "_links": {
+        "self": {
+          "href": "/users/USER_ID_2"
+        }
+      },
+      "id": "USER_ID_2",
+      "name": "Lukas Lukasson",
+      "photo": "http://photo.com/1234.jpg"
+    },   {
+      "_links": {
+        "self": {
+          "href": "/users/USER_ID_3"
+        }
+      },
+      "id": "USER_ID_3",
+      "name": "Mats Mattsson",
+      "photo": "http://photo.com/1234.jpg"
+    }],
+    "votes": [{
+      "id": "VOTE_ID_1",
+      "_links":  {
+        "self": {
+          "href": "/votes/VOTE_ID_1"
+        }
+      },
+      "_embedded": {
+        "user": {
+          "id": "USER_ID_1",
+        },
+        "restaurant":  {
+          "id": "RESTAURANT_ID_2",
+        },
+        "poll": {
+          "id": "POLL_ID_1"
+        }
+      }
+    }, {
+      "id": "VOTE_ID_2",
+      "_links":  {
+        "self": {
+          "href": "/votes/VOTE_ID_2"
+        }
+      },
+      "_embedded": {
+        "user": {
+          "id": "USER_ID_2",
+        },
+        "restaurant":  {
+          "id": "RESTAURANT_ID_2",
+        },
+        "poll": {
+          "id": "POLL_ID_1"
+        }
+      }
+    }, {
+      "id": "VOTE_ID_3",
+      "_links":  {
+        "self": {
+          "href": "/votes/VOTE_ID_3"
+        }
+      },
+      "_embedded": {
+        "user": {
+          "id": "USER_ID_3",
+        },
+        "restaurant":  {
+          "id": "RESTAURANT_ID_1",
+        },
+        "poll": {
+          "id": "POLL_ID_1"
+        }
+      }
+    }],
+    "group": {
+      "_links":  {
+        "self": {
+          "href": "/groups/GROUP_ID_1"
+        }
+      },
+      "id": "GROUP_ID_1",
+      "name": "Vi som älskar burgare på Odd Hill"
+    }
+  },
+  "id": "POLL_ID_1",
+  "name": "Odd Hill, team 2",
+  "expires": "2016-02-23T22:49:05Z",
+  "created": "2016-02-01T15:20:05Z",
+  "fixed_vote": false
+}
