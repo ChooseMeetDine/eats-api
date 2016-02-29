@@ -193,102 +193,118 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 {
   "data": {
     "type": "poll",
-    "id": "00000001",
+    "id": "POLL_ID_1",
     "attributes": {
       "name": "Odd Hill, team 2",
       "expires": "2016-02-23T22:49:05Z",
       "created": "2016-02-01T15:20:05Z",
-      "fixed_vote": false
-    },
-    "relationships": {
-      "creator": {
-        "links": {
-          "self": "/users/000000123"
-        },
-        "data": {
-          "type": "user",
-          "id": "000000123",
-          "attributes": {
-            "name": "Per Persson",
-            "photo": "https://imgur.com/erqwfdsco92.jpg"
-          }
-        }
-      }
+      "allow_new_restaurants": false
     }
-  }
-}
-
-{
-  "_links": {
-    "self": { "href": "/polls/000012" },
   },
-  "_embedded": {
+  "relationships": {
     "creator": {
-        "_links": {
-          "self": { "href": "/users/123" },
-        },
-        "id": 123,
-        "name": "Per Persson",
-        "photo": "https://imgur.com/erqwfdsco92.jpg"
-      },
-      "restaurants": [{
-        "_links": {
-          "self": { "href": "/restaurants/123" }
-        },
-        "id": "123"
-        "name": "Din Restaurang",
-        "latitude": 56.1234,
-        "longitude": 14.1234,
-        "info": "Informationstext om restaurangen",
-        "photo": "http://photo.com/1234.jpg",
-        "numberVotes": 345,
-        "numberWonVotes": 234,
-        "temporary": false,
-        "priceRate": 3
-      }, {
-        "_links": {
-          "self": { "href": "/restaurants/987" }
-        },
-        "id": "123"
-        "name": "Din Restaurang",
-        "latitude": 56.1234,
-        "longitude": 14.1234,
-        "info": "Informationstext om restaurangen",
-        "photo": "http://photo.com/1234.jpg",
-        "numberVotes": 345,
-        "numberWonVotes": 234,
-        "temporary": false,
-        "priceRate": 3
-      }],
-      "users": [{
-        "_links": {
-          "self": { "href": "/users/123" }
-        },
-        "id": "123",
-        "name": "Lukas Lukasson",
-        "photo": "http://photo.com/1234.jpg"
-      }, {
-        "_links": {
-          "self": { "href": "/users/987" }
-        },
-        "id": "987",
-        "name": "Mats Mattsson",
-        "photo": "http://photo.com/1234.jpg"
-      }],
-      "votes": [],
-      "group": {
-        "_links": {
-          "self": {"href": "/groups/12312"}
-        }
-        "id": "12312",
-        "name": "Vi som älskar burgare på Odd Hill"
+      "data": {
+        "type": "user",
+        "id": "USER_ID_1",
       }
+    },
+    "restaurants": {
+      "data": [{
+        "type": "restaurant",
+        "id": "RESTAURANT_ID_1",
+      }, {
+        "type": "restaurant",
+        "id": "RESTAURANT_ID_2",
+      }]
+    },
+    "users": {
+      "data": [{
+        "type": "user",
+        "id": "USER_ID_1",
+      }, {
+        "type": "user",
+        "id": "USER_ID_2",
+      }, {
+        "type": "user",
+        "id": "USER_ID_3",
+      }]
+    },
+    "group": {
+      "data": {
+        "type": "group",
+        "id": "GROUP_ID_1"
+      }
+    },
+    "votes": {
+      "data": []
+    }
   },
-  "id": "00000001",
-  "name": "Odd Hill, team 2",
-  "expires": "2016-02-23T22:49:05Z",
-  "created": "2016-02-01T15:20:05Z",
-  "fixed_vote": false
+  "included": [{
+    "type": "restaurant",
+    "id": "RESTAURANT_ID_1",
+    "attributes": {
+      "name": "Din Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "temporary": false,
+    },
+    "links": {
+      "self": "/restaurants/RESTAURANT_ID_1"
+    }
+  }, {
+    "type": "restaurant",
+    "id": "RESTAURANT_ID_2",
+    "attributes": {
+      "name": "Vår Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "temporary": false,
+    },
+    "links": {
+      "self": "/restaurants/RESTAURANT_ID_2"
+    }
+  }, {
+    "type": "user",
+    "id": "USER_ID_1",
+    "attributes": {
+      "name": "Per Persson",
+      "photo": "https://imgur.com/erqwfdsco92.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/USER_ID_1"
+    }
+  }, {
+    "type": "user",
+    "id": "USER_ID_2",
+    "attributes": {
+      "name": "Lukas Lukasson",
+      "photo": "http://photo.com/1234.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/0USER_ID_2"
+    }
+  }, {
+    "type": "user",
+    "id": "USER_ID_3",
+    "attributes": {
+      "name": "Mats Mattsson",
+      "anonymous": true
+    },
+    "links": {
+      "self": "/users/USER_ID_3"
+    }
+  }, {
+    "type": "group",
+    "id": "GROUP_ID_1",
+    "attributes": {
+      "name": "Vi som älskar burgare på Odd Hill"
+    },
+    "links": {
+      "self": "/groups/GROUP_ID_1"
+    }
+  }]
 }
 
 + Response 201
@@ -320,6 +336,217 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ### Retrieve specific poll if user has access [GET]
 
 + Response 200 (application/json)
+
+{
+  "data": {
+    "type": "poll",
+    "id": "POLL_ID_1",
+    "attributes": {
+      "name": "Odd Hill, team 2",
+      "expires": "2016-02-23T22:49:05Z",
+      "created": "2016-02-01T15:20:05Z",
+      "allow_new_restaurants": false
+    }
+  },
+  "relationships": {
+    "creator": {
+      "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+      }
+    },
+    "restaurants": {
+      "data": [{
+        "type": "restaurant",
+        "id": "RESTAURANT_ID_1",
+      }, {
+        "type": "restaurant",
+        "id": "RESTAURANT_ID_2",
+      }]
+    },
+    "users": {
+      "data": [{
+        "type": "user",
+        "id": "USER_ID_1",
+      }, {
+        "type": "user",
+        "id": "USER_ID_2",
+      }, {
+        "type": "user",
+        "id": "USER_ID_3",
+      }]
+    },
+    "group": {
+      "data": {
+        "type": "group",
+        "id": "GROUP_ID_1"
+      }
+    },
+    "votes": {
+      "data": [{
+        "type": "vote",
+        "id": "VOTE_ID_1"
+      }, {
+        "type": "vote",
+        "id": "VOTE_ID_2"
+      }, {
+        "type": "vote",
+        "id": "VOTE_ID_3"
+      }]
+    }
+  },
+  "included": [{
+    "type": "restaurant",
+    "id": "RESTAURANT_ID_1",
+    "attributes": {
+      "name": "Din Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "temporary": false,
+    },
+    "links": {
+      "self": "/restaurants/RESTAURANT_ID_1"
+    }
+  }, {
+    "type": "restaurant",
+    "id": "RESTAURANT_ID_2",
+    "attributes": {
+      "name": "Vår Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "temporary": false,
+    },
+    "links": {
+      "self": "/restaurants/RESTAURANT_ID_2"
+    }
+  }, {
+    "type": "user",
+    "id": "USER_ID_1",
+    "attributes": {
+      "name": "Per Persson",
+      "photo": "https://imgur.com/erqwfdsco92.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/USER_ID_1"
+    }
+  }, {
+    "type": "user",
+    "id": "USER_ID_2",
+    "attributes": {
+      "name": "Lukas Lukasson",
+      "photo": "http://photo.com/1234.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/0USER_ID_2"
+    }
+  }, {
+    "type": "user",
+    "id": "USER_ID_3",
+    "attributes": {
+      "name": "Mats Mattsson",
+      "anonymous": true
+    },
+    "links": {
+      "self": "/users/USER_ID_3"
+    }
+  }, {
+    "type": "group",
+    "id": "GROUP_ID_1",
+    "attributes": {
+      "name": "Vi som älskar burgare på Odd Hill"
+    },
+    "links": {
+      "self": "/groups/GROUP_ID_1"
+    }
+  }, {
+    "type": "vote",
+    "id": "VOTE_ID_1",
+    "created": "2016-02-23T22:49:05Z",
+    "updated": "2016-02-23T22:49:05Z",
+    "relationships": {
+      "user": {
+        "data": {
+          "type": "user",
+          "id": "USER_ID_1"
+        }
+      },
+      "restaurant": {
+        "data": {
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_2"
+        }
+      },
+      "poll": {
+        "data": {
+          "type": "poll",
+          "id": "POLL_ID_1"
+        }
+      }
+    },
+    "links": {
+      "self": "/votes/VOTE_ID_1"
+    }
+  }, {
+    "type": "vote",
+    "id": "VOTE_ID_2",
+    "created": "2016-02-23T22:49:05Z",
+    "updated": "2016-02-23T22:49:05Z",
+    "relationships": {
+      "user": {
+        "data": {
+          "type": "user",
+          "id": "USER_ID_2"
+        }
+      },
+      "restaurant": {
+        "data": {
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_2"
+        }
+      },
+      "poll": {
+        "data": {
+          "type": "poll",
+          "id": "POLL_ID_1"
+        }
+      }
+    },
+    "links": {
+      "self": "/votes/VOTE_ID_2"
+    }
+  }, {
+    "type": "vote",
+    "id": "VOTE_ID_3",
+    "created": "2016-02-23T22:49:05Z",
+    "updated": "2016-02-23T22:49:05Z",
+    "relationships": {
+      "user": {
+        "data": {
+          "type": "user",
+          "id": "USER_ID_3"
+        }
+      },
+      "restaurant": {
+        "data": {
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_1"
+        }
+      },
+      "poll": {
+        "data": {
+          "type": "poll",
+          "id": "POLL_ID_1"
+        }
+      }
+    },
+    "links": {
+      "self": "/votes/VOTE_ID_3"
+    }
+  }]
+}
+
 
         Retrieve specific poll if user has access to the poll.
 
