@@ -10,6 +10,9 @@ var pollValidator = {};
 // the ones in "data". Any difference between database result and "data" is
 // ID's that does not exist, ie. invalid ID's
 var validateRestaurantIDs = function(data, schema, done) {
+  if (!data || data.length === 0) {
+    return done(null, []);
+  }
 
   pg.pluck('id')
     .from('restaurant')
@@ -32,8 +35,6 @@ var validateRestaurantIDs = function(data, schema, done) {
       return done(null, data);
 
     }).catch(function(err) {
-      console.log('err');
-      console.log(err);
       done(new Error('Invalid restaurant IDs'));
     });
 
@@ -42,7 +43,7 @@ var validateRestaurantIDs = function(data, schema, done) {
 var validateGroupID = function(data, schema, done) {
   //if data is null, dont contact database to validate it.
   if (!data) {
-    return done(null, null);
+    return done(data, null);
   }
   pg.schema
     .raw('select exists(select 1 from "group" where id=' + data + ') AS "exists"')
@@ -87,6 +88,7 @@ pollValidator.post = function(req, res, next) {
         default: [],
         schema: {
           type: Number,
+          required: false,
           custom: function(data) {
             if (data && !isInteger(data)) {
               throw new Error('restaurants must be an array of integers');
@@ -105,6 +107,7 @@ pollValidator.post = function(req, res, next) {
         type: Number,
         required: false,
         allowNull: true,
+        default: null, // FUNGERAR DETTA?
         custom: [
           validateGroupID,
           function(data) {
@@ -123,7 +126,7 @@ pollValidator.post = function(req, res, next) {
         type: String,
         required: false,
         match: /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/,
-        default: null,
+        default: null, //hur?
         errors: {
           type: 'expires must be a valid ISO 8601 date',
           match: 'expires must be a valid ISO 8601 date',
@@ -135,11 +138,8 @@ pollValidator.post = function(req, res, next) {
 
   isvalid(req.body, schema, function(validationError, validData) {
     if (validationError) {
-      //Hantera fel på ett bättre sätt
-      console.log(validationError);
-      res.status(400).json(validationError);
+      next(validationError); //hantera fel på ett annat ställe
     } else {
-      console.log(validData);
       req.valid = validData;
       next();
     }
