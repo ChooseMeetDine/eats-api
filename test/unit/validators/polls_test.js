@@ -1,40 +1,64 @@
 var expect = require('chai').expect;
 var validator = require('../../../app/validators/polls');
+var httpMocks = require('node-mocks-http');
 
-describe.skip('Testing the poll validator (polls.js)', function() {
+// Kommentarer tack!
 
-  describe('testing the post-validator ', function() {
+describe('Testing the poll validator (polls.js)', function() {
+  var response;
+  var request;
 
+  before(function() {
+    response = httpMocks.createResponse();
+  });
 
-    describe('description', function() {
-
-      it('should set req.valid to the same ', function(done) {
-
-        var req = {};
-        req.body = {
-          name: 'name'
-        };
-        var res = {};
-        var validate = function(req, res) {
-          expect(req.valid).to.equal(body);
-          done();
-        };
-        validator.post(req, res, validate);
-
-      });
-    });
-
-    it('should return false for null', function() {
-      expect(validator.isString(null)).to.equal(false);
-    });
-    it('should return false for undefined', function() {
-      expect(validator.isString(undefined)).to.equal(false);
-    });
-    it('should return false for a 123', function() {
-      expect(validator.isString(123)).to.equal(false);
-    });
-    it('should return false for {}', function() {
-      expect(validator.isString({})).to.equal(false);
+  beforeEach(function() {
+    request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/polls',
     });
   });
+
+
+  describe('for parameter "name"', function() {
+
+    it('should pass for string', function(done) {
+
+      var expected = {
+        allowNewRestaurants: true,
+        expires: null,
+        group: null,
+        name: 'restaurantname',
+        restaurants: []
+      };
+
+      request.body = {
+        name: 'restaurantname'
+      };
+
+      var validate = function(err) {
+        if (err) {
+          console.log(err);
+        }
+        expect(request.valid).to.deep.equal(expected);
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should return error for string', function(done) {
+      request.body = {
+        name: 123
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+  });
+
 });
