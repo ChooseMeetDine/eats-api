@@ -1,25 +1,32 @@
 var expect = require('chai').expect;
 var validator = require('../../../app/validators/polls');
+
+//Used to mock response and request objects for middleware testing
 var httpMocks = require('node-mocks-http');
+
+//For time-related tasks
 var moment = require('moment');
+
+//The modules below are needed to mock Knex
 var mockDb = require('mock-knex');
 var knex = require('knex');
 var db = knex({
   client: 'pg',
 });
-
 mockDb.mock(db);
-
-// Kommentarer tack!
 
 describe('Testing the poll validator (polls.js)', function() {
   var response;
   var request;
 
+  //Create a mock response object that will be used in all tests.
+  //This is done only once, since we dont actually test how this object is used.
   before(function() {
     response = httpMocks.createResponse();
   });
 
+  //Create a mock request for each test case. Testcases will alter this object, and because of that
+  //it has to be recreated before each test case to avoid them from altering each other
   beforeEach(function() {
     request = httpMocks.createRequest({
       method: 'POST',
@@ -31,6 +38,8 @@ describe('Testing the poll validator (polls.js)', function() {
 
     var defaultValues;
 
+    //Create a request (not done by the earlier beforeEach since this inside another describe)
+    //Set required body-parameter "name" and validate request in the validator to get defaultValues
     before(function(done) {
       request = httpMocks.createRequest({
         method: 'POST',
@@ -51,6 +60,7 @@ describe('Testing the poll validator (polls.js)', function() {
 
     });
 
+    //One it-should for each parameter
     it('should set allowNewRestaurants to true', function() {
       expect(defaultValues.allowNewRestaurants).to.equal(true);
     });
@@ -73,6 +83,7 @@ describe('Testing the poll validator (polls.js)', function() {
 
   describe('for parameter "name"', function() {
 
+    //Check that a valid value for name is accepted
     it('should pass for string', function(done) {
 
       request.body = {
@@ -81,8 +92,11 @@ describe('Testing the poll validator (polls.js)', function() {
 
       var validate = function(err) {
         if (err) {
-          console.log(err);
+          console.log(err); //Log error so that if this fails, we can read that message
         }
+
+        //the middleware we are testing will put validated parameters and default values
+        //on request.validBody
         expect(request.validBody.name).to.equal('restaurantname');
         done();
       };
@@ -95,6 +109,7 @@ describe('Testing the poll validator (polls.js)', function() {
         name: 123
       };
 
+      //Error should be an object, since number is not allowed
       var validate = function(err) {
         expect(err).to.be.an('object');
         done();
@@ -153,6 +168,7 @@ describe('Testing the poll validator (polls.js)', function() {
 
       };
 
+      //err will be undefined if no error is thrown
       var validate = function(err) {
         expect(err).to.equal(undefined);
         done();
@@ -193,6 +209,7 @@ describe('Testing the poll validator (polls.js)', function() {
 
     });
 
+    //date is before now. Cant have votes expire years before they begin
     it('should return error for "2015-05-19 14:39:22+0600"', function(done) {
 
       request.body = {
@@ -209,12 +226,139 @@ describe('Testing the poll validator (polls.js)', function() {
 
     });
 
+    //Cant have votes expire as they begin
     it('should return error for date.now()', function(done) {
 
       request.body = {
         name: 'restaurantname',
         expires: moment()
 
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+  });
+
+  describe('for parameter "allowNewRestaurants"', function() {
+
+    //Should it really? do we care?
+    it('should pass for string "true"', function(done) {
+
+      request.body = {
+        name: 'restaurantname',
+        allowNewRestaurants: 'true'
+      };
+
+      var validate = function(err) {
+        expect(err).to.equal(undefined);
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+
+    it('should pass for boolean true', function(done) {
+
+      request.body = {
+        name: 'restaurantname', //name is required
+        allowNewRestaurants: true
+      };
+
+      var validate = function(err) {
+        expect(err).to.equal(undefined);
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should pass for boolean false', function(done) {
+
+      request.body = {
+        name: 'restaurantname', //name is required
+        allowNewRestaurants: true
+      };
+
+      var validate = function(err) {
+        expect(err).to.equal(undefined);
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should return error for 1', function(done) {
+
+      request.body = {
+        name: 'restaurantname',
+        allowNewRestaurants: 1
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should return error for string "1"', function(done) {
+
+      request.body = {
+        name: 'restaurantname',
+        allowNewRestaurants: '1'
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should return error for string "0"', function(done) {
+
+      request.body = {
+        name: 'restaurantname',
+        allowNewRestaurants: '0'
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should return error for object', function(done) {
+
+      request.body = {
+        name: 'restaurantname',
+        allowNewRestaurants: {}
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validator.post(request, response, validate);
+
+    });
+
+    it('should return error for null', function(done) {
+
+      request.body = {
+        name: 'restaurantname',
+        allowNewRestaurants: null
       };
 
       var validate = function(err) {
