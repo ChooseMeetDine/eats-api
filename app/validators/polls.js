@@ -1,5 +1,6 @@
 var isvalid = require('isvalid');
 var pg = require('../shared/knex');
+var moment = require('moment');
 
 var pollValidator = {};
 
@@ -125,22 +126,33 @@ pollValidator.post = function(req, res, next) {
       'expires': {
         type: String,
         required: false,
-        match: /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/,
-        default: null, //hur?
+        custom: function(data) {
+          if (!moment(data).isValid()) {
+            throw new Error('expires must be a ISO 8601 string');
+          }
+          var now = moment();
+          var isLaterThenNow = moment(data).isAfter(now);
+          if (isLaterThenNow) {
+            return data;
+          }
+          throw new Error('expires must be a time later than now');
+        },
+        default: function() {
+          var twentyMinutesLater = moment().add(20, 'm');
+          return twentyMinutesLater;
+        },
         errors: {
           type: 'expires must be a valid ISO 8601 date',
-          match: 'expires must be a valid ISO 8601 date',
         }
       }
     }
   };
 
-
   isvalid(req.body, schema, function(validationError, validData) {
     if (validationError) {
       next(validationError); //hantera fel på ett annat ställe
     } else {
-      req.valid = validData;
+      req.validBody = validData;
       next();
     }
   });
