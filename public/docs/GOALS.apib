@@ -1,608 +1,745 @@
-# eats-api goal documentation
-An Express/SocketIO-application that functions as a backend API for the Eats client (web app).
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /restaurants
-
-## Any user [/restaurants]
-
-### Retrieve restaurants [GET]
-
-+ Response 200 (application/json)
-
-        Get all restaurants.
-
-### Add a restaurant [POST]
-
-+ Request (application/json)
-
-        Add restaurant.
-
-+ Response 201
-
-## Only registered users & admin [/restaurants]
-
-### Update restaurant rating [PUT]
-
-+ Request (application/json)
-
-        Update restaurant rating.
-
-+ Response 201
-
-## Only Admin [/restaurants]
-
-### Delete restaurant [DELETE]
-
-+ Request (application/json)
-
-        Your restaurant is deleted.
-
-+ Response 201
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /restaurants/:id
-
-## Only registered users & admin [/restaurants/:id]
-
-## Retrieve specific restaurant [GET]
-
-+ Response 200 (application/json)
-
-        Get specific restaurant.
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /restaurants/update
-
-## Any user [/restaurant/update]
-
-### Update restaurant info [POST]
-
-+ Response 200 (application/json)
-
-        Request to update a restaurant.
-
-## Only admin [/restaurants/update]
-
-### Retrieve all restaurants pending update [GET]
-
-+ Response 200 (application/json)
-
-        Retrieve all restaurants pending update.
-
-### Accept pending restaurant update [PUT]
-
-+ Request (application/json)
-
-        Accept pending restaurant update.
-
-+ Response 201
-
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /users
-
-## Only registered users [/users]
-
-### Retrieve users with basic info [GET]
-
-+ Response 200 (application/json)
-
-        Get all users but only name, photo and id.
-
-## Only admin [/users]
-
-### Retrieve users with full info [GET]
-
-+ Response 200 (application/json)
-
-        Get all users with full information.
-
-## Unregistered user [/users]
-
-### Register for user account [POST]
-
-+ Request (application/json)
-
-        Register user.
-
-+ Response 201
-
-## Only registered user [/users]
-
-### Update own user information [PUT]
-
-+ Request (application/json)
-
-        Update own user information.
-
-+ Response 201
-
-### Delete your own account [DELETE]
-
-+ Request (application/json)
-
-        Delete yourself a user.
-
-+ Response 201
-
-
-## Only admin [/users]
-
-### Update any user information[PUT]
-
-+ Request (application/json)
-
-        Update own user information.
-
-+ Response 201
-
-### Delete user [DELETE]
-
-+ Request (application/json)
-
-        Delete any user.
-
-+ Response 201
-
-
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /users/:id
-
-## Only registered users & admin [/users/:id]
-
-### Retrieve own user info [GET]
-
-+ Response 200 (application/json)
-
-        Get all your own user information.
-
-## Only admin [/users/:id]
-
-### Retrieve full info from any user[GET]
-
-+ Response 200 (application/json)
-
-        Get all information about a specific user.
-
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /polls
-
-## Only registered users [/polls]
-
-### Retrieve all user accessed polls [GET]
-
-+ Response 200 (application/json)
-
-        Retrieve all the polls that you can access.
-
-### Create poll [POST]
-
-+ Request (application/json)
-
-+ Response 200 (application/json)
-
-{
-  "data": {
-    "type": "poll",
-    "id": "POLL_ID_1",
-    "attributes": {
-      "name": "Odd Hill, team 2",
-      "expires": "2016-02-23T22:49:05Z",
-      "created": "2016-02-01T15:20:05Z",
-      "allow_new_restaurants": false
-    }
+  # eats-api goal documentation
+  An Express/SocketIO-application that functions as a backend API for the Eats client (web app).
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /restaurants
+
+  ## Any user [/restaurants]
+
+  ### Retrieve restaurants [GET]
+
+  + Response 200 (application/json)
+
+  {
+  "links": {
+      "self": "/restaurants"
+        },
+
+  "data": [{
+  "type": "restaurant",
+  "id": "RESTAURANT_ID_1",
+  "attributes": {
+  "name": "Bamboo City",
+  "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque. Vi erbjuder en mycket hög kvalitet i våra bufféer i härliga lokaler. Vi serverar både lunch och a la carte.",
+  "photo": "http://photo.com/1234.jpg",
+  "price-rate": 3,
+  "rating": 4,
+  "number_votes": 27,
+  "number_won_votes": 3,
+  "longitude": 13.00073,
+  "latitude": 55.60587,
+
+  "temporary": false
   },
   "relationships": {
-    "creator": {
-      "data": {
-        "type": "user",
-        "id": "USER_ID_1",
-      }
-    },
-    "restaurants": {
-      "data": [{
-        "type": "restaurant",
-        "id": "RESTAURANT_ID_1",
-      }, {
-        "type": "restaurant",
-        "id": "RESTAURANT_ID_2",
-      }]
-    },
-    "users": {
-      "data": [{
-        "type": "user",
-        "id": "USER_ID_1",
-      }, {
-        "type": "user",
-        "id": "USER_ID_2",
-      }, {
-        "type": "user",
-        "id": "USER_ID_3",
-      }]
-    },
-    "group": {
-      "data": {
-        "type": "group",
-        "id": "GROUP_ID_1"
-      }
-    },
-    "votes": {
-      "data": []
-    }
-  },
-  "included": [{
-    "type": "restaurant",
-    "id": "RESTAURANT_ID_1",
-    "attributes": {
-      "name": "Din Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
-      "temporary": false,
-    },
-    "links": {
-      "self": "/restaurants/RESTAURANT_ID_1"
-    }
+
+  "category": {
+  "data": [{
+  "type": "category",
+  "id": "CATEGORY_ID_1",
   }, {
-    "type": "restaurant",
-    "id": "RESTAURANT_ID_2",
-    "attributes": {
-      "name": "Vår Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
-      "temporary": false,
-    },
-    "links": {
-      "self": "/restaurants/RESTAURANT_ID_2"
-    }
-  }, {
-    "type": "user",
-    "id": "USER_ID_1",
-    "attributes": {
-      "name": "Per Persson",
-      "photo": "https://imgur.com/erqwfdsco92.jpg",
-      "anonymous": false
-    },
-    "links": {
-      "self": "/users/USER_ID_1"
-    }
-  }, {
-    "type": "user",
-    "id": "USER_ID_2",
-    "attributes": {
-      "name": "Lukas Lukasson",
-      "photo": "http://photo.com/1234.jpg",
-      "anonymous": false
-    },
-    "links": {
-      "self": "/users/0USER_ID_2"
-    }
-  }, {
-    "type": "user",
-    "id": "USER_ID_3",
-    "attributes": {
-      "name": "Mats Mattsson",
-      "anonymous": true
-    },
-    "links": {
-      "self": "/users/USER_ID_3"
-    }
-  }, {
-    "type": "group",
-    "id": "GROUP_ID_1",
-    "attributes": {
-      "name": "Vi som älskar burgare på Odd Hill"
-    },
-    "links": {
-      "self": "/groups/GROUP_ID_1"
-    }
+  "type": "category",
+  "id": "CATEGORY_ID_3",
   }]
-}
-
-+ Response 201
-
-### Add restaurants to poll [PUT]
-
-+ Request (application/json)
-
-        Add restaurants to poll if user has access to poll.
-
-+ Response 201
-
-### Delete poll [DELETE]
-
-+ Request (application/json)
-
-        Delete poll can only be done by the creator of the poll.
-
-+ Response 201
-
-
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
-# Group /polls/:id
-
-## Only registered users [/polls/:id]
-
-### Retrieve specific poll if user has access [GET]
-
-+ Response 200 (application/json)
-
-{
-  "data": {
-    "type": "poll",
-    "id": "POLL_ID_1",
-    "attributes": {
-      "name": "Odd Hill, team 2",
-      "expires": "2016-02-23T22:49:05Z",
-      "created": "2016-02-01T15:20:05Z",
-      "allow_new_restaurants": false
-    }
+  }
+  },
+  "links": {
+  "self": "/restaurants/RESTAURANT_ID_1"
+  }
+  },{
+  "type": "restaurant",
+  "id": "RESTAURANT_ID_2",
+  "attributes": {
+  "name": "Krua Thai",
+  "info": "Helt vanligt thai restaurant",
+  "photo": "http://photo.com/2345.jpg",
+  "price-rate": 3,
+  "rating": 3,
+  "number_votes": 15,
+  "number_won_votes": 2,
+  "longitude": 13.00173,
+  "latitude": 55.60587,
+  "temporary": false
   },
   "relationships": {
-    "creator": {
-      "data": {
-        "type": "user",
-        "id": "USER_ID_1",
-      }
-    },
-    "restaurants": {
-      "data": [{
-        "type": "restaurant",
-        "id": "RESTAURANT_ID_1",
-      }, {
-        "type": "restaurant",
-        "id": "RESTAURANT_ID_2",
-      }]
-    },
-    "users": {
-      "data": [{
-        "type": "user",
-        "id": "USER_ID_1",
-      }, {
-        "type": "user",
-        "id": "USER_ID_2",
-      }, {
-        "type": "user",
-        "id": "USER_ID_3",
-      }]
-    },
-    "group": {
-      "data": {
-        "type": "group",
-        "id": "GROUP_ID_1"
-      }
-    },
-    "votes": {
-      "data": [{
-        "type": "vote",
-        "id": "VOTE_ID_1"
-      }, {
-        "type": "vote",
-        "id": "VOTE_ID_2"
-      }, {
-        "type": "vote",
-        "id": "VOTE_ID_3"
-      }]
-    }
-  },
-  "included": [{
-    "type": "restaurant",
-    "id": "RESTAURANT_ID_1",
-    "attributes": {
-      "name": "Din Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
-      "temporary": false,
-    },
-    "links": {
-      "self": "/restaurants/RESTAURANT_ID_1"
-    }
+  "category": {
+  "data": [{
+  "type": "category",
+  "id": "CATEGORY_ID_2",
   }, {
-    "type": "restaurant",
-    "id": "RESTAURANT_ID_2",
-    "attributes": {
-      "name": "Vår Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
-      "temporary": false,
-    },
-    "links": {
-      "self": "/restaurants/RESTAURANT_ID_2"
-    }
-  }, {
-    "type": "user",
-    "id": "USER_ID_1",
-    "attributes": {
-      "name": "Per Persson",
-      "photo": "https://imgur.com/erqwfdsco92.jpg",
-      "anonymous": false
-    },
-    "links": {
-      "self": "/users/USER_ID_1"
-    }
-  }, {
-    "type": "user",
-    "id": "USER_ID_2",
-    "attributes": {
-      "name": "Lukas Lukasson",
-      "photo": "http://photo.com/1234.jpg",
-      "anonymous": false
-    },
-    "links": {
-      "self": "/users/0USER_ID_2"
-    }
-  }, {
-    "type": "user",
-    "id": "USER_ID_3",
-    "attributes": {
-      "name": "Mats Mattsson",
-      "anonymous": true
-    },
-    "links": {
-      "self": "/users/USER_ID_3"
-    }
-  }, {
-    "type": "group",
-    "id": "GROUP_ID_1",
-    "attributes": {
-      "name": "Vi som älskar burgare på Odd Hill"
-    },
-    "links": {
-      "self": "/groups/GROUP_ID_1"
-    }
-  }, {
-    "type": "vote",
-    "id": "VOTE_ID_1",
-    "created": "2016-02-23T22:49:05Z",
-    "updated": "2016-02-23T22:49:05Z",
-    "relationships": {
-      "user": {
-        "data": {
-          "type": "user",
-          "id": "USER_ID_1"
-        }
-      },
-      "restaurant": {
-        "data": {
-          "type": "restaurant",
-          "id": "RESTAURANT_ID_2"
-        }
-      },
-      "poll": {
-        "data": {
-          "type": "poll",
-          "id": "POLL_ID_1"
-        }
-      }
-    },
-    "links": {
-      "self": "/votes/VOTE_ID_1"
-    }
-  }, {
-    "type": "vote",
-    "id": "VOTE_ID_2",
-    "created": "2016-02-23T22:49:05Z",
-    "updated": "2016-02-23T22:49:05Z",
-    "relationships": {
-      "user": {
-        "data": {
-          "type": "user",
-          "id": "USER_ID_2"
-        }
-      },
-      "restaurant": {
-        "data": {
-          "type": "restaurant",
-          "id": "RESTAURANT_ID_2"
-        }
-      },
-      "poll": {
-        "data": {
-          "type": "poll",
-          "id": "POLL_ID_1"
-        }
-      }
-    },
-    "links": {
-      "self": "/votes/VOTE_ID_2"
-    }
-  }, {
-    "type": "vote",
-    "id": "VOTE_ID_3",
-    "created": "2016-02-23T22:49:05Z",
-    "updated": "2016-02-23T22:49:05Z",
-    "relationships": {
-      "user": {
-        "data": {
-          "type": "user",
-          "id": "USER_ID_3"
-        }
-      },
-      "restaurant": {
-        "data": {
-          "type": "restaurant",
-          "id": "RESTAURANT_ID_1"
-        }
-      },
-      "poll": {
-        "data": {
-          "type": "poll",
-          "id": "POLL_ID_1"
-        }
-      }
-    },
-    "links": {
-      "self": "/votes/VOTE_ID_3"
-    }
+  "type": "category",
+  "id": "CATEGORY_ID_3",
   }]
-}
+  }
+  },
+  "links": {
+  "self": "/restaurants/RESTAURANT_ID_2"
+  }
+  }],
+
+  "included": [{
+  "type": "category",
+  "id": "CATEGORY_ID_1",
+  "attributes": {
+  "name": "fish"
+  }
+  }, {
+  "type": "category",
+  "id": "CATEGORY_ID_2",
+  "attributes": {
+  "name": "vegan"
+  }
+  },{
+  "type": "category",
+  "id": "CATEGORY_ID_3",
+  "attributes": {
+  "name": "thai"
+  }
+  }]
+  }
 
 
-        Retrieve specific poll if user has access to the poll.
+          Get all restaurants.
+
+  ### Add a restaurant [POST]
+
+  + Request (application/json)
+
+          Add restaurant.
+
+  + Response 201
+
+  ## Only registered users & admin [/restaurants]
+
+  ### Update restaurant rating [PUT]
+
+  + Request (application/json)
+
+          Update restaurant rating.
+
+  + Response 201
+
+  ## Only Admin [/restaurants]
+
+  ### Delete restaurant [DELETE]
+
+  + Request (application/json)
+
+          Your restaurant is deleted.
+
+  + Response 201
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /restaurants/:id
+
+  ## Only registered users & admin [/restaurants/:id]
+
+  ## Retrieve specific restaurant [GET]
+
+  + Response 200 (application/json)
+
+  {
+
+  "data": {
+  "type": "restaurant",
+  "id": "RESTAURANT_ID_1",
+  "attributes": {
+  "name": "Bamboo City",
+  "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.",
+  "photo": "http://photo.com/1234.jpg",
+  "price-rate": 3,
+  "rating": 4,
+  "number_votes": 27,
+  "number_won_votes": 3,
+  "longitude": 13.00073,
+  "latitude": 55.60587,
+  "temporary": false
+  },
+  "relationships": {
+  "category": {
+  "data": [{
+  "type": "category",
+  "id": "CATEGORY_ID_1",
+  }, {
+  "type": "category",
+  "id": "CATEGORY_ID_3",
+  }]
+  }
+  },
+  "links": {
+  "self": "/restaurants/RESTAURANT_ID_1"
+  }
+  },
+
+  "included": [{
+  "type": "category",
+  "id": "CATEGORY_ID_1",
+  "attributes": {
+  "name": "fish",
+  }
+  }, {
+  "type": "category",
+  "id": "CATEGORY_ID_3",
+  "attributes": {
+  "name": "thai",
+  }
+  }]
+  }
+
+          Get specific restaurant.
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /restaurants/update
+
+  ## Any user [/restaurant/update]
+
+  ### Update restaurant info [POST]
+
+  + Response 200 (application/json)
+
+          Request to update a restaurant.
+
+  ## Only admin [/restaurants/update]
+
+  ### Retrieve all restaurants pending update [GET]
+
+  + Response 200 (application/json)
+
+          Retrieve all restaurants pending update.
+
+  ### Accept pending restaurant update [PUT]
+
+  + Request (application/json)
+
+          Accept pending restaurant update.
+
+  + Response 201
 
 
-[comment]: <> (-------------------------break between endpoint--------------------------)
+  [comment]: <> (-------------------------break between endpoint--------------------------)
 
-# Group /groups
+  # Group /users
 
-## Only registered user & admin [/groups]
+  ## Only registered users [/users]
 
-### Retrieve all user accessed groups [GET]
+  ### Retrieve users with basic info [GET]
 
-+ Response 200 (application/json)
+  + Response 200 (application/json)
 
-        Retrieve all the groups that you can access.
+          Get all users but only name, photo and id.
 
-### Create group [POST]
+  ## Only admin [/users]
 
-+ Request (application/json)
+  ### Retrieve users with full info [GET]
 
-        Create a group.
+  + Response 200 (application/json)
 
-+ Response 201
+          Get all users with full information.
 
-### Add users to group [PUT]
+  ## Unregistered user [/users]
 
-+ Request (application/json)
+  ### Register for user account [POST]
 
-        Add users to group if creator.
+  + Request (application/json)
 
-+ Response 201
+          Register user.
 
-### Remove yourself from group [PUT]
+  + Response 201
 
-+ Request (application/json)
+  ## Only registered user [/users]
 
-        Remove yourself from a group.
+  ### Update own user information [PUT]
 
-+ Response 201
+  + Request (application/json)
 
-### Delete group [DELETE]
+          Update own user information.
 
-+ Request (application/json)
+  + Response 201
 
-        Delete group can only be done by the creator of the group.
+  ### Delete your own account [DELETE]
 
-+ Response 201
+  + Request (application/json)
 
-[comment]: <> (-------------------------break between endpoint--------------------------)
+          Delete yourself a user.
 
-# Group /groups/:id
+  + Response 201
 
-## Only registered users [/groups/:id]
 
-### Retrieve specific group if user has access [GET]
+  ## Only admin [/users]
 
-+ Response 200 (application/json)
+  ### Update any user information[PUT]
 
-        Retrieve specific group if user has access to the group.
+  + Request (application/json)
+
+          Update own user information.
+
+  + Response 201
+
+  ### Delete user [DELETE]
+
+  + Request (application/json)
+
+          Delete any user.
+
+  + Response 201
+
+
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /users/:id
+
+  ## Only registered users & admin [/users/:id]
+
+  ### Retrieve own user info [GET]
+
+  + Response 200 (application/json)
+
+          Get all your own user information.
+
+  ## Only admin [/users/:id]
+
+  ### Retrieve full info from any user[GET]
+
+  + Response 200 (application/json)
+
+          Get all information about a specific user.
+
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /polls
+
+  ## Only registered users [/polls]
+
+  ### Retrieve all user accessed polls [GET]
+
+  + Response 200 (application/json)
+
+          Retrieve all the polls that you can access.
+
+  ### Create poll [POST]
+
+  + Request (application/json)
+
+  + Response 200 (application/json)
+
+  {
+    "data": {
+      "type": "poll",
+      "id": "POLL_ID_1",
+      "attributes": {
+        "name": "Odd Hill, team 2",
+        "expires": "2016-02-23T22:49:05Z",
+        "created": "2016-02-01T15:20:05Z",
+        "allow_new_restaurants": false
+      }
+    },
+    "relationships": {
+      "creator": {
+        "data": {
+          "type": "user",
+          "id": "USER_ID_1",
+        }
+      },
+      "restaurants": {
+        "data": [{
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_1",
+        }, {
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_2",
+        }]
+      },
+      "users": {
+        "data": [{
+          "type": "user",
+          "id": "USER_ID_1",
+        }, {
+          "type": "user",
+          "id": "USER_ID_2",
+        }, {
+          "type": "user",
+          "id": "USER_ID_3",
+        }]
+      },
+      "group": {
+        "data": {
+          "type": "group",
+          "id": "GROUP_ID_1"
+        }
+      },
+      "votes": {
+        "data": []
+      }
+    },
+    "included": [{
+      "type": "restaurant",
+      "id": "RESTAURANT_ID_1",
+      "attributes": {
+        "name": "Din Restaurang",
+        "latitude": 56.1234,
+        "longitude": 14.1234,
+        "temporary": false,
+      },
+      "links": {
+        "self": "/restaurants/RESTAURANT_ID_1"
+      }
+    }, {
+      "type": "restaurant",
+      "id": "RESTAURANT_ID_2",
+      "attributes": {
+        "name": "Vår Restaurang",
+        "latitude": 56.1234,
+        "longitude": 14.1234,
+        "temporary": false,
+      },
+      "links": {
+        "self": "/restaurants/RESTAURANT_ID_2"
+      }
+    }, {
+      "type": "user",
+      "id": "USER_ID_1",
+      "attributes": {
+        "name": "Per Persson",
+        "photo": "https://imgur.com/erqwfdsco92.jpg",
+        "anonymous": false
+      },
+      "links": {
+        "self": "/users/USER_ID_1"
+      }
+    }, {
+      "type": "user",
+      "id": "USER_ID_2",
+      "attributes": {
+        "name": "Lukas Lukasson",
+        "photo": "http://photo.com/1234.jpg",
+        "anonymous": false
+      },
+      "links": {
+        "self": "/users/0USER_ID_2"
+      }
+    }, {
+      "type": "user",
+      "id": "USER_ID_3",
+      "attributes": {
+        "name": "Mats Mattsson",
+        "anonymous": true
+      },
+      "links": {
+        "self": "/users/USER_ID_3"
+      }
+    }, {
+      "type": "group",
+      "id": "GROUP_ID_1",
+      "attributes": {
+        "name": "Vi som älskar burgare på Odd Hill"
+      },
+      "links": {
+        "self": "/groups/GROUP_ID_1"
+      }
+    }]
+  }
+
+  + Response 201
+
+  ### Add restaurants to poll [PUT]
+
+  + Request (application/json)
+
+          Add restaurants to poll if user has access to poll.
+
+  + Response 201
+
+  ### Delete poll [DELETE]
+
+  + Request (application/json)
+
+          Delete poll can only be done by the creator of the poll.
+
+  + Response 201
+
+
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /polls/:id
+
+  ## Only registered users [/polls/:id]
+
+  ### Retrieve specific poll if user has access [GET]
+
+  + Response 200 (application/json)
+
+  {
+    "data": {
+      "type": "poll",
+      "id": "POLL_ID_1",
+      "attributes": {
+        "name": "Odd Hill, team 2",
+        "expires": "2016-02-23T22:49:05Z",
+        "created": "2016-02-01T15:20:05Z",
+        "allow_new_restaurants": false
+      }
+    },
+    "relationships": {
+      "creator": {
+        "data": {
+          "type": "user",
+          "id": "USER_ID_1",
+        }
+      },
+      "restaurants": {
+        "data": [{
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_1",
+        }, {
+          "type": "restaurant",
+          "id": "RESTAURANT_ID_2",
+        }]
+      },
+      "users": {
+        "data": [{
+          "type": "user",
+          "id": "USER_ID_1",
+        }, {
+          "type": "user",
+          "id": "USER_ID_2",
+        }, {
+          "type": "user",
+          "id": "USER_ID_3",
+        }]
+      },
+      "group": {
+        "data": {
+          "type": "group",
+          "id": "GROUP_ID_1"
+        }
+      },
+      "votes": {
+        "data": [{
+          "type": "vote",
+          "id": "VOTE_ID_1"
+        }, {
+          "type": "vote",
+          "id": "VOTE_ID_2"
+        }, {
+          "type": "vote",
+          "id": "VOTE_ID_3"
+        }]
+      }
+    },
+    "included": [{
+      "type": "restaurant",
+      "id": "RESTAURANT_ID_1",
+      "attributes": {
+        "name": "Din Restaurang",
+        "latitude": 56.1234,
+        "longitude": 14.1234,
+        "temporary": false,
+      },
+      "links": {
+        "self": "/restaurants/RESTAURANT_ID_1"
+      }
+    }, {
+      "type": "restaurant",
+      "id": "RESTAURANT_ID_2",
+      "attributes": {
+        "name": "Vår Restaurang",
+        "latitude": 56.1234,
+        "longitude": 14.1234,
+        "temporary": false,
+      },
+      "links": {
+        "self": "/restaurants/RESTAURANT_ID_2"
+      }
+    }, {
+      "type": "user",
+      "id": "USER_ID_1",
+      "attributes": {
+        "name": "Per Persson",
+        "photo": "https://imgur.com/erqwfdsco92.jpg",
+        "anonymous": false
+      },
+      "links": {
+        "self": "/users/USER_ID_1"
+      }
+    }, {
+      "type": "user",
+      "id": "USER_ID_2",
+      "attributes": {
+        "name": "Lukas Lukasson",
+        "photo": "http://photo.com/1234.jpg",
+        "anonymous": false
+      },
+      "links": {
+        "self": "/users/0USER_ID_2"
+      }
+    }, {
+      "type": "user",
+      "id": "USER_ID_3",
+      "attributes": {
+        "name": "Mats Mattsson",
+        "anonymous": true
+      },
+      "links": {
+        "self": "/users/USER_ID_3"
+      }
+    }, {
+      "type": "group",
+      "id": "GROUP_ID_1",
+      "attributes": {
+        "name": "Vi som älskar burgare på Odd Hill"
+      },
+      "links": {
+        "self": "/groups/GROUP_ID_1"
+      }
+    }, {
+      "type": "vote",
+      "id": "VOTE_ID_1",
+      "created": "2016-02-23T22:49:05Z",
+      "updated": "2016-02-23T22:49:05Z",
+      "relationships": {
+        "user": {
+          "data": {
+            "type": "user",
+            "id": "USER_ID_1"
+          }
+        },
+        "restaurant": {
+          "data": {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2"
+          }
+        },
+        "poll": {
+          "data": {
+            "type": "poll",
+            "id": "POLL_ID_1"
+          }
+        }
+      },
+      "links": {
+        "self": "/votes/VOTE_ID_1"
+      }
+    }, {
+      "type": "vote",
+      "id": "VOTE_ID_2",
+      "created": "2016-02-23T22:49:05Z",
+      "updated": "2016-02-23T22:49:05Z",
+      "relationships": {
+        "user": {
+          "data": {
+            "type": "user",
+            "id": "USER_ID_2"
+          }
+        },
+        "restaurant": {
+          "data": {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2"
+          }
+        },
+        "poll": {
+          "data": {
+            "type": "poll",
+            "id": "POLL_ID_1"
+          }
+        }
+      },
+      "links": {
+        "self": "/votes/VOTE_ID_2"
+      }
+    }, {
+      "type": "vote",
+      "id": "VOTE_ID_3",
+      "created": "2016-02-23T22:49:05Z",
+      "updated": "2016-02-23T22:49:05Z",
+      "relationships": {
+        "user": {
+          "data": {
+            "type": "user",
+            "id": "USER_ID_3"
+          }
+        },
+        "restaurant": {
+          "data": {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1"
+          }
+        },
+        "poll": {
+          "data": {
+            "type": "poll",
+            "id": "POLL_ID_1"
+          }
+        }
+      },
+      "links": {
+        "self": "/votes/VOTE_ID_3"
+      }
+    }]
+  }
+
+
+          Retrieve specific poll if user has access to the poll.
+
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /groups
+
+  ## Only registered user & admin [/groups]
+
+  ### Retrieve all user accessed groups [GET]
+
+  + Response 200 (application/json)
+
+          Retrieve all the groups that you can access.
+
+  ### Create group [POST]
+
+  + Request (application/json)
+
+          Create a group.
+
+  + Response 201
+
+  ### Add users to group [PUT]
+
+  + Request (application/json)
+
+          Add users to group if creator.
+
+  + Response 201
+
+  ### Remove yourself from group [PUT]
+
+  + Request (application/json)
+
+          Remove yourself from a group.
+
+  + Response 201
+
+  ### Delete group [DELETE]
+
+  + Request (application/json)
+
+          Delete group can only be done by the creator of the group.
+
+  + Response 201
+
+  [comment]: <> (-------------------------break between endpoint--------------------------)
+
+  # Group /groups/:id
+
+  ## Only registered users [/groups/:id]
+
+  ### Retrieve specific group if user has access [GET]
+
+  + Response 200 (application/json)
+
+          Retrieve specific group if user has access to the group.
