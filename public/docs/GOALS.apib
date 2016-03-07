@@ -11,6 +11,92 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 + Response 200 (application/json)
 
+{
+"links": {
+   		 "self": "/restaurants"},
+
+"data": [{
+		"type": "restaurant",
+		"id": "RESTAURANT_ID_1",
+		"attributes": {
+		"name": "Bamboo City",
+		"info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque. Vi erbjuder en mycket hög kvalitet i våra bufféer i härliga lokaler. Vi serverar både lunch och a la carte.",
+		"photo": "http://photo.com/1234.jpg",
+		"price-rate": 3,
+		"rating": 4,
+		"number_votes": 27,
+		"number_won_votes": 3,
+		"longitude": 13.00073,
+		"latitude": 55.60587,
+		"temporary": false
+		},
+"relationships": {
+
+	"category": {
+			"data": [{
+					"type": "category",
+					"id": "CATEGORY_ID_1",
+					}, {
+					"type": "category",
+					"id": "CATEGORY_ID_3",
+					}]
+				}
+			},
+"links": {
+		"self": "/restaurants/RESTAURANT_ID_1"
+		}
+},{
+		"type": "restaurant",
+		"id": "RESTAURANT_ID_2",
+		"attributes": {
+		"name": "Krua Thai",
+		"info": "Helt vanligt thai restaurant",
+		"photo": "http://photo.com/2345.jpg",
+		"price-rate": 3,
+		"rating": 3,
+		"number_votes": 15,
+		"number_won_votes": 2,
+		"longitude": 13.00173,
+		"latitude": 55.60587,
+		"temporary": false
+		},
+"relationships": {
+	"category": {
+			"data": [{
+			"type": "category",
+			"id": "CATEGORY_ID_2",
+			}, {
+			"type": "category",
+			"id": "CATEGORY_ID_3",
+			}]
+			}
+},
+	"links": {
+			"self": "/restaurants/RESTAURANT_ID_2"
+			}
+}],
+
+"included": [{
+	"type": "category",
+	"id": "CATEGORY_ID_1",
+	"attributes": {
+			"name": "fish"
+			}
+	}, {
+	"type": "category",
+	"id": "CATEGORY_ID_2",
+	"attributes": {
+			"name": "vegan"
+			}
+	},{
+	"type": "category",
+	"id": "CATEGORY_ID_3",
+	"attributes": {
+			"name": "thai"
+			}
+	}]
+}
+
         Get all restaurants.
 
 ### Add a restaurant [POST]
@@ -50,6 +136,54 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ## Retrieve specific restaurant [GET]
 
 + Response 200 (application/json)
+
+{
+
+"data": {
+		"type": "restaurant",
+		"id": "RESTAURANT_ID_1",
+		"attributes": {
+		"name": "Bamboo City",
+		"info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque. Vi erbjuder en mycket hög kvalitet i våra bufféer i härliga lokaler. Vi serverar både lunch och a la carte.",
+		"photo": "http://photo.com/1234.jpg",
+		"price-rate": 3,
+		"rating": 4,
+		"number_votes": 27,
+		"number_won_votes": 3,
+		"longitude": 13.00073,
+		"latitude": 55.60587,
+		"temporary": false
+		},
+"relationships": {
+	"category": {
+			"data": [{
+					"type": "category",
+					"id": "CATEGORY_ID_1",
+					}, {
+					"type": "category",
+					"id": "CATEGORY_ID_3",
+					}]
+				}
+	},
+"links": {
+		"self": "/restaurants/RESTAURANT_ID_1"
+		}
+},
+
+"included": [{
+			"type": "category",
+			"id": "CATEGORY_ID_1",
+			"attributes": {
+				"name": "fish",
+			}
+			}, {
+			"type": "category",
+			"id": "CATEGORY_ID_3",
+			"attributes": {
+				"name": "thai",
+			}
+}]
+}
 
         Get specific restaurant.
 
