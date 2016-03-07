@@ -15,9 +15,9 @@ var validateRestaurantIDs = function(data, schema, done) {
     return done(null, []);
   }
 
-  pg.pluck('id')
+  pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
     .from('restaurant')
-    .whereIn('id', data)
+    .whereIn('id', data) //get all ID's from database that matches the data-array
     .then(function(res) {
       var diff = [];
       var len = data.length;
@@ -41,6 +41,7 @@ var validateRestaurantIDs = function(data, schema, done) {
 
 };
 
+// Check if the ID exists in database
 var validateGroupID = function(data, schema, done) {
   //if data is null, dont contact database to validate it.
   if (!data) {
@@ -56,41 +57,45 @@ var validateGroupID = function(data, schema, done) {
     });
 };
 
+//Special validator. type Number accepts floats too.
 var isInteger = function(data) {
   return (typeof data === 'number' && (data % 1) === 0);
 };
 
+//exported middleware that validates a post body
 pollValidator.post = function(req, res, next) {
+
+  //Schema that defines the accepted variations of a post body
   var schema = {
     type: Object,
-    unknownKeys: 'deny',
-    required: 'implicit',
+    unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
+    required: 'implicit', //Parent of required parameter becomes required.
     schema: {
       'name': {
-        type: String,
-        required: true,
+        type: String, //Has to be a string
+        required: true, //is required
         errors: {
-          type: 'name must be a String',
-          required: 'name is required.'
+          type: 'name must be a String', //error if type: String throws error
+          required: 'name is required.' //error if name is not present
         }
       },
       'allowNewRestaurants': {
         type: Boolean,
         required: false,
-        default: true,
+        default: true, //Defaults to true
         errors: {
           type: 'allowNewRestaurants must be a boolean'
         }
       },
       'restaurants': {
         type: Array,
-        required: false,
-        custom: validateRestaurantIDs,
-        default: [],
-        schema: {
+        required: false, //not required
+        custom: validateRestaurantIDs, //Validate all ID's in database
+        default: [], //defaults to epmty array
+        schema: { //Defines what the array contains
           type: Number,
           required: false,
-          custom: function(data) {
+          custom: function(data) { //Check that everything in the array is an integer
             if (data && !isInteger(data)) {
               throw new Error('restaurants must be an array of integers');
             }
@@ -107,10 +112,10 @@ pollValidator.post = function(req, res, next) {
       'group': {
         type: Number,
         required: false,
-        allowNull: true,
+        allowNull: true, //Allow null
         default: null, // FUNGERAR DETTA?
         custom: [
-          validateGroupID,
+          validateGroupID, //Validate sent ID and that it is an integer
           function(data) {
             if (data && !isInteger(data)) {
               throw new Error('group ID must be an integer');
@@ -127,9 +132,10 @@ pollValidator.post = function(req, res, next) {
         type: String,
         required: false,
         custom: function(data) {
-          if (!moment(data).isValid()) {
+          if (!moment(data).isValid()) { //Validate timestamp with moment (ISO 8601)
             throw new Error('expires must be a ISO 8601 string');
           }
+          //Also validate that expires is any time after now.
           var now = moment();
           var isLaterThenNow = moment(data).isAfter(now);
           if (isLaterThenNow) {
@@ -137,7 +143,7 @@ pollValidator.post = function(req, res, next) {
           }
           throw new Error('expires must be a time later than now');
         },
-        default: function() {
+        default: function() { //Default value is circa 20 minutes later than now
           var twentyMinutesLater = moment().add(20, 'm');
           return twentyMinutesLater;
         },
@@ -148,9 +154,10 @@ pollValidator.post = function(req, res, next) {
     }
   };
 
+  //Use the schema to validate
   isvalid(req.body, schema, function(validationError, validData) {
     if (validationError) {
-      next(validationError); //hantera fel på ett annat ställe
+      next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;
       next();
