@@ -37,7 +37,8 @@ node_modules
 # Development environment variables
 .env
 
-
+# web token secret
+config.js
 
 # .html
 public/docs/documentation.html

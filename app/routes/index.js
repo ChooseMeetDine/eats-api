@@ -4,8 +4,10 @@ var pollRouter = require('../routes/polls');
 var path = require('path');
 var knex = require('../shared/knex');
 var stormpath = require('express-stormpath');
+var jwt = require('jsonwebtoken');
 
-
+var cert = process.env.JWTSECRET;
+var token;
 
 router.use('/polls', pollRouter);
 
@@ -19,19 +21,7 @@ router.get('/users', function (req, res) {
   });
 });
 
-router.get('/log-out', stormpath.getUser, function (req, res) {
-  if (req.user) {
-    res.sendFile(__dirname + '/loggaut.html');
-  } else {
-    res.send('Not logged in');
-  }
-});
-
-router.get('/admin', stormpath.groupsRequired(['admin']), function (req, res) {
-  res.send('Welcome admin');
-});
-
-//----------------------------------------
+//------------------------- ROOT with jwt token creation-------/
 router.get('/', stormpath.getUser, function (req, res) {
   if (req.user) {
     knex.select('*').from('user').where('email', '=', req.user.email)
@@ -41,16 +31,14 @@ router.get('/', stormpath.getUser, function (req, res) {
         res.send(error);
       });
   } else {
-    res.send('<p>Du gick till rooten i API:et och här är env-variabeln MONGO_DB_USER i .env: ' +
-      process.env.MONGO_DB_USER + '</p>');
+    var anonymus = {
+      name: 'anonymus'
+    };
+    token = jwt.sign(anonymus, cert, {
+      expiresIn: '10s'
+    });
+    res.send('<p>Du gick till rooten i API:et och du är anonym och din token är ' + token);
   }
-});
-
-
-//----------------------------------------
-router.get('/', function (req, res) {
-  res.send('<p>Du gick till rooten i API:et och här är env-variabeln MONGO_DB_USER i .env: ' +
-    process.env.MONGO_DB_USER + '</p>');
 });
 
 router.get('/docs', function (req, res) {
@@ -74,7 +62,6 @@ router.get('/docs', function (req, res) {
     });
 });
 
-
 router.get('/goaldocs', function (req, res) {
   var options = {
     themeTemplate: 'default',
@@ -95,5 +82,46 @@ router.get('/goaldocs', function (req, res) {
     });
 });
 
+//custom-logout
+router.get('/log-out', stormpath.getUser, function (req, res) {
+  if (req.user) {
+    res.sendFile(__dirname + '/loggaut.html');
+  } else {
+    res.send('Not logged in');
+  }
+});
+
+//Admin route test
+router.get('/admin', stormpath.groupsRequired(['admin']), function (req, res) {
+  res.send('Welcome admin');
+});
+
+//anonymus jwt test
+router.get('/vote', stormpath.getUser, function (req, res) {
+  //console.log(req);
+  if (req.user) {
+    knex.select('*').from('user').where('email', '=', req.user.email)
+      .then(function (result) {
+        res.send('Welcome to votes ' + result[0].name);
+      }).catch(function (error) {
+        res.send(error);
+      });
+  } else if (!req.user) {
+    jwt.verify(token, cert, function (err, decoded) {
+      if (err) {
+        err = {
+          name: 'TokenExpiredError',
+          message: 'jwt expired'
+        };
+        res.json(err);
+      } else if (decoded) {
+        res.send('Welcome user with token ' + token);
+      }
+    });
+
+  } else {
+    res.send('something went wrong');
+  }
+});
 
 module.exports = router;
