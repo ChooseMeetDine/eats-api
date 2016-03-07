@@ -41,6 +41,37 @@ var validateRestaurantIDs = function(data, schema, done) {
 
 };
 
+var validateUserIDs = function(data, schema, done) {
+  if (!data || data.length === 0) {
+    return done(null, []);
+  }
+  pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
+    .from('user')
+    .whereIn('id', data) //get all ID's from database that matches the data-array
+    .then(function(res) {
+      var diff = [];
+      var len = data.length;
+      for (var i = 0; i < len; i++) {
+        if (res.indexOf('' + data[i]) === -1) {
+          diff.push(data[i]);
+        }
+      }
+
+      if (diff.length > 1) {
+        return done(new Error(diff + ' are not valid IDs'));
+      } else if (diff.length === 1) {
+        return done(new Error(diff + ' is not a valid ID'));
+      }
+
+      return done(null, data);
+
+    }).catch(function(err) {
+      console.log(err);
+      done(new Error('Invalid user IDs'));
+    });
+
+};
+
 // Check if the ID exists in database
 var validateGroupID = function(data, schema, done) {
   //if data is null, dont contact database to validate it.
@@ -107,6 +138,28 @@ pollValidator.post = function(req, res, next) {
         },
         errors: {
           type: 'restaurants must be an array of restaurant IDs',
+        }
+      },
+      'users': {
+        type: Array,
+        required: false, //not required
+        custom: validateUserIDs, //Validate all ID's in database
+        default: [], //defaults to epmty array
+        schema: { //Defines what the array contains
+          type: Number,
+          required: false,
+          custom: function(data) { //Check that everything in the array is an integer
+            if (data && !isPositiveInteger(data)) {
+              throw new Error('users must be an array of integers');
+            }
+            return data;
+          },
+          errors: {
+            type: 'user ids must be integers',
+          }
+        },
+        errors: {
+          type: 'user must be an array of user IDs',
         }
       },
       'group': {

@@ -77,6 +77,10 @@ describe('Testing the poll validator (polls.js)', function() {
     it('should set restaurants to an empty array', function() {
       expect(defaultValues.restaurants).to.deep.equal([]);
     });
+
+    it('should set users to an empty array', function() {
+      expect(defaultValues.users).to.deep.equal([]);
+    });
   });
 
   describe('for parameter "name"', function() {
@@ -729,4 +733,185 @@ describe('Testing the poll validator (polls.js)', function() {
 
     });
   });
+
+
+  describe('for parameter "users"', function() {
+    var validatorWithMock;
+    var tracker;
+
+    before(function(done) {
+      //Mock the database
+      mockDb.mock(db);
+
+      //Use the mocked database in the validator
+      validatorWithMock = proxyquire(validatorPath, {
+        '../shared/knex': db
+      });
+
+      //Install tracker
+      tracker = mockDb.getTracker();
+      tracker.install();
+      done();
+    });
+
+    it('should pass for [0]', function(done) {
+
+      //Tell tracker what to do when a query is sent to the database
+      tracker.on('query', function(query) {
+        query.response([{ //This wierd response structure is needed for the pluck-method
+          id: '0'
+        }]);
+      });
+      request.body = {
+        name: 'restaurantname',
+        users: [0]
+      };
+
+      var validate = function(err) {
+        expect(err).to.equal(undefined);
+        done();
+      };
+      //call the validator with the mocked db
+      validatorWithMock.post(request, response, validate);
+    });
+
+    it('should pass for [9007199254740991]', function(done) {
+      tracker.on('query', function(query) {
+        query.response([{
+          id: '9007199254740991'
+        }]);
+      });
+      request.body = {
+        name: 'restaurantname',
+        users: [9007199254740991]
+      };
+
+      var validate = function(err) {
+        expect(err).to.equal(undefined);
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+    });
+
+    it('should pass for ["123", 2]', function(done) {
+      tracker.on('query', function(query) {
+        query.response([{
+          id: '123'
+        }, {
+          id: '2'
+        }]);
+      });
+      request.body = {
+        name: 'restaurantname',
+        users: ['123', 2]
+      };
+
+      var validate = function(err) {
+        expect(err).to.equal(undefined);
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+    });
+
+    it('should return error for [true]', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: [true]
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+
+    it('should return error for [123.2]', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: [123.2]
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+
+    it('should return error for [-123.2]', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: [-123.2]
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+
+    it('should return error for {id: -123.2}', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: {
+          id: -123.2
+        }
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+
+    it('should return error for "string"', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: 'string'
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+
+    it('should return error for 123', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: 123
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+
+    it('should return error for null', function(done) {
+      request.body = {
+        name: 'restaurantname',
+        users: null
+      };
+
+      var validate = function(err) {
+        expect(err).to.be.an('object');
+        done();
+      };
+      validatorWithMock.post(request, response, validate);
+
+    });
+  });
+
 });
