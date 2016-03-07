@@ -1,4 +1,4 @@
-var pg = require('knex')({
+var knex = require('knex')({
   client: 'pg',
   connection: {
     user: process.env.POSTGRES_USER,
@@ -15,4 +15,4 @@ var pg = require('knex')({
   }
 });
 
-module.exports = pg;
+module.exports = knex;
