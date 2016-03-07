@@ -14,7 +14,6 @@ var validateRestaurantIDs = function(data, schema, done) {
   if (!data || data.length === 0) {
     return done(null, []);
   }
-
   pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
     .from('restaurant')
     .whereIn('id', data) //get all ID's from database that matches the data-array
@@ -36,6 +35,7 @@ var validateRestaurantIDs = function(data, schema, done) {
       return done(null, data);
 
     }).catch(function(err) {
+      console.log(err);
       done(new Error('Invalid restaurant IDs'));
     });
 
@@ -47,7 +47,7 @@ var validateGroupID = function(data, schema, done) {
   if (!data) {
     return done(data, null);
   }
-  pg.schema
+  pg.schema //Returns rows-object as either: [{exists:true}] or [{exists:false}]
     .raw('select exists(select 1 from "group" where id=' + data + ') AS "exists"')
     .then(function(res) {
       if (res.rows[0].exists) {
@@ -58,8 +58,8 @@ var validateGroupID = function(data, schema, done) {
 };
 
 //Special validator. type Number accepts floats too.
-var isInteger = function(data) {
-  return (typeof data === 'number' && (data % 1) === 0);
+var isPositiveInteger = function(data) {
+  return (typeof data === 'number' && (data % 1) === 0 && data >= 0);
 };
 
 //exported middleware that validates a post body
@@ -96,7 +96,7 @@ pollValidator.post = function(req, res, next) {
           type: Number,
           required: false,
           custom: function(data) { //Check that everything in the array is an integer
-            if (data && !isInteger(data)) {
+            if (data && !isPositiveInteger(data)) {
               throw new Error('restaurants must be an array of integers');
             }
             return data;
@@ -113,15 +113,15 @@ pollValidator.post = function(req, res, next) {
         type: Number,
         required: false,
         allowNull: true, //Allow null
-        default: null, // FUNGERAR DETTA?
+        default: null,
         custom: [
-          validateGroupID, //Validate sent ID and that it is an integer
-          function(data) {
-            if (data && !isInteger(data)) {
+          function(data) { //validate that it is a positive integer
+            if (data && !isPositiveInteger(data)) {
               throw new Error('group ID must be an integer');
             }
             return data;
-          }
+          },
+          validateGroupID //Validate sent ID
         ],
         default: null,
         errors: {
