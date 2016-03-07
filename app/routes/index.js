@@ -31,13 +31,19 @@ router.get('/', stormpath.getUser, function (req, res) {
         res.send(error);
       });
   } else {
-    var anonymus = {
-      name: 'anonymus'
-    };
-    token = jwt.sign(anonymus, cert, {
-      expiresIn: '10s'
+    jwt.verify(token, cert, function (err, decoded) {
+      if (err) {
+        var anonymus = {
+          name: 'anonymus'
+        };
+        token = jwt.sign(anonymus, cert, {
+          expiresIn: '30s'
+        });
+        res.send('Du gick till rooten i API:et och du är anonym och din token är ' + token);
+      } else if (decoded) {
+        res.send('Du gick till rooten i API:et och du är anonym och din token är ' + token);
+      }
     });
-    res.send('<p>Du gick till rooten i API:et och du är anonym och din token är ' + token);
   }
 });
 
