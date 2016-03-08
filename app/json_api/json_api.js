@@ -9,9 +9,9 @@ function JsonApiModule(main) {
     attributes: main.data
   };
   delete this.data.attributes.id; //ID should only exist in data.id and not in attributes
-  this.links = [{
+  this.links = {
     self: createResourceLink(main)
-  }];
+  };
 }
 
 var validateMainInput = function(input) {
@@ -25,7 +25,7 @@ var validateMainInput = function(input) {
     throw new Error('Validation in JSON-API module failed: variable "data" is not an Object');
   }
   if (!_.isString(input.data.id)) {
-    throw new Error('Validation in JSON-API module failed: variable "id" is not a number');
+    throw new Error('Validation in JSON-API module failed: variable "id" is not a string');
   }
 };
 
@@ -123,6 +123,7 @@ JsonApiModule.prototype.addRelation = function(input) {
 
 };
 
+// Creates a link with API_URL and the resource name (and id if it exists)
 var createResourceLink = function(resource) {
   var link = process.env.API_URL + resource.resource;
   if (resource.data.id) {
@@ -204,6 +205,7 @@ var createSubRelations = function(input, model) {
     //Add to array
     relationships[currentSubRelation.relation].push(subRel);
   }
+  return relationships;
 };
 
 var validateRelationInput = function(input) {
