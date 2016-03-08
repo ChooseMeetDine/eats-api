@@ -41,7 +41,7 @@
     "no-trailing-spaces": 2,
     "no-unused-vars": 1,
     "no-use-before-define": [
-      2,
+      0,
       "nofunc"
     ],
     "object-curly-spacing": [
