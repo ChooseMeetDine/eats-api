@@ -12,7 +12,8 @@ router.post('/', function(req, res) {
 
   var user = {
     name: undefined,
-    email: undefined
+    email: undefined,
+    admin: undefined
   };
 
   knex.select('*').from('user').where('email', '=', req.body.email)
@@ -20,6 +21,7 @@ router.post('/', function(req, res) {
       if (req.body.email === result[0].email && req.body.password === result[0].password) {
         user.name = result[0].name;
         user.email = result[0].email;
+        user.admin = result[0].admin;
 
         var token = jwt.sign(user, cert, {
           expiresIn: '1m' // expires in 1 minute

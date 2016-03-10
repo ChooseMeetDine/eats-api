@@ -11,6 +11,11 @@ router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');
 });
 
+router.get('/testauth', auth.validate, function(req, res) {
+  res.send('Welcome ' + req.decoded.name +
+    ' your token has been validated and your email is ' + req.decoded.email);
+});
+
 router.use('/polls', pollRouter);
 router.use('/auth', authRouter);
 router.use('/authtest', auth.validate, authTest);
