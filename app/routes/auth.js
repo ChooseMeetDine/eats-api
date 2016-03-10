@@ -30,11 +30,17 @@ router.post('/', function(req, res) {
           message: 'Enjoy your token ' + user.name,
           token: token
         });
+      } else {
+        res.json({
+          authentication: false,
+          message: 'Your email or password is incorrect',
+          token: false
+        });
       }
     }).catch(function() {
       res.json({
         authentication: false,
-        message: 'Your email or password is incorrect',
+        message: 'You need to POST email and password',
         token: false
       });
     });
