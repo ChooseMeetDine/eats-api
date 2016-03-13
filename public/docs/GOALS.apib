@@ -111,8 +111,45 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
         Get all restaurants.
 
 ### Add a restaurant [POST]
+{
++ Parameters
+
+ + name (string, required) - Name of the restaurant
+
+ + category (array, optional) - food categories IDs to add to this restaurant
+     + Default: []
+
+ + priceRate (number, optional) - price-rate for this restaurent from 1 to 5 range
+     + Default: null
+
+ + rating (number, optional) - rating star for this restaurent from 1 to 5 range
+     + Default: null
+
+ + info (string, optional) - address and other additional information relevant to this restaurant
+     + Default: null
+
+ + photo (string, optional) - link to the photo of the restaurant
+ 		+ Default: null
+
+ + longitude (number, required) - longitude coordinate of this restaurant in WGS84 format
+
+ + latitude (number, required) - latitude coordinate of this restaurant in WGS84 format
+
+}
 
 + Request (application/json)
+
+{
+ "name": "Name of the restaurant",
+ "category": [23412,12412, 12312],
+ "priceRate": 4,
+ "rating": 5,
+ "info": "Nordenskiöldsgatan 1, Malmö",
+ "photo":"http://photo.com/1234.jpg",
+ "longitude": 13.00073,
+ "latitude": 55.60587
+}
+
 
         Add restaurant.
 
@@ -253,8 +290,32 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ## Unregistered user [/users]
 
 ### Register for user account [POST]
+{
++ Parameters
+
+ + name (string, required) - Name of the user
+
+ + password (string, required) - user's password
+
+ + email (string, required) - email-address of the user
+
+ + phone (number, optional) - telephone number of the user
+     + Default: null
+
+ + photo (string, optional) - link to the photo of the user
+ 		+ Default: null
+
+}
 
 + Request (application/json)
+
+{
+ "name": "User's name",
+ "password": "Qwerty1",
+ "email": "lalala@eats.se",
+ "phone": 076123123,
+ "photo":"http://photo.com/1234.jpg"
+ }
 
         Register user.
 
@@ -477,6 +538,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "id": "USER_ID_3",
             "attributes": {
                 "name": "Mats Mattsson",
+                "photo": "http://photo.com/1234.jpg",
                 "anonymous": true
             },
             "links": {
@@ -762,7 +824,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
         }
     ]
 }
-
 
         Retrieve specific poll if user has access to the poll.
 
