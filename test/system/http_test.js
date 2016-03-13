@@ -32,20 +32,22 @@ describe('Testing Eats-API HTTP requests', function() {
           done();
         });
     });
-    /*
-        it('Should post stuff', function () {
-          request(app)
-            .post('/users')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end(function (err, res) {
-              var response = JSON.parse(res.text);
-              expect(response).to.deep.equal({
-                message: 'done'
-              });
-              done();
-            });
-        });*/
+
+    it('Should return json repsonse', function(done) {
+      request(app)
+        .post('/auth')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.deep.equal({
+            authentication: false,
+            message: 'You need to POST email and password',
+            token: false
+          });
+          done();
+        });
+    });
 
     it('Should load the root page for GET /', function(done) {
       request(app)
