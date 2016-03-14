@@ -1,5 +1,5 @@
 var isvalid = require('isvalid');
-var pg = require('../shared/knex');
+var pg = require('../shared/database/knex');
 var moment = require('moment');
 var _ = require('underscore');
 
