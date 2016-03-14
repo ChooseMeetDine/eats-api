@@ -4,6 +4,8 @@ var io = require('socket.io')(http);
 var routes = require('./app/routes/index');
 var bodyParser = require('body-parser');
 
+// redirects to HTTPS on Heroku (http://jaketrent.com/post/https-redirect-node-heroku/)
+var env = process.env.NODE_ENV || 'development';
 if (env === 'production') {
   app.use(function(req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https') {
