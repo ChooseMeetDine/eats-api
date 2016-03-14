@@ -106,7 +106,7 @@ var insertRestaurants = function(trx, req, pollid) {
 };
 
 var selectPollData = function(pollId) {
-  return knex.select('id', 'name', 'expires',
+  return knex.select('id', 'name', 'expires', 'created',
       'group_id as group', 'allow_new_restaurants as allowNewRestaurants')
     .from('poll')
     .where('id', pollId.toString())

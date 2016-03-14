@@ -420,7 +420,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 {
   "name": "Name of the restaurant",
   "expires": "2017-08-07T10:46:40+00:00",
-  "restaurants": ["234123","12412332", "12312"],
+  "restaurants": ["234123","12412332"],
   "users": ["7545345", "6663523", "45656855"],
   "group": "989098098",
   "allowNewRestaurants": true
@@ -429,136 +429,122 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Response 200 (application/json)
 
 {
-    "data": {
-        "type": "poll",
-        "id": "POLL_ID_1",
-        "attributes": {
-            "name": "Odd Hill, team 2",
-            "expires": "2016-02-23T22:49:05Z",
-            "created": "2016-02-01T15:20:05Z",
-            "allow_new_restaurants": false
-        },
-        "relationships": {
-            "creator": {
-                "data": {
-                    "type": "user",
-                    "id": "USER_ID_1"
-                }
-            },
-            "restaurants": {
-                "data": [
-                    {
-                        "type": "restaurant",
-                        "id": "RESTAURANT_ID_1"
-                    },
-                    {
-                        "type": "restaurant",
-                        "id": "RESTAURANT_ID_2"
-                    }
-                ]
-            },
-            "users": {
-                "data": [
-                    {
-                        "type": "user",
-                        "id": "USER_ID_1"
-                    },
-                    {
-                        "type": "user",
-                        "id": "USER_ID_2"
-                    },
-                    {
-                        "type": "user",
-                        "id": "USER_ID_3"
-                    }
-                ]
-            },
-            "group": {
-                "data": {
-                    "type": "group",
-                    "id": "GROUP_ID_1"
-                }
-            },
-            "votes": {
-                "data": []
-            }
-        }
+  "data": {
+    "type": "poll",
+    "id": "123123123",
+    "attributes": {
+      "name": "Name of the restaurant",
+      "expires": "2017-08-07T10:46:40Z",
+      "created": "2016-02-01T15:20:05Z",
+      "allow_new_restaurants": true
+    }
+  },
+  "relationships": {
+    "creator": {
+      "data": {
+        "type": "user",
+        "id": "7545345",
+      }
     },
-    "included": [
-        {
-            "type": "restaurant",
-            "id": "RESTAURANT_ID_1",
-            "attributes": {
-                "name": "Din Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
-                "temporary": false
-            },
-            "links": {
-                "self": "/restaurants/RESTAURANT_ID_1"
-            }
-        },
-        {
-            "type": "restaurant",
-            "id": "RESTAURANT_ID_2",
-            "attributes": {
-                "name": "Vår Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
-                "temporary": false
-            },
-            "links": {
-                "self": "/restaurants/RESTAURANT_ID_2"
-            }
-        },
-        {
-            "type": "user",
-            "id": "USER_ID_1",
-            "attributes": {
-                "name": "Per Persson",
-                "photo": "https://imgur.com/erqwfdsco92.jpg",
-                "anonymous": false
-            },
-            "links": {
-                "self": "/users/USER_ID_1"
-            }
-        },
-        {
-            "type": "user",
-            "id": "USER_ID_2",
-            "attributes": {
-                "name": "Lukas Lukasson",
-                "photo": "http://photo.com/1234.jpg",
-                "anonymous": false
-            },
-            "links": {
-                "self": "/users/0USER_ID_2"
-            }
-        },
-        {
-            "type": "user",
-            "id": "USER_ID_3",
-            "attributes": {
-                "name": "Mats Mattsson",
-                "photo": "http://photo.com/1234.jpg",
-                "anonymous": true
-            },
-            "links": {
-                "self": "/users/USER_ID_3"
-            }
-        },
-        {
-            "type": "group",
-            "id": "GROUP_ID_1",
-            "attributes": {
-                "name": "Vi som älskar burgare på Odd Hill"
-            },
-            "links": {
-                "self": "/groups/GROUP_ID_1"
-            }
-        }
-    ]
+    "restaurants": {
+      "data": [{
+        "type": "restaurant",
+        "id": "234123",
+      }, {
+        "type": "restaurant",
+        "id": "12412332",
+      }]
+    },
+    "users": {
+      "data": [{
+        "type": "user",
+        "id": "7545345",
+      }, {
+        "type": "user",
+        "id": "6663523",
+      }, {
+        "type": "user",
+        "id": "45656855",
+      }]
+    },
+    "group": {
+      "data": {
+        "type": "group",
+        "id": "45656855"
+      }
+    }
+  },
+  "links": {
+    "self": "www.path.to.api/polls/123123123"
+  },
+  "included": [{
+    "type": "restaurant",
+    "id": "234123",
+    "attributes": {
+      "name": "Din Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "temporary": false,
+    },
+    "links": {
+      "self": "/restaurants/234123"
+    }
+  }, {
+    "type": "restaurant",
+    "id": "12412332",
+    "attributes": {
+      "name": "Vår Restaurang",
+      "latitude": 56.1234,
+      "longitude": 14.1234,
+      "temporary": false,
+    },
+    "links": {
+      "self": "/restaurants/12412332"
+    }
+  }, {
+    "type": "user",
+    "id": "7545345",
+    "attributes": {
+      "name": "Per Persson",
+      "photo": "https://imgur.com/erqwfdsco92.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/7545345"
+    }
+  }, {
+    "type": "user",
+    "id": "6663523",
+    "attributes": {
+      "name": "Lukas Lukasson",
+      "photo": "http://photo.com/1234.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/06663523"
+    }
+  }, {
+    "type": "user",
+    "id": "45656855",
+    "attributes": {
+      "name": "Mats Mattsson",
+      "anonymous": true
+    },
+    "links": {
+      "self": "/users/45656855"
+    }
+  }, {
+    "type": "group",
+    "id": "45656855",
+    "attributes": {
+      "name": "Vi som älskar burgare på Odd Hill"
+    },
+    "links": {
+      "self": "/groups/45656855"
+    }
+  }]
 }
+
 
 + Response 201
 

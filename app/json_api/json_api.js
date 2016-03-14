@@ -8,10 +8,10 @@ function JsonApiModule(main) {
     id: main.data.id,
     attributes: main.data
   };
-  delete this.data.attributes.id; //ID should only exist in data.id and not in attributes
   this.links = {
     self: createResourceLink(main)
   };
+  delete this.data.attributes.id; //ID should only exist in data.id and not in attributes
 }
 
 var validateMainInput = function(input) {
