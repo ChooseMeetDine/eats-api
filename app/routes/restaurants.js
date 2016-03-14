@@ -10,7 +10,11 @@ router.post('/', restaurantValidator.post, function(req, res) {
       res.send(response);
     })
     .catch(function(err) {
-      res.status(500).send(err);
+      res.status(500).send({
+        httpStatus: 500,
+        error: err.message,
+        stack: err.stack
+      });
     });
 });
 
