@@ -35,8 +35,9 @@ var createPollPostResponse = function(pollId) {
     selectPollUsersData(pollId),
     selectRestaurantPollsData(pollId),
     selectGroupData(pollId),
-    selectCreatorData(pollId)
-  ).spread(function(poll, users, restaurants, group, creator) {
+    selectCreatorData(pollId),
+    selectVotesData(pollId)
+  ).spread(function(poll, users, restaurants, group, creator, votes) {
     var i;
     var response = new responseModule(poll);
     response.addRelation(creator);
@@ -44,11 +45,13 @@ var createPollPostResponse = function(pollId) {
       response.addRelation(users[i]);
     }
     for (i = 0; i < restaurants.length; i++) {
-      console.log(restaurants[i]);
       response.addRelation(restaurants[i]);
     }
     if (group) {
       response.addRelation(group);
+    }
+    for (i = 0; i < votes.length; i++) {
+      response.addRelation(votes[i]);
     }
     return response;
   }).catch(function(err) {
@@ -89,7 +92,7 @@ var insertRestaurants = function(trx, pollid, req) {
 };
 
 var selectPollData = function(pollId) {
-  return knex.select('id', 'creator_id as creator', 'name', 'expires',
+  return knex.select('id', 'name', 'expires',
       'group_id as group', 'allow_new_restaurants as allowNewRestaurants')
     .from('poll')
     .where('id', pollId.toString())
@@ -110,8 +113,6 @@ var selectCreatorData = function(pollId) {
     })
     .where('poll.id', pollId.toString())
     .then(function(res) {
-      console.log('resasdasdasd');
-      console.log(res);
       return {
         type: 'user',
         relation: 'creator',
@@ -184,6 +185,55 @@ var selectGroupData = function(pollId) {
         resource: 'groups',
         data: res[0]
       };
+    });
+};
+
+var selectVotesData = function(pollId) {
+  return knex.select('id', 'poll_id', 'user_id', 'restaurant_id')
+    .from('vote')
+    .where('vote.poll_id', pollId.toString())
+    .then(function(res) {
+
+      var votes = [];
+      for (var i = 0; i < res.length; i++) {
+        var voteRelation = {
+          data: {
+            id: res[i].id,
+          },
+          relation: 'votes',
+          multiple: true,
+          type: 'vote',
+          resource: 'votes',
+          relationships: [{
+            data: {
+              id: res[i].user_id
+            },
+            relation: 'user',
+            multiple: false,
+            type: 'user',
+            resource: 'users',
+          }, {
+            data: {
+              id: res[0].restaurant_id
+            },
+            relation: 'restaurant',
+            multiple: false,
+            type: 'restaurant',
+            resource: 'restaurants',
+          }, {
+            data: {
+              id: res[i].poll_id
+            },
+            relation: 'poll',
+            multiple: false,
+            type: 'poll',
+            resource: 'polls',
+          }]
+        };
+
+        votes.push(voteRelation);
+      }
+      return votes;
     });
 };
 
