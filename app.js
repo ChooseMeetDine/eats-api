@@ -4,6 +4,16 @@ var io = require('socket.io')(http);
 var routes = require('./app/routes/index');
 var bodyParser = require('body-parser');
 
+if (env === 'production') {
+  app.use(function(req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(301, 'https://' + (req.header('host')) + req.url);
+    } else {
+      return next();
+    }
+  });
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
