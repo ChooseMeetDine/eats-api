@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var routes = require('./app/routes/index');
 var bodyParser = require('body-parser');
+var pollsSocket = require('./app/socketio/polls_socket');
 
 // redirects to HTTPS on Heroku (http://jaketrent.com/post/https-redirect-node-heroku/)
 var env = process.env.NODE_ENV || 'development';
@@ -23,16 +24,15 @@ app.use(bodyParser.urlencoded({
 
 app.use('/', routes);
 
+// Initializes the socketIO-module for /polls
+pollsSocket.init(io);
+
 app.use(function(err, req, res, next) {
   res.status(500).send({
     httpStatus: 500,
     error: err.message,
     stack: err.stack
   });
-});
-
-io.on('connection', function() {
-  console.log('Someone connected to the API via socketIO!');
 });
 
 var port = process.env.PORT || 3001;

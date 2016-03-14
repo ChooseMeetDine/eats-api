@@ -379,7 +379,7 @@ describe('Testing the poll validator (polls.js)', function() {
     before(function(done) {
       mockDb.mock(db);
       validatorWithMock = proxyquire(validatorPath, {
-        '../shared/knex': db
+        '../shared/database/knex': db
       });
 
       tracker = mockDb.getTracker();
@@ -536,7 +536,7 @@ describe('Testing the poll validator (polls.js)', function() {
 
       //Use the mocked database in the validator
       validatorWithMock = proxyquire(validatorPath, {
-        '../shared/knex': db
+        '../shared/database/knex': db
       });
 
       //Install tracker
@@ -696,7 +696,7 @@ describe('Testing the poll validator (polls.js)', function() {
 
       //Use the mocked database in the validator
       validatorWithMock = proxyquire(validatorPath, {
-        '../shared/knex': db
+        '../shared/database/knex': db
       });
 
       //Install tracker
