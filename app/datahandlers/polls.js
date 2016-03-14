@@ -3,6 +3,12 @@ var pollsDatahandler = {};
 var Promise = require('bluebird');
 var responseModule = require('../json_api/json_api');
 
+// Handles POST requests to endpoint /poll
+// Inserts data to database with a transaction and then selects data based on the
+// returned poll-ID and creates a JSON-API-response with that
+//
+// Error handling is handled in the two promises separately, to be able to distinguish what error
+// was thrown and to be able to return a useful message to the user.
 pollsDatahandler.post = function(req) {
   req.validUser = 10; //TODO: Remove once auth works
 
@@ -10,13 +16,18 @@ pollsDatahandler.post = function(req) {
     .then(createPollPostResponse);
 };
 
+// Executes several INSERT to the database as a transaction,
+// so if one insertion fails, everything is rolled back to the previous state.
+//
+// The function creates a new transaction-object and sends that object to other functions
+// for them to add queries to that object (just a way to split this function to smaller parts)
 var executeInsertionTransaction = function(req) {
   return knex.transaction(function(trx) {
-      return insertPoll(trx, req)
+      return insertPoll(trx, req) // returns the poll id needed for the rest of the inserts
         .then(function(pollid) {
           return Promise.join(
-              insertRestaurants(trx, pollid, req),
-              insertUsers(trx, pollid, req)
+              insertRestaurants(trx, req, pollid), // two more inserts to other tables
+              insertUsers(trx, req, pollid)
             )
             .then(function() {
               return Promise.resolve(pollid);
@@ -29,9 +40,11 @@ var executeInsertionTransaction = function(req) {
     });
 };
 
+// Executes several SELECT queries to the database and creates an object for each type of data
+// returned, which is used to create a JSON-API-poll object and add relations to it
 var createPollPostResponse = function(pollId) {
-  return Promise.join(
-    selectPollData(pollId),
+  return Promise.join( // run all SELECTs
+    selectPollData(pollId), // returns a knex-select-promise
     selectPollUsersData(pollId),
     selectRestaurantPollsData(pollId),
     selectGroupData(pollId),
@@ -39,7 +52,7 @@ var createPollPostResponse = function(pollId) {
     selectVotesData(pollId)
   ).spread(function(poll, users, restaurants, group, creator, votes) {
     var i;
-    var response = new responseModule(poll);
+    var response = new responseModule(poll); // creates a new JSON-API-poll object
     response.addRelation(creator);
     for (i = 0; i < users.length; i++) {
       response.addRelation(users[i]);
@@ -60,6 +73,7 @@ var createPollPostResponse = function(pollId) {
   });
 };
 
+// Takes an object for an ongoing transaction and runs an INSERT query "on" that object
 var insertPoll = function(trx, req) {
   return trx('poll')
     .insert({
@@ -72,7 +86,7 @@ var insertPoll = function(trx, req) {
     .returning('id');
 };
 
-var insertUsers = function(trx, pollid, req) {
+var insertUsers = function(trx, req, pollid) {
   return Promise.map(req.validBody.restaurants, function(restaurantid) {
     return trx.insert({
       restaurant_id: restaurantid,
@@ -81,7 +95,7 @@ var insertUsers = function(trx, pollid, req) {
   });
 };
 
-var insertRestaurants = function(trx, pollid, req) {
+var insertRestaurants = function(trx, req, pollid) {
   return Promise.map(req.validBody.users, function(userid) {
     return trx.insert({
       user_id: userid,
@@ -214,7 +228,7 @@ var selectVotesData = function(pollId) {
             resource: 'users',
           }, {
             data: {
-              id: res[0].restaurant_id
+              id: res[i].restaurant_id
             },
             relation: 'restaurant',
             multiple: false,
