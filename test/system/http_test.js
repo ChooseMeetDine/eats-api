@@ -33,13 +33,12 @@ describe('Testing Eats-API HTTP requests', function() {
         });
     });
 
-    it('Should return json repsonse', function(done) {
+    it('Should return json response with false authentication', function(done) {
       request(app)
         .post('/auth')
-        .expect(200)
-        .expect('Content-Type', /json/)
+        .set('Content-Type', 'application/json')
         .end(function(err, res) {
-          var response = res.body;
+          var response = JSON.parse(res.text);
           expect(response).to.deep.equal({
             authentication: false,
             message: 'You need to POST email and password',
