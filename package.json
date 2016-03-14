@@ -35,7 +35,7 @@
     "proxyquire": "~1.7.4"
   },
   "scripts": {
-    "start": "nf start",
+    "start": "nf start --trim 350",
     "test": "mocha --recursive test",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --recursive test",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
