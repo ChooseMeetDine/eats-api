@@ -11,6 +11,13 @@ app.use(bodyParser.urlencoded({
 
 app.use('/', routes);
 
+app.use(function(err, req, res, next) {
+  res.status(500).send({
+    httpStatus: 500,
+    error: err.message,
+    stack: err.stack
+  });
+});
 
 io.on('connection', function() {
   console.log('Someone connected to the API via socketIO!');
