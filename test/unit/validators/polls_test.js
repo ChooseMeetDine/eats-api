@@ -394,11 +394,11 @@ describe('Testing the poll validator (polls.js)', function() {
       done();
     });
 
-    it('should pass for 1', function(done) {
+    it('should pass for "1"', function(done) {
 
       request.body = {
         name: 'restaurantname',
-        group: 1
+        group: '1'
       };
 
       var validate = function(err) {
@@ -408,11 +408,11 @@ describe('Testing the poll validator (polls.js)', function() {
       validatorWithMock.post(request, response, validate);
     });
 
-    it('should pass for 9007199254740991', function(done) {
+    it('should pass for "9007199254740991"', function(done) {
 
       request.body = {
         name: 'restaurantname',
-        group: 9007199254740991
+        group: '9007199254740991'
       };
 
       var validate = function(err) {
@@ -422,25 +422,11 @@ describe('Testing the poll validator (polls.js)', function() {
       validatorWithMock.post(request, response, validate);
     });
 
-    it('should pass for "123"', function(done) {
+    it('should pass for "0"', function(done) {
 
       request.body = {
         name: 'restaurantname',
-        group: '123'
-      };
-
-      var validate = function(err) {
-        expect(err).to.equal(undefined);
-        done();
-      };
-      validatorWithMock.post(request, response, validate);
-    });
-
-    it('should pass for 0', function(done) {
-
-      request.body = {
-        name: 'restaurantname',
-        group: 0
+        group: '0'
       };
 
       var validate = function(err) {
@@ -538,21 +524,6 @@ describe('Testing the poll validator (polls.js)', function() {
       };
       validatorWithMock.post(request, response, validate);
     });
-
-
-    it('should return error for "string"', function(done) {
-
-      request.body = {
-        name: 'restaurantname',
-        group: 'string'
-      };
-
-      var validate = function(err) {
-        expect(err).to.be.an('object');
-        done();
-      };
-      validatorWithMock.post(request, response, validate);
-    });
   });
 
   describe('for parameter "restaurants"', function() {
@@ -574,7 +545,7 @@ describe('Testing the poll validator (polls.js)', function() {
       done();
     });
 
-    it('should pass for [0]', function(done) {
+    it('should pass for ["0"]', function(done) {
 
       //Tell tracker what to do when a query is sent to the database
       tracker.on('query', function(query) {
@@ -584,7 +555,7 @@ describe('Testing the poll validator (polls.js)', function() {
       });
       request.body = {
         name: 'restaurantname',
-        restaurants: [0]
+        restaurants: ['0']
       };
 
       var validate = function(err) {
@@ -595,7 +566,7 @@ describe('Testing the poll validator (polls.js)', function() {
       validatorWithMock.post(request, response, validate);
     });
 
-    it('should pass for [9007199254740991]', function(done) {
+    it('should pass for ["9007199254740991"]', function(done) {
       tracker.on('query', function(query) {
         query.response([{
           id: '9007199254740991'
@@ -603,27 +574,7 @@ describe('Testing the poll validator (polls.js)', function() {
       });
       request.body = {
         name: 'restaurantname',
-        restaurants: [9007199254740991]
-      };
-
-      var validate = function(err) {
-        expect(err).to.equal(undefined);
-        done();
-      };
-      validatorWithMock.post(request, response, validate);
-    });
-
-    it('should pass for ["123", 2]', function(done) {
-      tracker.on('query', function(query) {
-        query.response([{
-          id: '123'
-        }, {
-          id: '2'
-        }]);
-      });
-      request.body = {
-        name: 'restaurantname',
-        restaurants: ['123', 2]
+        restaurants: ['9007199254740991']
       };
 
       var validate = function(err) {
@@ -754,28 +705,7 @@ describe('Testing the poll validator (polls.js)', function() {
       done();
     });
 
-    it('should pass for [0]', function(done) {
-
-      //Tell tracker what to do when a query is sent to the database
-      tracker.on('query', function(query) {
-        query.response([{ //This wierd response structure is needed for the pluck-method
-          id: '0'
-        }]);
-      });
-      request.body = {
-        name: 'restaurantname',
-        users: [0]
-      };
-
-      var validate = function(err) {
-        expect(err).to.equal(undefined);
-        done();
-      };
-      //call the validator with the mocked db
-      validatorWithMock.post(request, response, validate);
-    });
-
-    it('should pass for [9007199254740991]', function(done) {
+    it('should pass for ["9007199254740991"]', function(done) {
       tracker.on('query', function(query) {
         query.response([{
           id: '9007199254740991'
@@ -783,27 +713,7 @@ describe('Testing the poll validator (polls.js)', function() {
       });
       request.body = {
         name: 'restaurantname',
-        users: [9007199254740991]
-      };
-
-      var validate = function(err) {
-        expect(err).to.equal(undefined);
-        done();
-      };
-      validatorWithMock.post(request, response, validate);
-    });
-
-    it('should pass for ["123", 2]', function(done) {
-      tracker.on('query', function(query) {
-        query.response([{
-          id: '123'
-        }, {
-          id: '2'
-        }]);
-      });
-      request.body = {
-        name: 'restaurantname',
-        users: ['123', 2]
+        users: ['9007199254740991']
       };
 
       var validate = function(err) {

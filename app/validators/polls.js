@@ -1,97 +1,9 @@
 var isvalid = require('isvalid');
 var pg = require('../shared/knex');
 var moment = require('moment');
+var _ = require('underscore');
 
 var pollValidator = {};
-
-
-// Uses the array of restaurant ID's from parameter "data" and selects
-// the corresponding ID's from the database.
-// Query will only return the ID's that actually exists, so we can match those with
-// the ones in "data". Any difference between database result and "data" is
-// ID's that does not exist, ie. invalid ID's
-var validateRestaurantIDs = function(data, schema, done) {
-  if (!data || data.length === 0) {
-    return done(null, []);
-  }
-  pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
-    .from('restaurant')
-    .whereIn('id', data) //get all ID's from database that matches the data-array
-    .then(function(res) {
-      var diff = [];
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-        if (res.indexOf('' + data[i]) === -1) {
-          diff.push(data[i]);
-        }
-      }
-
-      if (diff.length > 1) {
-        return done(new Error(diff + ' are not valid IDs'));
-      } else if (diff.length === 1) {
-        return done(new Error(diff + ' is not a valid ID'));
-      }
-
-      return done(null, data);
-
-    }).catch(function(err) {
-      console.log(err);
-      done(new Error('Invalid restaurant IDs'));
-    });
-
-};
-
-var validateUserIDs = function(data, schema, done) {
-  if (!data || data.length === 0) {
-    return done(null, []);
-  }
-  pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
-    .from('user')
-    .whereIn('id', data) //get all ID's from database that matches the data-array
-    .then(function(res) {
-      var diff = [];
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-        if (res.indexOf('' + data[i]) === -1) {
-          diff.push(data[i]);
-        }
-      }
-
-      if (diff.length > 1) {
-        return done(new Error(diff + ' are not valid IDs'));
-      } else if (diff.length === 1) {
-        return done(new Error(diff + ' is not a valid ID'));
-      }
-
-      return done(null, data);
-
-    }).catch(function(err) {
-      console.log(err);
-      done(new Error('Invalid user IDs'));
-    });
-
-};
-
-// Check if the ID exists in database
-var validateGroupID = function(data, schema, done) {
-  //if data is null, dont contact database to validate it.
-  if (!data) {
-    return done(data, null);
-  }
-  pg.schema //Returns rows-object as either: [{exists:true}] or [{exists:false}]
-    .raw('select exists(select 1 from "group" where id=' + data + ') AS "exists"')
-    .then(function(res) {
-      if (res.rows[0].exists) {
-        return done(null, data);
-      }
-      return done(new Error(data + ' is not a valid group ID'));
-    });
-};
-
-//Special validator. type Number accepts floats too.
-var isPositiveInteger = function(data) {
-  return (typeof data === 'number' && (data % 1) === 0 && data >= 0);
-};
 
 //exported middleware that validates a post body
 pollValidator.post = function(req, res, next) {
@@ -124,20 +36,10 @@ pollValidator.post = function(req, res, next) {
         custom: validateRestaurantIDs, //Validate all ID's in database
         default: [], //defaults to epmty array
         schema: { //Defines what the array contains
-          type: Number,
-          required: false,
-          custom: function(data) { //Check that everything in the array is an integer
-            if (data && !isPositiveInteger(data)) {
-              throw new Error('restaurants must be an array of integers');
-            }
-            return data;
-          },
-          errors: {
-            type: 'restaurant ids must be integers',
-          }
+          type: String
         },
         errors: {
-          type: 'restaurants must be an array of restaurant IDs',
+          type: 'restaurants must be an array of valid restaurant IDs as strings',
         }
       },
       'users': {
@@ -146,39 +48,20 @@ pollValidator.post = function(req, res, next) {
         custom: validateUserIDs, //Validate all ID's in database
         default: [], //defaults to epmty array
         schema: { //Defines what the array contains
-          type: Number,
-          required: false,
-          custom: function(data) { //Check that everything in the array is an integer
-            if (data && !isPositiveInteger(data)) {
-              throw new Error('users must be an array of integers');
-            }
-            return data;
-          },
-          errors: {
-            type: 'user ids must be integers',
-          }
+          type: String
         },
         errors: {
-          type: 'user must be an array of user IDs',
+          type: 'user must be an array of valid user IDs as strings',
         }
       },
       'group': {
-        type: Number,
+        type: String,
         required: false,
         allowNull: true, //Allow null
         default: null,
-        custom: [
-          function(data) { //validate that it is a positive integer
-            if (data && !isPositiveInteger(data)) {
-              throw new Error('group ID must be an integer');
-            }
-            return data;
-          },
-          validateGroupID //Validate sent ID
-        ],
-        default: null,
+        custom: validateGroupID, //Validate sent ID
         errors: {
-          type: 'group must be a valid group ID',
+          type: 'group must be a valid group ID as string',
         }
       },
       'expires': {
@@ -218,5 +101,76 @@ pollValidator.post = function(req, res, next) {
   });
 };
 
+// Uses the array of restaurant ID's from parameter "data" and selects
+// the corresponding ID's from the database.
+// Query will only return the ID's that actually exists, so we can match those with
+// the ones in "data". Any difference between database result and "data" is
+// ID's that does not exist, ie. invalid ID's
+var validateRestaurantIDs = function(data, schema, done) {
+  if (!data || data.length === 0) {
+    return done(null, []);
+  }
+  pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
+    .from('restaurant')
+    .whereIn('id', data) //get all ID's from database that matches the data-array
+    .then(function(res) {
+      var diff = _.difference(data, res);
+      if (diff.length > 1) {
+        return done(new Error(diff + ' are not valid IDs'));
+      } else if (diff.length === 1) {
+        return done(new Error(diff + ' is not a valid ID'));
+      }
+
+      return done(null, data);
+
+    }).catch(function(err) {
+      console.log(err);
+      done(new Error('Invalid restaurant IDs:' + data));
+    });
+
+};
+
+var validateUserIDs = function(data, schema, done) {
+  if (!data || data.length === 0) {
+    return done(null, []);
+  }
+  pg.pluck('id') // Turns response from [{id:xxx}, {id:xxx}] to [xxx, xxx]
+    .from('user')
+    .whereIn('id', data) //get all ID's from database that matches the data-array
+    .then(function(res) {
+      var diff = _.difference(data, res);
+      if (diff.length > 1) {
+        return done(new Error(diff + ' are not valid IDs'));
+      } else if (diff.length === 1) {
+        return done(new Error(diff + ' is not a valid ID'));
+      }
+
+      return done(null, data);
+
+    }).catch(function(err) {
+      console.log(err);
+      done(new Error('Invalid user IDs:' + data));
+    });
+
+};
+
+// Check if the ID exists in database
+var validateGroupID = function(data, schema, done) {
+  //if data is null, dont contact database to validate it.
+  if (!data) {
+    return done(data, null);
+  }
+  pg.schema //Returns rows-object as either: [{exists:true}] or [{exists:false}]
+    .raw('select exists(select 1 from "group" where id=' + data + ') AS "exists"')
+    .then(function(res) {
+      if (res.rows[0].exists) {
+        return done(null, data);
+      }
+      return done(new Error(data + ' is not a valid group ID'));
+    }).catch(function(err) {
+      console.log(err);
+      done(new Error('Invalid group ID:' + data));
+    });
+};
 
 module.exports = pollValidator;

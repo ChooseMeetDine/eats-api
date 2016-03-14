@@ -4,7 +4,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 # GET /docs
 + response 200 (text/html)
 
-
 # Group /polls
 
 ## Only registered users [/polls]
@@ -15,10 +14,10 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
   + name (string, required) - Name of the poll
 
-  + restaurants (array, optional) - Restaurant ID's to add to this poll
+  + restaurants (array, optional) - Restaurant ID's as strings to add to this poll
       + Default: []
 
-  + users (array, optional) - User ID's to add to this poll
+  + users (array, optional) - User ID's as strings to add to this poll
       + Default: []
 
   + expires (string, optional) - Time of expiry, formatted as ISO 8601
@@ -27,7 +26,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
   + allowNewRestaurants (boolean, optional) - Allow new restaurants to be added to poll after it has begun
       + Default: true
 
-  + group (number, optional) - Group ID that this poll belongs to. Null for no group connection.
+  + group (number, optional) - Group ID as string that this poll belongs to. Null for no group connection.
       + Default: null
 
 
@@ -36,9 +35,9 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 {
   "name": "Name of the restaurant",
   "expires": "2017-08-07T10:46:40+00:00",
-  "restaurants": [234123,12412332, 12312],
-  "users": [7545345,6663523, 45656855],
-  "group": 989098098,
+  "restaurants": ["234123","12412332"],
+  "users": ["7545345", "6663523", "45656855"],
+  "group": "989098098",
   "allowNewRestaurants": true
 }
 
@@ -47,55 +46,55 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 {
   "data": {
     "type": "poll",
-    "id": "POLL_ID_1",
+    "id": "123123123",
     "attributes": {
-      "name": "Odd Hill, team 2",
-      "expires": "2016-02-23T22:49:05Z",
+      "name": "Name of the restaurant",
+      "expires": "2017-08-07T10:46:40Z",
       "created": "2016-02-01T15:20:05Z",
-      "allow_new_restaurants": false
+      "allow_new_restaurants": true
     }
   },
   "relationships": {
     "creator": {
       "data": {
         "type": "user",
-        "id": "USER_ID_1",
+        "id": "7545345",
       }
     },
     "restaurants": {
       "data": [{
         "type": "restaurant",
-        "id": "RESTAURANT_ID_1",
+        "id": "234123",
       }, {
         "type": "restaurant",
-        "id": "RESTAURANT_ID_2",
+        "id": "12412332",
       }]
     },
     "users": {
       "data": [{
         "type": "user",
-        "id": "USER_ID_1",
+        "id": "7545345",
       }, {
         "type": "user",
-        "id": "USER_ID_2",
+        "id": "6663523",
       }, {
         "type": "user",
-        "id": "USER_ID_3",
+        "id": "45656855",
       }]
     },
     "group": {
       "data": {
         "type": "group",
-        "id": "GROUP_ID_1"
+        "id": "45656855"
       }
-    },
-    "votes": {
-      "data": []
     }
+  },
+  "links": {
+    "self": "www.path.to.api/polls/123123123"
   },
   "included": [{
     "type": "restaurant",
-    "id": "RESTAURANT_ID_1",
+    "id": "234123",
     "attributes": {
       "name": "Din Restaurang",
       "latitude": 56.1234,
@@ -103,11 +102,11 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "temporary": false,
     },
     "links": {
-      "self": "/restaurants/RESTAURANT_ID_1"
+      "self": "/restaurants/234123"
     }
   }, {
     "type": "restaurant",
-    "id": "RESTAURANT_ID_2",
+    "id": "12412332",
     "attributes": {
       "name": "Vår Restaurang",
       "latitude": 56.1234,
@@ -115,48 +114,48 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "temporary": false,
     },
     "links": {
-      "self": "/restaurants/RESTAURANT_ID_2"
+      "self": "/restaurants/12412332"
     }
   }, {
     "type": "user",
-    "id": "USER_ID_1",
+    "id": "7545345",
     "attributes": {
       "name": "Per Persson",
       "photo": "https://imgur.com/erqwfdsco92.jpg",
       "anonymous": false
     },
     "links": {
-      "self": "/users/USER_ID_1"
+      "self": "/users/7545345"
     }
   }, {
     "type": "user",
-    "id": "USER_ID_2",
+    "id": "6663523",
     "attributes": {
       "name": "Lukas Lukasson",
       "photo": "http://photo.com/1234.jpg",
       "anonymous": false
     },
     "links": {
-      "self": "/users/0USER_ID_2"
+      "self": "/users/06663523"
     }
   }, {
     "type": "user",
-    "id": "USER_ID_3",
+    "id": "45656855",
     "attributes": {
       "name": "Mats Mattsson",
       "anonymous": true
     },
     "links": {
-      "self": "/users/USER_ID_3"
+      "self": "/users/45656855"
     }
   }, {
     "type": "group",
-    "id": "GROUP_ID_1",
+    "id": "45656855",
     "attributes": {
       "name": "Vi som älskar burgare på Odd Hill"
     },
     "links": {
-      "self": "/groups/GROUP_ID_1"
+      "self": "/groups/45656855"
     }
   }]
 }
