@@ -2,6 +2,7 @@ var knex = require('../shared/knex');
 var pollsDatahandler = {};
 var Promise = require('bluebird');
 var responseModule = require('../json_api/json_api');
+var _ = require('underscore');
 
 // Handles POST requests to endpoint /poll
 // Inserts data to database with a transaction and then selects data based on the
@@ -24,6 +25,11 @@ pollsDatahandler.post = function(req) {
 var executeInsertionTransaction = function(req) {
   return knex.transaction(function(trx) {
       return insertPoll(trx, req) // returns the poll id needed for the rest of the inserts
+        .then(function(pollid) {
+          // If group is specified in request, add the users for that group to the users in the poll
+          // This has to be done before insertUsers()
+          return addGroupUsersAsPollUsers(trx, req, pollid);
+        })
         .then(function(pollid) {
           return Promise.join(
               insertRestaurants(trx, req, pollid), // two more inserts to other tables
@@ -80,13 +86,14 @@ var insertPoll = function(trx, req) {
       creator_id: req.validUser,
       name: req.validBody.name,
       expires: req.validBody.expires,
+      group_id: req.validBody.group,
       allow_new_restaurants: req.validBody.allowNewRestaurants,
       created: knex.raw('now()')
     })
     .returning('id');
 };
 
-var insertUsers = function(trx, req, pollid) {
+var insertRestaurants = function(trx, req, pollid) {
   return Promise.map(req.validBody.restaurants, function(restaurantid) {
     return trx.insert({
       restaurant_id: restaurantid,
@@ -95,7 +102,26 @@ var insertUsers = function(trx, req, pollid) {
   });
 };
 
-var insertRestaurants = function(trx, req, pollid) {
+var addGroupUsersAsPollUsers = function(trx, req, pollid) {
+  // No group specified, skip adding group users
+  if (!req.validBody.group) {
+    return Promise.resolve(pollid);
+  }
+
+  // If group is specified in request,
+  // add the users for that group to the users in the poll
+  return trx.pluck('user_id')
+    .from('group_users')
+    .join('poll', 'poll.group_id', 'group_users.group_id')
+    .where('poll.id', pollid.toString())
+    .then(function(res) {
+      //Add group users to the array of users to add to the poll
+      req.validBody.users = _.union(req.validBody.users, res);
+      return Promise.resolve(pollid);
+    });
+};
+
+var insertUsers = function(trx, req, pollid) {
   return Promise.map(req.validBody.users, function(userid) {
     return trx.insert({
       user_id: userid,
