@@ -399,10 +399,10 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
   + name (string, required) - Name of the poll
 
-  + restaurants (array, optional) - Restaurant ID's to add to this poll
+  + restaurants (array, optional) - Restaurant ID's as strings to add to this poll
       + Default: []
 
-  + users (array, optional) - User ID's to add to this poll
+  + users (array, optional) - User ID's as strings to add to this poll
       + Default: []
 
   + expires (string, optional) - Time of expiry, formatted as ISO 8601
@@ -411,19 +411,21 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
   + allowNewRestaurants (boolean, optional) - Allow new restaurants to be added to poll after it has begun
       + Default: true
 
-  + group (number, optional) - Group ID that this poll belongs to. Null for no group connection.
+  + group (number, optional) - Group ID as string that this poll belongs to. Null for no group connection.
       + Default: null
+
 
 + Request (application/json)
 
 {
   "name": "Name of the restaurant",
   "expires": "2017-08-07T10:46:40+00:00",
-  "restaurants": [234123,12412332, 12312],
-  "users": [7545345,6663523, 45656855],
-  "group": 989098098,
+  "restaurants": ["234123","12412332", "12312"],
+  "users": ["7545345", "6663523", "45656855"],
+  "group": "989098098",
   "allowNewRestaurants": true
 }
+
 + Response 200 (application/json)
 
 {
