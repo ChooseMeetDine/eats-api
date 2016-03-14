@@ -5,25 +5,55 @@ var responseModule = require('../json_api/json_api');
 
 pollsDatahandler.post = function(req) {
   req.validUser = 10; //TODO: Remove once auth works
-  // 0. Kolla hur man gör transactions!
-  // 1. INSERT poll data i 'polls' RETURNING 'id'
-  // 2. INSERT user data i 'poll_users' mha poll-idt
-  // 3. INSERT restaurant data i 'restaurant_polls' mha poll-idt
-  // 4. SELECT data från 'polls', 'poll_users', 'restaurant_polls', 'groups' TODO: VOTES med
-  // 5. skapa ett JSON-API-svar utifrån SELECT-datan
-  // 6. returnera JSON-API-svaret
-  var pollId;
+
+  return executeInsertionTransaction(req)
+    .then(createPollPostResponse);
+};
+
+var executeInsertionTransaction = function(req) {
   return knex.transaction(function(trx) {
-    return insertPoll(trx, req)
-      .then(function(pollid) {
-        pollId = pollid;
-        return Promise.join(
-          insertRestaurants(trx, pollid, req),
-          insertUsers(trx, pollid, req)
-        );
-      });
-  }).then(function(res) {
-    return createPollPostResponse(res, pollId, req);
+      return insertPoll(trx, req)
+        .then(function(pollid) {
+          return Promise.join(
+              insertRestaurants(trx, pollid, req),
+              insertUsers(trx, pollid, req)
+            )
+            .then(function() {
+              return Promise.resolve(pollid);
+            });
+        });
+    })
+    .catch(function(error) {
+      console.log(error.stack);
+      return Promise.reject(new Error('Could not insert poll data into database'));
+    });
+};
+
+var createPollPostResponse = function(pollId) {
+  return Promise.join(
+    selectPollData(pollId),
+    selectPollUsersData(pollId),
+    selectRestaurantPollsData(pollId),
+    selectGroupData(pollId),
+    selectCreatorData(pollId)
+  ).spread(function(poll, users, restaurants, group, creator) {
+    var i;
+    var response = new responseModule(poll);
+    response.addRelation(creator);
+    for (i = 0; i < users.length; i++) {
+      response.addRelation(users[i]);
+    }
+    for (i = 0; i < restaurants.length; i++) {
+      console.log(restaurants[i]);
+      response.addRelation(restaurants[i]);
+    }
+    if (group) {
+      response.addRelation(group);
+    }
+    return response;
+  }).catch(function(err) {
+    console.log(err.stack);
+    return Promise.reject(new Error('Could insert but not retrieve poll data from database'));
   });
 };
 
@@ -32,7 +62,6 @@ var insertPoll = function(trx, req) {
     .insert({
       creator_id: req.validUser,
       name: req.validBody.name,
-      group_id: req.validBody.group,
       expires: req.validBody.expires,
       allow_new_restaurants: req.validBody.allowNewRestaurants,
       created: knex.raw('now()')
@@ -57,35 +86,6 @@ var insertRestaurants = function(trx, pollid, req) {
       joined: knex.raw('now()')
     }).into('poll_users');
   });
-};
-
-
-var createPollPostResponse = function(res, pollId, req) {
-  return Promise.join(
-    selectPollData(pollId),
-    selectPollUsersData(pollId, req),
-    selectRestaurantPollsData(pollId),
-    selectGroupData(pollId, req),
-    selectCreatorData(pollId)
-  ).spread(function(poll, users, restaurants, group, creator) {
-    var i;
-    var response = new responseModule(poll);
-    response.addRelation(creator);
-    for (i = 0; i < users.length; i++) {
-      response.addRelation(users[i]);
-    }
-    for (i = 0; i < restaurants.length; i++) {
-      console.log(restaurants[i]);
-      response.addRelation(restaurants[i]);
-    }
-    if (group) {
-      response.addRelation(group);
-    }
-    return response;
-  }).catch(function(err) {
-    console.log(err.stack);
-  });
-
 };
 
 var selectPollData = function(pollId) {
@@ -168,14 +168,15 @@ var selectRestaurantPollsData = function(pollId) {
     });
 };
 
-var selectGroupData = function(pollId, req) {
-  if (!req.validBody.group) {
-    return Promise.resolve();
-  }
-  return knex.select('id', 'name')
-    .from('group')
-    .where('id', req.validBody.group) //TODO: Can this be done without req?
+var selectGroupData = function(pollId) {
+  return knex('poll')
+    .join('group', 'poll.group_id', 'group.id')
+    .select('group.id', 'group.name')
+    .where('poll.id', pollId.toString())
     .then(function(res) {
+      if (res.length === 0) {
+        return null;
+      }
       return {
         relation: 'group',
         multiple: false,
