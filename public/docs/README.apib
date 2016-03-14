@@ -52,40 +52,40 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "expires": "2017-08-07T10:46:40Z",
       "created": "2016-02-01T15:20:05Z",
       "allow_new_restaurants": true
-    }
-  },
-  "relationships": {
-    "creator": {
-      "data": {
-        "type": "user",
-        "id": "7545345",
-      }
     },
-    "restaurants": {
-      "data": [{
-        "type": "restaurant",
-        "id": "234123",
-      }, {
-        "type": "restaurant",
-        "id": "12412332",
-      }]
-    },
-    "users": {
-      "data": [{
-        "type": "user",
-        "id": "7545345",
-      }, {
-        "type": "user",
-        "id": "6663523",
-      }, {
-        "type": "user",
-        "id": "45656855",
-      }]
-    },
-    "group": {
-      "data": {
-        "type": "group",
-        "id": "45656855"
+    "relationships": {
+      "creator": {
+        "data": {
+          "type": "user",
+          "id": "7545345",
+        }
+      },
+      "restaurants": {
+        "data": [{
+          "type": "restaurant",
+          "id": "234123",
+        }, {
+          "type": "restaurant",
+          "id": "12412332",
+        }]
+      },
+      "users": {
+        "data": [{
+          "type": "user",
+          "id": "7545345",
+        }, {
+          "type": "user",
+          "id": "6663523",
+        }, {
+          "type": "user",
+          "id": "45656855",
+        }]
+      },
+      "group": {
+        "data": {
+          "type": "group",
+          "id": "45656855"
+        }
       }
     }
   },
@@ -158,4 +158,109 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "self": "/groups/45656855"
     }
   }]
+}
+
+# Group /restaurants
+
+## Any user [/restaurants]
+
+### Add a restaurant [POST]
+{
++ Parameters
+
+ + name (string, required) - Name of the restaurant
+
+ + category (array, optional) - food categories IDs to add to this restaurant
+     + Default: []
+
+ + priceRate (number, optional) - price-rate for this restaurent from 1 to 5 range
+     + Default: null
+
+ + rating (number, optional) - rating star for this restaurent from 1 to 5 range
+     + Default: null
+
+ + info (string, optional) - address and other additional information relevant to this restaurant
+     + Default: null
+
+ + photo (string, optional) - link to the photo of the restaurant
+     + Default: null
+
+ + longitude (number, required) - longitude coordinate of this restaurant in WGS84 format
+
+ + latitude (number, required) - latitude coordinate of this restaurant in WGS84 format
+
+ + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
+     + Default: false
+
+}
+
++ Request (application/json)
+
+{
+ "name": "Restaurant name",
+ "category": [23412,12412],
+ "priceRate": 4,
+ "rating": 5,
+ "info": "Nordenskiöldsgatan 1, Malmö",
+ "photo":"http://photo.com/1234.jpg",
+ "temporary": false,
+ "longitude": 13.00073,
+ "latitude": 55.60587
+}
+
+
+        Add restaurant.
+
++ Response 201(application/json)
+
+{
+    "links": {
+        "self": "/restaurants/321321"
+    },
+    "data":{
+        "type": "restaurant",
+        "id": "321321",
+        "attributes": {
+            "name": "Restaurant name",
+            "info": "Nordenskiöldsgatan 1, Malmö",
+            "photo": "http://photo.com/1234.jpg",
+            "price-rate": 4,
+            "rating": 5,
+            "numberOfPolls": 0,
+            "numberOfPollsWon": 0,
+            "longitude": 13.00073,
+            "latitude": 55.60587,
+            "temporary": false
+        },
+        "relationships": {
+            "category": {
+                "data": [
+                    {
+                        "type": "category",
+                        "id": "23412"
+                    },
+                    {
+                        "type": "category",
+                        "id": "12412"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "category",
+            "id": "23412",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "12412",
+            "attributes": {
+                "name": "vegan"
+            }
+        }
+    ]
 }

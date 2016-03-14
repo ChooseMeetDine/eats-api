@@ -25,8 +25,8 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
                 "photo": "http://photo.com/1234.jpg",
                 "price-rate": 3,
                 "rating": 4,
-                "number_votes": 27,
-                "number_won_votes": 3,
+                "numberOfPolls": 27,
+                "numberOfPollsWon": 3,
                 "longitude": 13.00073,
                 "latitude": 55.60587,
                 "temporary": false
@@ -58,8 +58,8 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
                 "photo": "http://photo.com/2345.jpg",
                 "price-rate": 3,
                 "rating": 3,
-                "number_votes": 15,
-                "number_won_votes": 2,
+                "numberOfPolls": 15,
+                "numberOfPollsWon": 2,
                 "longitude": 13.00173,
                 "latitude": 55.60587,
                 "temporary": false
@@ -108,7 +108,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
     ]
 }
 
-        Get all restaurants.
+Get all restaurants.
 
 ### Add a restaurant [POST]
 {
@@ -129,22 +129,22 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
      + Default: null
 
  + photo (string, optional) - link to the photo of the restaurant
-    + Default: null
+     + Default: null
 
  + longitude (number, required) - longitude coordinate of this restaurant in WGS84 format
 
  + latitude (number, required) - latitude coordinate of this restaurant in WGS84 format
 
- + temporary (boolean, optional) - Temporary restaurants are only used in one poll. Coordinates are not required for temporary restaurants
-    + Default: false
+ + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
+     + Default: false
 
 }
 
 + Request (application/json)
 
 {
- "name": "Name of the restaurant",
- "category": [23412,12412, 12312],
+ "name": "Restaurant name",
+ "category": [23412,12412],
  "priceRate": 4,
  "rating": 5,
  "info": "Nordenskiöldsgatan 1, Malmö",
@@ -157,7 +157,59 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
         Add restaurant.
 
-+ Response 201
++ Response 201(application/json)
+
+{
+    "links": {
+        "self": "/restaurants/321321"
+    },
+    "data":{
+        "type": "restaurant",
+        "id": "321321",
+        "attributes": {
+            "name": "Restaurant name",
+            "info": "Nordenskiöldsgatan 1, Malmö",
+            "photo": "http://photo.com/1234.jpg",
+            "price-rate": 4,
+            "rating": 5,
+            "numberOfPolls": 0,
+            "numberOfPollsWon": 0,
+            "longitude": 13.00073,
+            "latitude": 55.60587,
+            "temporary": false
+        },
+        "relationships": {
+            "category": {
+                "data": [
+                    {
+                        "type": "category",
+                        "id": "23412"
+                    },
+                    {
+                        "type": "category",
+                        "id": "12412"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "category",
+            "id": "23412",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "12412",
+            "attributes": {
+                "name": "vegan"
+            }
+        }
+    ]
+}
 
 ## Only registered users & admin [/restaurants]
 
@@ -199,8 +251,8 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "photo": "http://photo.com/1234.jpg",
             "price-rate": 3,
             "rating": 4,
-            "number_votes": 27,
-            "number_won_votes": 3,
+            "numberOfPolls": 27,
+            "numberOfPollsWon": 3,
             "longitude": 13.00073,
             "latitude": 55.60587,
             "temporary": false
