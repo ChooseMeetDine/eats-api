@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var aglio = require('aglio');
 var pollRouter = require('../routes/polls');
+var restaurantRouter = require('../routes/restaurants');
 var path = require('path');
 
 router.get('/', function(req, res) {
@@ -8,6 +9,7 @@ router.get('/', function(req, res) {
 });
 
 router.use('/polls', pollRouter);
+router.use('/restaurants', restaurantRouter);
 
 //TODO: Fix routers for everything below this comment.
 
