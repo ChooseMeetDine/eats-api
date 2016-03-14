@@ -5,6 +5,18 @@ var routes = require('./app/routes/index');
 var bodyParser = require('body-parser');
 var pollsSocket = require('./app/socketio/polls_socket');
 
+// redirects to HTTPS on Heroku (http://jaketrent.com/post/https-redirect-node-heroku/)
+var env = process.env.NODE_ENV || 'development';
+if (env === 'production') {
+  app.use(function(req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(301, 'https://' + (req.header('host')) + req.url);
+    } else {
+      return next();
+    }
+  });
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -14,6 +26,14 @@ app.use('/', routes);
 
 // Initializes the socketIO-module for /polls
 pollsSocket.init(io);
+
+app.use(function(err, req, res, next) {
+  res.status(500).send({
+    httpStatus: 500,
+    error: err.message,
+    stack: err.stack
+  });
+});
 
 var port = process.env.PORT || 3001;
 
