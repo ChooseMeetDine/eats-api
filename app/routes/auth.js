@@ -1,6 +1,6 @@
 var router = require('express').Router();
 var jwt = require('jsonwebtoken');
-var knex = require('../shared/knex');
+var knex = require('../shared/database/knex');
 var bodyParser = require('body-parser');
 var cert = process.env.JWTSECRET;
 var authRequest = require('../validators/auth');
@@ -24,9 +24,17 @@ router.post('/', authRequest.checkData, function(req, res) {
         user.email = result[0].email;
         user.admin = result[0].admin;
 
-        var token = jwt.sign(user, cert, {
-          expiresIn: '1m' // expires in 1 minute
-        });
+        var token;
+
+        if (user.admin === true) {
+          token = jwt.sign(user, cert, {
+            expiresIn: '168h' // expires in one week (168 hours)
+          });
+        } else {
+          token = jwt.sign(user, cert, {
+            expiresIn: '1m' // expires in 1 minute
+          });
+        }
 
         res.json({
           authentication: true,

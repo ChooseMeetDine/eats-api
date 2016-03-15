@@ -32,7 +32,7 @@ describe('Testing Eats-API HTTP requests', function() {
           done();
         });
     });
-
+    /*
     it('Should return json response with false authentication', function(done) {
       request(app)
         .post('/auth')
@@ -46,7 +46,7 @@ describe('Testing Eats-API HTTP requests', function() {
           });
           done();
         });
-    });
+    });*/
 
     it('Should load the root page for GET /', function(done) {
       request(app)
