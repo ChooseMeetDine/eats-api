@@ -35,6 +35,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
+//test route for login
 app.get('/login', function(req, res) {
   res.sendFile(__dirname + '/public/login/index.html');
 });
