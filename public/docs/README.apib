@@ -41,7 +41,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
   "allowNewRestaurants": true
 }
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
 {
   "data": {
@@ -161,6 +161,252 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
     }
   }]
 }
+
+# Group /polls/:id
+
+## Only registered users [/polls/:id]
+
+### Retrieve specific poll if user has access [GET /polls/51515151]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "poll",
+        "id": "51515151",
+        "attributes": {
+            "name": "Odd Hill, team 2",
+            "expires": "2016-02-23T22:49:05Z",
+            "created": "2016-02-01T15:20:05Z",
+            "allowNewRestaurants": false
+        },
+        "relationships": {
+            "creator": {
+                "data": {
+                    "type": "user",
+                    "id": "USER_ID_1"
+                }
+            },
+            "restaurants": {
+                "data": [
+                    {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    },
+                    {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                ]
+            },
+            "users": {
+                "data": [
+                    {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                ]
+            },
+            "group": {
+                "data": {
+                    "type": "group",
+                    "id": "GROUP_ID_1"
+                }
+            },
+            "votes": {
+                "data": [
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_1"
+                    },
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_2"
+                    },
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_3"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Din Restaurang",
+                "latitude": 56.1234,
+                "longitude": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Vår Restaurang",
+                "latitude": 56.1234,
+                "longitude": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Per Persson",
+                "photo": "https://imgur.com/erqwfdsco92.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/USER_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Lukas Lukasson",
+                "photo": "http://photo.com/1234.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/0USER_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_3",
+            "attributes": {
+                "name": "Mats Mattsson",
+                "anonymous": true
+            },
+            "links": {
+                "self": "/users/USER_ID_3"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_1",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_2",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_2"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_3",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_3"
+            }
+        }
+    ]
+}
+
 
 # Group /restaurants
 

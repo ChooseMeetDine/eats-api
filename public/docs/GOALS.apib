@@ -639,7 +639,7 @@ Both lat and lng has to be used if one of them are used, or radius is used,
 + Request (application/json)
 
 {
-  "name": "Name of the restaurant",
+  "name": "Name of the poll",
   "expires": "2017-08-07T10:46:40+00:00",
   "restaurants": ["234123","12412332"],
   "users": ["7545345", "6663523", "45656855"],
@@ -647,14 +647,14 @@ Both lat and lng has to be used if one of them are used, or radius is used,
   "allowNewRestaurants": true
 }
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
 {
   "data": {
     "type": "poll",
     "id": "123123123",
     "attributes": {
-      "name": "Name of the restaurant",
+      "name": "Name of the poll",
       "expires": "2017-08-07T10:46:40Z",
       "created": "2016-02-01T15:20:05Z",
       "allowNewRestaurants": true
@@ -766,9 +766,6 @@ Both lat and lng has to be used if one of them are used, or radius is used,
   }]
 }
 
-
-+ Response 201
-
 ### Add restaurants to poll [PUT]
 
 + Request (application/json)
@@ -793,14 +790,14 @@ Both lat and lng has to be used if one of them are used, or radius is used,
 
 ## Only registered users [/polls/:id]
 
-### Retrieve specific poll if user has access [GET]
+### Retrieve specific poll if user has access [GET /polls/51515151]
 
 + Response 200 (application/json)
 
 {
     "data": {
         "type": "poll",
-        "id": "POLL_ID_1",
+        "id": "51515151",
         "attributes": {
             "name": "Odd Hill, team 2",
             "expires": "2016-02-23T22:49:05Z",
@@ -1033,8 +1030,6 @@ Both lat and lng has to be used if one of them are used, or radius is used,
         }
     ]
 }
-
-        Retrieve specific poll if user has access to the poll.
 
 
 [comment]: <> (-------------------------break between endpoint--------------------------)
