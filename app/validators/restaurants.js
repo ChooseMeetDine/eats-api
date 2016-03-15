@@ -17,6 +17,19 @@ restaurantValidator.post = function(req, res, next) {
   });
 };
 
+//exported middleware that validates get parameters
+restaurantValidator.get = function(req, res, next) {
+  //Use the schema to validate
+  isvalid(req.query, getRestaurantGetSchema(), function(validationError, validData) {
+    if (validationError) {
+      next(validationError); //Handle errors in another middleware
+    } else {
+      req.validQuery = validData;
+      next();
+    }
+  });
+};
+
 //Schema that defines the accepted variations of a post body
 var getRestaurantPostSchema = function() {
   return {
@@ -137,6 +150,69 @@ var getRestaurantPostSchema = function() {
         },
         errors: {
           type: 'categories must be an array of valid category IDs as strings',
+        }
+      }
+    }
+  };
+};
+
+var getRestaurantGetSchema = function() {
+  return {
+    type: Object,
+    unknownKeys: 'deny',
+    required: 'implicit',
+    custom: function(data) {
+      //Enforce coordinates if radius is provided
+      if (data.radius && (!data.lat || !data.lng)) {
+        throw new Error('You must provide lat and lng if you use radius');
+      }
+      //If either lat och lng is used, the other coordinate must exist
+      if ((data.lat || data.lng) && !(data.lat && data.lng)) {
+        throw new Error('You have to use either both lat and lng or neither');
+      }
+      return data;
+    },
+    schema: {
+      'lat': {
+        type: Number,
+        required: false,
+        custom: function(data) {
+          if (data && !isInRange(data, -180, 180)) {
+            throw new Error('lat must be WGS84-formatted coordinate between -180 and 180');
+          }
+          return data;
+        },
+        default: null,
+        errors: {
+          type: 'lat must be WGS84-formatted coordinate between -180 and 180'
+        }
+      },
+      'lng': {
+        type: Number,
+        required: false,
+        custom: function(data) {
+          if (data && !isInRange(data, -180, 180)) {
+            throw new Error('lng must be WGS84-formatted coordinate between -180 and 180');
+          }
+          return data;
+        },
+        default: null,
+        errors: {
+          type: 'lng must be WGS84-formatted coordinate between -180 and 180'
+        }
+      },
+      'radius': {
+        type: Number,
+        required: false,
+        custom: function(data) {
+          if (data && !isInRange(data, 0, 100000)) {
+            throw new Error('radius must be a number between 0 and 100 000');
+          }
+          return data;
+        },
+        default: 1000,
+        errors: {
+          type: 'radius must be a number between 0 and 100 000'
         }
       }
     }
