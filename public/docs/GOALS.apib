@@ -334,7 +334,32 @@ Get all restaurants.
 
 + Response 200 (application/json)
 
-        Get all users but only name, photo and id.
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ]
+}
 
 ## Only admin [/users]
 
@@ -342,7 +367,35 @@ Get all restaurants.
 
 + Response 200 (application/json)
 
-        Get all users with full information.
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg",
+                "email": "qaz@eats-api.se"
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg",
+                "email": "wsx@eats-api.se"
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ]
+}
+
 
 ## Unregistered user [/users]
 
@@ -426,8 +479,60 @@ Get all restaurants.
 ### Retrieve own user info [GET]
 
 + Response 200 (application/json)
-
-        Get all your own user information.
+    Get all information about user self
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
 
 ## Only admin [/users/:id]
 
@@ -436,6 +541,59 @@ Get all restaurants.
 + Response 200 (application/json)
 
         Get all information about a specific user.
+        {
+            "data": {
+                "type": "user",
+                "id": "USER_ID_1",
+                "attributes": {
+                    "name": "Lars",
+                    "email": "lars@eats.se",
+                    "photo": "http://photo.com/9876.jpg",
+                    "phone": "0761234567",
+                    "admin": false,
+                    "registrationDate": "2016-02-23T22:49:05Z"
+                },
+                "relationships": {
+                    "groups": {
+                        "data": [
+                            {
+                                "type": "group",
+                                "id": "GROUP_ID_1"
+                            },
+                            {
+                                "type": "group",
+                                "id": "GROUP_ID_3"
+                            }
+                        ]
+                    }
+                },
+                "links": {
+                    "self": "/user/user_ID_1"
+                }
+            },
+            "included": [
+                {
+                    "type": "group",
+                    "id": "GROUP_ID_1",
+                    "attributes": {
+                        "name": "Vi som älskar burgare på Odd Hill"
+                    },
+                    "links": {
+                        "self": "/groups/GROUP_ID_1"
+                    }
+                },
+                {
+                    "type": "group",
+                    "id": "GROUP_ID_3",
+                    "attributes": {
+                        "name": "EATS-API project-team på MAH"
+                    },
+                    "links": {
+                        "self": "/groups/GROUP_ID_3"
+                    }
+                }
+            ]
+        }
 
 
 [comment]: <> (-------------------------break between endpoint--------------------------)
@@ -928,3 +1086,31 @@ Get all restaurants.
 + Response 200 (application/json)
 
         Retrieve specific group if user has access to the group.
+
+# Group /auth
+
+## For authentication of registered user and authorization to restricted endpoints [/auth]
+
+### Authenticate user [POST]
+
++ Parameters
+
+  + email (string, required) - email of registered account
+
+  + password (string, required) - password of registered account
+
+
++ Request (application/json)
+
+{
+  "email":"user_email@mail.com",
+  "password": "yourpassword"
+}
+
++ Response 200 (application/json)
+
+{
+  "authentication": true,
+  "message": "Welcome user_name",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
+}

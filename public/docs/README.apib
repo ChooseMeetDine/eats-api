@@ -168,7 +168,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 ### Add a restaurant [POST]
 
-{
 + Parameters
 
  + name (string, required) - Name of the restaurant
@@ -195,8 +194,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
  + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
      + Default: false
 
-}
-
 + Request (application/json)
 
 {
@@ -212,8 +209,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 }
 
 
-+ Response 201(application/json)
-
 {
     "links": {
         "self": "/restaurants/321321"
@@ -227,8 +222,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "photo": "http://photo.com/1234.jpg",
             "priceRate": 4,
             "rating": 5,
-            "numberOfPolls": 0,
-            "numberOfPollsWon": 0,
             "longitude": 13.00073,
             "latitude": 55.60587,
             "temporary": false,
@@ -265,4 +258,33 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             }
         }
     ]
+}
+
++ Response 201(application/json)
+
+# Group /auth
+
+## For authentication of registered user and authorization to restricted endpoints [/auth]
+
+### Authenticate user [POST]
+
++ Parameters
+
+  + email (string, required) - email of registered account
+
+  + password (string, required) - password of registered account
+
+
+
+{
+  "email":"user_email@mail.com",
+  "password": "yourpassword"
+}
+
++ Response 200 (application/json)
+
+{
+  "authentication": true,
+  "message": "Welcome user_name",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
 }
