@@ -25,8 +25,8 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
                 "photo": "http://photo.com/1234.jpg",
                 "price-rate": 3,
                 "rating": 4,
-                "number_votes": 27,
-                "number_won_votes": 3,
+                "numberVotes": 27,
+                "numberWonVotes": 3,
                 "longitude": 13.00073,
                 "latitude": 55.60587,
                 "temporary": false
@@ -58,8 +58,8 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
                 "photo": "http://photo.com/2345.jpg",
                 "price-rate": 3,
                 "rating": 3,
-                "number_votes": 15,
-                "number_won_votes": 2,
+                "numberVotes": 15,
+                "numberWonVotes": 2,
                 "longitude": 13.00173,
                 "latitude": 55.60587,
                 "temporary": false
@@ -131,9 +131,9 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
  + photo (string, optional) - link to the photo of the restaurant
  		+ Default: null
 
- + longitude (number, required) - longitude coordinate of this restaurant in WGS84 format
+ + longitude (decimal, required) - longitude coordinate of this restaurant in WGS84 format
 
- + latitude (number, required) - latitude coordinate of this restaurant in WGS84 format
+ + latitude (decimal, required) - latitude coordinate of this restaurant in WGS84 format
 
 }
 
@@ -193,10 +193,10 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "name": "Bamboo City",
             "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque. Vi erbjuder en mycket hög kvalitet i våra bufféer i härliga lokaler. Vi serverar både lunch och a la carte.",
             "photo": "http://photo.com/1234.jpg",
-            "price-rate": 3,
+            "priceRate": 3,
             "rating": 4,
-            "number_votes": 27,
-            "number_won_votes": 3,
+            "numberVotes": 27,
+            "numberWonVotes": 3,
             "longitude": 13.00073,
             "latitude": 55.60587,
             "temporary": false
@@ -277,7 +277,32 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 + Response 200 (application/json)
 
-        Get all users but only name, photo and id.
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ]
+}
 
 ## Only admin [/users]
 
@@ -285,7 +310,35 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 + Response 200 (application/json)
 
-        Get all users with full information.
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg",
+                "email": "qaz@eats-api.se"
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg",
+                "email": "wsx@eats-api.se"
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ]
+}
+
 
 ## Unregistered user [/users]
 
@@ -369,8 +422,60 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ### Retrieve own user info [GET]
 
 + Response 200 (application/json)
-
-        Get all your own user information.
+    Get all information about user self
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
 
 ## Only admin [/users/:id]
 
@@ -379,6 +484,59 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Response 200 (application/json)
 
         Get all information about a specific user.
+        {
+            "data": {
+                "type": "user",
+                "id": "USER_ID_1",
+                "attributes": {
+                    "name": "Lars",
+                    "email": "lars@eats.se",
+                    "photo": "http://photo.com/9876.jpg",
+                    "phone": "0761234567",
+                    "admin": false,
+                    "registrationDate": "2016-02-23T22:49:05Z"
+                },
+                "relationships": {
+                    "groups": {
+                        "data": [
+                            {
+                                "type": "group",
+                                "id": "GROUP_ID_1"
+                            },
+                            {
+                                "type": "group",
+                                "id": "GROUP_ID_3"
+                            }
+                        ]
+                    }
+                },
+                "links": {
+                    "self": "/user/user_ID_1"
+                }
+            },
+            "included": [
+                {
+                    "type": "group",
+                    "id": "GROUP_ID_1",
+                    "attributes": {
+                        "name": "Vi som älskar burgare på Odd Hill"
+                    },
+                    "links": {
+                        "self": "/groups/GROUP_ID_1"
+                    }
+                },
+                {
+                    "type": "group",
+                    "id": "GROUP_ID_3",
+                    "attributes": {
+                        "name": "EATS-API project-team på MAH"
+                    },
+                    "links": {
+                        "self": "/groups/GROUP_ID_3"
+                    }
+                }
+            ]
+        }
 
 
 [comment]: <> (-------------------------break between endpoint--------------------------)
@@ -436,7 +594,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "name": "Name of the restaurant",
       "expires": "2017-08-07T10:46:40Z",
       "created": "2016-02-01T15:20:05Z",
-      "allow_new_restaurants": true
+      "allowNewRestaurants": true
     }
   },
   "relationships": {
@@ -584,7 +742,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "name": "Odd Hill, team 2",
             "expires": "2016-02-23T22:49:05Z",
             "created": "2016-02-01T15:20:05Z",
-            "allow_new_restaurants": false
+            "allowNewRestaurants": false
         },
         "relationships": {
             "creator": {
