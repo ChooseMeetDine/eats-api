@@ -32,6 +32,7 @@ describe('Testing Eats-API HTTP requests', function() {
           done();
         });
     });
+
     /*
     it('Should return json response with false authentication', function(done) {
       request(app)
