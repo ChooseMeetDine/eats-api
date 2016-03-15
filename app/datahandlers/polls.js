@@ -15,7 +15,11 @@ pollsDatahandler.post = function(req) {
   req.validUser = 10; //TODO: Remove once auth works
 
   return executeInsertionTransaction(req)
-    .then(createPollPostResponse);
+    .then(createPollResponse);
+};
+
+pollsDatahandler.getID = function(req) {
+  return createPollResponse(req.validParams.id);
 };
 
 // Executes several INSERT to the database as a transaction,
@@ -30,7 +34,7 @@ var executeInsertionTransaction = function(req) {
         .then(function(pollid) {
           // No group specified, skip adding group users
           if (!req.validBody.group) {
-            return Promise.resolve(pollid); // returns the poll-id needed for the rest of the inserts
+            return Promise.resolve(pollid); //returns the poll-id needed for the rest of the inserts
           }
           // If group is specified in request, add the users for that group to the users in the poll
           // This has to be done before insertUsers()
@@ -60,7 +64,7 @@ var executeInsertionTransaction = function(req) {
 
 // Executes several SELECT queries to the database and creates an object for each type of data
 // returned, which is used to create a JSON-API-poll object and add relations to it
-var createPollPostResponse = function(pollId) {
+var createPollResponse = function(pollId) {
   return Promise.join( // run all SELECTs
     pollsQueries.selectPollData(pollId), // returns a knex-select-promise
     pollsQueries.selectPollUsersData(pollId),
