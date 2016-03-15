@@ -164,11 +164,121 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 # Group /restaurants
 
-## Any user [/restaurants]
+## Any user [/restaurant]
+
+### Retrieve restaurants [GET /restaurant?lat=123&lng=32&radius=15000]
+
+Query parameters
+Both lat and lng has to be used if one of them are used, or radius is used,
+
+
++ Parameters
+
+ + lng (number, optional) - Longitude coordinate in WGS84 format
+
+ + lat (number, optional) - Latitude coordinate in WGS84 format
+
+ + radius (number, optional) - Radius in meters from coordinates. Defines the area from which restaurants will be returned
+     + Default: 1000
+
++ Response 200 (application/json)
+
+{
+    "links": {
+        "self": "/restaurants"
+    },
+    "data": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Bamboo City",
+                "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.",
+                "photo": "http://photo.com/1234.jpg",
+                "priceRate": 3,
+                "rating": 4,
+                "longitude": 13.00073,
+                "latitude": 55.60587,
+                "temporary": false
+            },
+            "relationships": {
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_1"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Krua Thai",
+                "info": "Helt vanligt thai restaurant",
+                "photo": "http://photo.com/2345.jpg",
+                "priceRate": 3,
+                "rating": 3,
+                "longitude": 13.00173,
+                "latitude": 55.60587,
+                "temporary": false
+            },
+            "relationships": {
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_2"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_1",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_2",
+            "attributes": {
+                "name": "vegan"
+            }
+        },
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_3",
+            "attributes": {
+                "name": "thai"
+            }
+        }
+    ]
+}
 
 ### Add a restaurant [POST]
 
-{
+
 + Parameters
 
  + name (string, required) - Name of the restaurant
@@ -188,84 +298,84 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
  + photo (string, optional) - Link to the photo of the restaurant
      + Default: null
 
- + longitude (number, required) - Longitude coordinate of this restaurant in WGS84 format
+ + lng (number, required) - Longitude coordinate of this restaurant in WGS84 format
 
- + latitude (number, required) - Latitude coordinate of this restaurant in WGS84 format
+ + lat (number, required) - Latitude coordinate of this restaurant in WGS84 format
 
  + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
      + Default: false
 
-}
+
 
 + Request (application/json)
 
 {
-"name": "Restaurant name",
-"category": [23412,12412],
-"priceRate": 4,
-"rating": 5,
-"info": "Nordenskiöldsgatan 1, Malmö",
-"photo":"http://photo.com/1234.jpg",
-"temporary": false,
-"longitude": 13.00073,
-"latitude": 55.60587
+ "name": "Restaurant name",
+ "category": [23412,12412],
+ "priceRate": 4,
+ "rating": 5,
+ "info": "Nordenskiöldsgatan 1, Malmö",
+ "photo":"http://photo.com/1234.jpg",
+ "temporary": false,
+ "longitude": 13.00073,
+ "latitude": 55.60587
 }
 
 
 + Response 201(application/json)
 
 {
-   "links": {
-       "self": "/restaurants/321321"
-   },
-   "data":{
-       "type": "restaurant",
-       "id": "321321",
-       "attributes": {
-           "name": "Restaurant name",
-           "info": "Nordenskiöldsgatan 1, Malmö",
-           "photo": "http://photo.com/1234.jpg",
-           "priceRate": 4,
-           "rating": 5,
-           "numberOfPolls": 0,
-           "numberOfPollsWon": 0,
-           "longitude": 13.00073,
-           "latitude": 55.60587,
-           "temporary": false,
-           "status": "unexamined"
-       },
-       "relationships": {
-           "category": {
-               "data": [
-                   {
-                       "type": "category",
-                       "id": "23412"
-                   },
-                   {
-                       "type": "category",
-                       "id": "12412"
-                   }
-               ]
-           }
-       }
-   },
-   "included": [
-       {
-           "type": "category",
-           "id": "23412",
-           "attributes": {
-               "name": "fish"
-           }
-       },
-       {
-           "type": "category",
-           "id": "12412",
-           "attributes": {
-               "name": "vegan"
-           }
-       }
-   ]
-  }
+    "links": {
+        "self": "/restaurants/321321"
+    },
+    "data":{
+        "type": "restaurant",
+        "id": "321321",
+        "attributes": {
+            "name": "Restaurant name",
+            "info": "Nordenskiöldsgatan 1, Malmö",
+            "photo": "http://photo.com/1234.jpg",
+            "priceRate": 4,
+            "rating": 5,
+            "numberOfPolls": 0,
+            "numberOfPollsWon": 0,
+            "longitude": 13.00073,
+            "latitude": 55.60587,
+            "temporary": false,
+            "status": "unexamined"
+        },
+        "relationships": {
+            "category": {
+                "data": [
+                    {
+                        "type": "category",
+                        "id": "23412"
+                    },
+                    {
+                        "type": "category",
+                        "id": "12412"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "category",
+            "id": "23412",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "12412",
+            "attributes": {
+                "name": "vegan"
+            }
+        }
+    ]
+}
 
 # Group /auth
 

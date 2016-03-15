@@ -5,9 +5,22 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 # Group /restaurants
 
-## Any user [/restaurants]
+## Any user [/restaurant]
 
-### Retrieve restaurants [GET]
+### Retrieve restaurants [GET /restaurant?lat=123&lng=32&radius=15000]
+
+Query parameters
+Both lat and lng has to be used if one of them are used, or radius is used,
+
+
++ Parameters
+
+ + lng (number, optional) - Longitude coordinate in WGS84 format
+
+ + lat (number, optional) - Latitude coordinate in WGS84 format
+
+ + radius (number, optional) - Radius in meters from coordinates. Defines the area from which restaurants will be returned
+     + Default: 1000
 
 + Response 200 (application/json)
 
@@ -21,12 +34,10 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "id": "RESTAURANT_ID_1",
             "attributes": {
                 "name": "Bamboo City",
-                "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque. Vi erbjuder en mycket hög kvalitet i våra bufféer i härliga lokaler. Vi serverar både lunch och a la carte.",
+                "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.",
                 "photo": "http://photo.com/1234.jpg",
                 "priceRate": 3,
                 "rating": 4,
-                "numberOfPolls": 27,
-                "numberOfPollsWon": 3,
                 "longitude": 13.00073,
                 "latitude": 55.60587,
                 "temporary": false
@@ -58,8 +69,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
                 "photo": "http://photo.com/2345.jpg",
                 "priceRate": 3,
                 "rating": 3,
-                "numberOfPolls": 15,
-                "numberOfPollsWon": 2,
                 "longitude": 13.00173,
                 "latitude": 55.60587,
                 "temporary": false
@@ -108,12 +117,9 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
     ]
 }
 
-Get all restaurants.
-
-
 ### Add a restaurant [POST]
 
-{
+
 + Parameters
 
  + name (string, required) - Name of the restaurant
@@ -133,14 +139,14 @@ Get all restaurants.
  + photo (string, optional) - Link to the photo of the restaurant
      + Default: null
 
- + longitude (number, required) - Longitude coordinate of this restaurant in WGS84 format
+ + lng (number, required) - Longitude coordinate of this restaurant in WGS84 format
 
- + latitude (number, required) - Latitude coordinate of this restaurant in WGS84 format
+ + lat (number, required) - Latitude coordinate of this restaurant in WGS84 format
 
  + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
      + Default: false
 
-}
+
 
 + Request (application/json)
 
