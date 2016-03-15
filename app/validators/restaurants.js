@@ -170,6 +170,10 @@ var getRestaurantGetSchema = function() {
       if ((data.lat || data.lng) && !(data.lat && data.lng)) {
         throw new Error('You have to use either both lat and lng or neither');
       }
+      //set radius to 1000 if coordinates are used but radius not
+      if (data.lat && data.lng && !data.radius) {
+        data.radius = 1000;
+      }
       return data;
     },
     schema: {
@@ -210,8 +214,8 @@ var getRestaurantGetSchema = function() {
           }
           return data;
         },
-        default: 1000,
-        errors: {
+        default: null, //Set the default value only if coordinates are used
+        errors: { //which is done in the custom validator for the whole schema
           type: 'radius must be a number between 0 and 100 000'
         }
       }
