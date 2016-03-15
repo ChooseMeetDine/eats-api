@@ -82,6 +82,37 @@ describe('Testing Eats-API HTTP requests', function() {
         });
     });
 
+    it('Should return valid data for POST /auth', function(done) {
+      var port = process.env.PORT || 5000;
+      request('http://localhost:' + port.toString())
+        .post('/auth')
+        .send({
+          'email': 'fresh_musti@hotmail.com',
+          'password': 'password123'
+        })
+        .expect(200)
+        .end(function(err, res) {
+          console.log(res.body);
+          var response = res.body;
+          expect(response).to.be.jsonSchema({
+            'title': 'auth valid schema',
+            'type': 'object',
+            'properties': {
+              'authentication': {
+                'type': 'boolean'
+              },
+              'message': {
+                'type': 'string'
+              },
+              'token': {
+                'type': 'string'
+              }
+            }
+          });
+          done();
+        });
+    });
+
     /*
         it('POSTs a vote', function (done) {
           request('http://localhost:3001')

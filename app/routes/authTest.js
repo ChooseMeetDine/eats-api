@@ -1,6 +1,7 @@
 var router = require('express').Router();
 
 router.get('/', function(req, res) {
+  /*
   if (req.validUser.admin === true) {
     res.send('Welcome ' + req.validUser.name +
       ' your token has been validated and your email is ' +
@@ -9,7 +10,8 @@ router.get('/', function(req, res) {
   } else {
     res.send('Welcome ' + req.validUser.name +
       ' your token has been validated and your email is ' + req.validUser.email);
-  }
+  }*/
+  res.sendFile(__dirname + '/public/login/authtest.html');
 });
 
 
