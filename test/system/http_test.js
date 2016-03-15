@@ -32,20 +32,7 @@ describe('Testing Eats-API HTTP requests', function() {
           done();
         });
     });
-    /*
-        it('Should post stuff', function () {
-          request(app)
-            .post('/users')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end(function (err, res) {
-              var response = JSON.parse(res.text);
-              expect(response).to.deep.equal({
-                message: 'done'
-              });
-              done();
-            });
-        });*/
+
 
     it('Should load the root page for GET /', function(done) {
       request(app)
