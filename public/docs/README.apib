@@ -100,6 +100,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "latitude": 56.1234,
       "longitude": 14.1234,
       "temporary": false,
+      "status": "accepted"
     },
     "links": {
       "self": "/restaurants/234123"
@@ -112,6 +113,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "latitude": 56.1234,
       "longitude": 14.1234,
       "temporary": false,
+      "status": "accepted"
     },
     "links": {
       "self": "/restaurants/12412332"
@@ -165,6 +167,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ## Any user [/restaurants]
 
 ### Add a restaurant [POST]
+
 {
 + Parameters
 
@@ -228,7 +231,8 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "numberOfPollsWon": 0,
             "longitude": 13.00073,
             "latitude": 55.60587,
-            "temporary": false
+            "temporary": false,
+            "status": "unexamined"
         },
         "relationships": {
             "category": {
