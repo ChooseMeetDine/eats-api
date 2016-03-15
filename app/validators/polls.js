@@ -24,7 +24,7 @@ pollValidator.getID = function(req, res, next) {
   //No schema needed to validate a single parameter
   validatePollID(req.params.id)
     .then(function(id) {
-      req.validparams = {
+      req.validParams = {
         id: id
       };
       next();
