@@ -3,12 +3,13 @@ var jwt = require('jsonwebtoken');
 var knex = require('../shared/knex');
 var bodyParser = require('body-parser');
 var cert = process.env.JWTSECRET;
+var authRequest = require('../validators/auth');
 
 router.use(bodyParser.urlencoded({
   extended: true
 }));
 
-router.post('/', function(req, res) {
+router.post('/', authRequest.checkData, function(req, res) {
 
   var user = {
     name: undefined,
