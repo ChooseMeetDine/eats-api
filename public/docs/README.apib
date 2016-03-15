@@ -200,69 +200,97 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Request (application/json)
 
 {
- "name": "Restaurant name",
- "category": [23412,12412],
- "priceRate": 4,
- "rating": 5,
- "info": "Nordenskiöldsgatan 1, Malmö",
- "photo":"http://photo.com/1234.jpg",
- "temporary": false,
- "longitude": 13.00073,
- "latitude": 55.60587
+"name": "Restaurant name",
+"category": [23412,12412],
+"priceRate": 4,
+"rating": 5,
+"info": "Nordenskiöldsgatan 1, Malmö",
+"photo":"http://photo.com/1234.jpg",
+"temporary": false,
+"longitude": 13.00073,
+"latitude": 55.60587
 }
 
 
 + Response 201(application/json)
 
 {
-    "links": {
-        "self": "/restaurants/321321"
-    },
-    "data":{
-        "type": "restaurant",
-        "id": "321321",
-        "attributes": {
-            "name": "Restaurant name",
-            "info": "Nordenskiöldsgatan 1, Malmö",
-            "photo": "http://photo.com/1234.jpg",
-            "priceRate": 4,
-            "rating": 5,
-            "numberOfPolls": 0,
-            "numberOfPollsWon": 0,
-            "longitude": 13.00073,
-            "latitude": 55.60587,
-            "temporary": false,
-            "status": "unexamined"
-        },
-        "relationships": {
-            "category": {
-                "data": [
-                    {
-                        "type": "category",
-                        "id": "23412"
-                    },
-                    {
-                        "type": "category",
-                        "id": "12412"
-                    }
-                ]
-            }
-        }
-    },
-    "included": [
-        {
-            "type": "category",
-            "id": "23412",
-            "attributes": {
-                "name": "fish"
-            }
-        },
-        {
-            "type": "category",
-            "id": "12412",
-            "attributes": {
-                "name": "vegan"
-            }
-        }
-    ]
+   "links": {
+       "self": "/restaurants/321321"
+   },
+   "data":{
+       "type": "restaurant",
+       "id": "321321",
+       "attributes": {
+           "name": "Restaurant name",
+           "info": "Nordenskiöldsgatan 1, Malmö",
+           "photo": "http://photo.com/1234.jpg",
+           "priceRate": 4,
+           "rating": 5,
+           "numberOfPolls": 0,
+           "numberOfPollsWon": 0,
+           "longitude": 13.00073,
+           "latitude": 55.60587,
+           "temporary": false,
+           "status": "unexamined"
+       },
+       "relationships": {
+           "category": {
+               "data": [
+                   {
+                       "type": "category",
+                       "id": "23412"
+                   },
+                   {
+                       "type": "category",
+                       "id": "12412"
+                   }
+               ]
+           }
+       }
+   },
+   "included": [
+       {
+           "type": "category",
+           "id": "23412",
+           "attributes": {
+               "name": "fish"
+           }
+       },
+       {
+           "type": "category",
+           "id": "12412",
+           "attributes": {
+               "name": "vegan"
+           }
+       }
+   ]
+  }
+
+# Group /auth
+
+## For authentication of registered user and authorization to restricted endpoints [/auth]
+
+### Authenticate user [POST]
+
++ Parameters
+
+  + email (string, required) - email of registered account
+
+  + password (string, required) - password of registered account
+
+
++ Request (application/json)
+
+{
+  "email":"user_email@mail.com",
+  "password": "yourpassword"
+}
+
++ Response 200 (application/json)
+
+{
+  "authentication": true,
+  "message": "Welcome user_name",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
 }
