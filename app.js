@@ -35,6 +35,10 @@ app.use(function(err, req, res, next) {
   });
 });
 
+app.get('/login', function(req, res) {
+  res.sendFile(__dirname + '/public/login/index.html');
+});
+
 var port = process.env.PORT || 3001;
 
 http.listen(port, function() {
