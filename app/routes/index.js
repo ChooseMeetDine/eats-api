@@ -2,9 +2,9 @@ var router = require('express').Router();
 var aglio = require('aglio');
 var pollRouter = require('../routes/polls');
 var authRouter = require('../routes/auth');
-var authTest = require('../routes/authTest');
 var path = require('path');
 var auth = require('../validators/auth');
+//var authTest = require('../routes/authTest'); Route for testing auth
 
 
 router.get('/', function(req, res) {
@@ -18,7 +18,7 @@ router.get('/testauth', auth.validate, function(req, res) {
 
 router.use('/polls', pollRouter);
 router.use('/auth', authRouter);
-router.use('/authtest', auth.validate, authTest);
+//router.use('/authtest', auth.validate, authTest); Route for testing auth
 
 //TODO: Fix routers for everything below this comment.
 
