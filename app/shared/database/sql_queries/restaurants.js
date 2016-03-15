@@ -41,11 +41,16 @@ restaurantsQueries.insertRating = function(trx, req, restaurantID) {
 };
 
 restaurantsQueries.selectRestaurantData = function(restaurantID) {
+  var ratingQuery = '(select restaurant_id, avg(rating) as' +
+    ' rating from rating group by restaurant_id) as t1';
+
   return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
-      'lng', 'price_rate as priceRate', 'status')
+      'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
+    .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
     .where('id', restaurantID.toString())
     .then(function(res) {
+      res[0].rating = parseFloat(parseFloat(res[0].rating).toFixed(1));
       return {
         type: 'restaurant',
         resource: 'restaurants',
@@ -62,14 +67,18 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
     req.validQuery.lat + ')\')';
   var locationQuery = 'ST_DWithin( ' + dbLoc + ', ' + userLoc + ', ' + req.validQuery.radius + ')';
 
-  console.log(locationQuery);
+  var ratingQuery = '(select restaurant_id, avg(rating) as' +
+    ' rating from rating group by restaurant_id) as t1';
+
   return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
-      'lng', 'price_rate as priceRate', 'status')
+      'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
+    .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
     //.where(knex.raw(locationQuery))
     .then(function(res) {
       var restaurants = [];
       for (var i = 0; i < res.length; i++) {
+        res[i].rating = parseFloat(parseFloat(res[i].rating).toFixed(1));
         var restaurant = {
           data: res[i],
           relation: 'votes',
@@ -85,12 +94,17 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
 
 //without parameters
 restaurantsQueries.selectAllRestaurants = function() {
+  var ratingQuery = '(select restaurant_id, avg(rating) as' +
+    ' rating from rating group by restaurant_id) as t1';
+
   return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
-      'lng', 'price_rate as priceRate', 'status')
+      'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
+    .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
     .then(function(res) {
       var restaurants = [];
       for (var i = 0; i < res.length; i++) {
+        res[i].rating = parseFloat(parseFloat(res[i].rating).toFixed(1));
         var restaurant = {
           data: res[i],
           relation: 'votes',
@@ -122,22 +136,8 @@ restaurantsQueries.selectCreatorData = function(restaurantID) {
     });
 };
 
-restaurantsQueries.selectRatingData = function(restaurantID) {
-  return knex.pluck('rating')
-    .from('rating')
-    .where('restaurant_id', restaurantID.toString())
-    .then(function(res) {
-      var sum = 0;
-      for (var i = 0; i < res.length; i++) {
-        sum += res[i];
-      }
-      var avg = sum / res.length;
-      return avg.toFixed(1);
-    });
-};
-
 restaurantsQueries.selectCategoryData = function(restaurantID) {
-  return knex.select('id', 'type')
+  return knex.select('id', 'type as name')
     .from('restaurant_categories')
     .join('category', 'restaurant_categories.category_id', 'category.id')
     .where('restaurant_categories.restaurant_id', restaurantID.toString())
@@ -183,6 +183,28 @@ restaurantsQueries.selectNumberOfPollsWon = function(restaurantID) {
     .then(function(res) {
       return res.rows[0].count;
     });
+};
+restaurantsQueries.appendCategories = function(restaurants) {
+  return Promise.map(restaurants, function(restaurant) {
+    return knex.select('id', 'type as name')
+      .from('restaurant_categories')
+      .join('category', 'restaurant_categories.category_id', 'category.id')
+      .where('restaurant_categories.restaurant_id', restaurant.data.id)
+      .then(function(res) {
+        restaurant.relationships = [];
+        for (var i = 0; i < res.length; i++) {
+          var category = {
+            relation: 'categories',
+            multiple: true,
+            type: 'category',
+            resource: 'categories',
+            data: res[i]
+          };
+          restaurant.relationships.push(category);
+        }
+        return restaurant;
+      });
+  });
 };
 
 module.exports = restaurantsQueries;

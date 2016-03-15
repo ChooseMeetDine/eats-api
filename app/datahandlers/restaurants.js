@@ -54,13 +54,11 @@ var createRestaurantPostResponse = function(restaurantID) {
   return Promise.join( // run all SELECTs
     queries.selectRestaurantData(restaurantID), // returns a knex-select-promise
     queries.selectCreatorData(restaurantID),
-    queries.selectRatingData(restaurantID),
     queries.selectCategoryData(restaurantID),
     queries.selectNumberOfPollsData(restaurantID),
     queries.selectNumberOfPollsWon(restaurantID)
-  ).spread(function(restaurant, creator, rating, categories, pollCount, wonCount) {
+  ).spread(function(restaurant, creator, categories, pollCount, wonCount) {
     var i;
-    restaurant.data.rating = rating; //Rating is just a number for now
     restaurant.data.numberOfPolls = pollCount;
     restaurant.data.numberOfPollsWon = wonCount;
     var response = new responseModule(restaurant); // creates a new JSON-API-restaurant object
@@ -80,29 +78,26 @@ var createRestaurantPostResponse = function(restaurantID) {
 var createRestaurantGetResponse = function(req) {
 
   return new Promise(function(resolve) {
-    if (req.validQuery.lat) {
-      return resolve(queries.selectMultipleRestaurantsByLocation(req));
-    }
-    return resolve(queries.selectAllRestaurants());
-  }).then(function(restaurants) {
-    var i;
-
-    //Are these fuckers needed for the collection?
-    // restaurant.data.rating = rating; //Rating is just a number for now
-    // restaurant.data.numberOfPolls = pollCount;
-    // restaurant.data.numberOfPollsWon = wonCount;
-
-    var response = new responseCollectionModule({ // creates a new JSON-API-restaurant collection
-      resource: 'restaurants'
+      if (req.validQuery.lat) {
+        return resolve(queries.selectMultipleRestaurantsByLocation(req));
+      }
+      return resolve(queries.selectAllRestaurants());
+    })
+    .then(queries.appendCategories)
+    .then(function(restaurants) {
+      var i;
+      var response = new responseCollectionModule({ // creates a new JSON-API-restaurant collection
+        resource: 'restaurants'
+      });
+      for (i = 0; i < restaurants.length; i++) {
+        response.addObject(restaurants[i]);
+      }
+      return response;
+    }).catch(function(err) {
+      console.log(err.stack);
+      return Promise
+        .reject(new Error('Could insert but not retrieve restaurant data from database'));
     });
-    for (i = 0; i < restaurants.length; i++) {
-      response.addObject(restaurants[i]);
-    }
-    return response;
-  }).catch(function(err) {
-    console.log(err.stack);
-    return Promise.reject(new Error('Could insert but not retrieve restaurant data from database'));
-  });
 };
 
 module.exports = restaurantDatahandler;
