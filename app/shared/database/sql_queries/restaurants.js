@@ -42,7 +42,7 @@ restaurantsQueries.insertRating = function(trx, req, restaurantID) {
 
 restaurantsQueries.selectRestaurantData = function(restaurantID) {
   return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
-      'lng', 'price_rate as priceRate')
+      'lng', 'price_rate as priceRate', 'status')
     .from('restaurant')
     .where('id', restaurantID.toString())
     .then(function(res) {
