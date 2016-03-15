@@ -2,6 +2,7 @@ var knex = require('../shared/database/knex');
 var restaurantDatahandler = {};
 var Promise = require('bluebird');
 var responseModule = require('../json_api/json_api');
+var responseCollectionModule = require('../json_api/json_api_collection');
 var queries = require('../shared/database/sql_queries/restaurants');
 
 // Handles POST requests to endpoint /restaurants
@@ -15,6 +16,12 @@ restaurantDatahandler.post = function(req) {
 
   return executeInsertionTransaction(req)
     .then(createRestaurantPostResponse);
+};
+
+restaurantDatahandler.get = function(req) {
+  req.validUser = 10; //TODO: Remove once auth works
+
+  return createRestaurantGetResponse(req);
 };
 
 // Executes several INSERT to the database as a transaction,
@@ -60,6 +67,36 @@ var createRestaurantPostResponse = function(restaurantID) {
     response.addRelation(creator);
     for (i = 0; i < categories.length; i++) {
       response.addRelation(categories[i]);
+    }
+    return response;
+  }).catch(function(err) {
+    console.log(err.stack);
+    return Promise.reject(new Error('Could insert but not retrieve restaurant data from database'));
+  });
+};
+
+// Executes several SELECT queries to the database and creates an object for each type of data
+// returned, which is used to create a JSON-API-restaurant object and add relations to it
+var createRestaurantGetResponse = function(req) {
+
+  return new Promise(function(resolve) {
+    if (req.validQuery.lat) {
+      return resolve(queries.selectMultipleRestaurantsByLocation(req));
+    }
+    return resolve(queries.selectAllRestaurants());
+  }).then(function(restaurants) {
+    var i;
+
+    //Are these fuckers needed for the collection?
+    // restaurant.data.rating = rating; //Rating is just a number for now
+    // restaurant.data.numberOfPolls = pollCount;
+    // restaurant.data.numberOfPollsWon = wonCount;
+
+    var response = new responseCollectionModule({ // creates a new JSON-API-restaurant collection
+      resource: 'restaurants'
+    });
+    for (i = 0; i < restaurants.length; i++) {
+      response.addObject(restaurants[i]);
     }
     return response;
   }).catch(function(err) {

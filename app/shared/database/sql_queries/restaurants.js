@@ -54,6 +54,56 @@ restaurantsQueries.selectRestaurantData = function(restaurantID) {
     });
 };
 
+//With lat, lng, radius
+restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
+
+  var dbLoc = 'ST_SetSRID(ST_MakePoint(lng,lat),4326)::geography';
+  var userLoc = 'ST_GeogFromText(\'SRID=4326;POINT(' + req.validQuery.lng + ' ' +
+    req.validQuery.lat + ')\')';
+  var locationQuery = 'ST_DWithin( ' + dbLoc + ', ' + userLoc + ', ' + req.validQuery.radius + ')';
+
+  console.log(locationQuery);
+  return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
+      'lng', 'price_rate as priceRate', 'status')
+    .from('restaurant')
+    //.where(knex.raw(locationQuery))
+    .then(function(res) {
+      var restaurants = [];
+      for (var i = 0; i < res.length; i++) {
+        var restaurant = {
+          data: res[i],
+          relation: 'votes',
+          multiple: true,
+          type: 'vote',
+          resource: 'votes'
+        };
+        restaurants.push(restaurant);
+      }
+      return restaurants;
+    });
+};
+
+//without parameters
+restaurantsQueries.selectAllRestaurants = function() {
+  return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
+      'lng', 'price_rate as priceRate', 'status')
+    .from('restaurant')
+    .then(function(res) {
+      var restaurants = [];
+      for (var i = 0; i < res.length; i++) {
+        var restaurant = {
+          data: res[i],
+          relation: 'votes',
+          multiple: true,
+          type: 'vote',
+          resource: 'votes'
+        };
+        restaurants.push(restaurant);
+      }
+      return restaurants;
+    });
+};
+
 restaurantsQueries.selectCreatorData = function(restaurantID) {
   return knex.select('user.id', 'user.name', 'user.photo', 'anon')
     .from('user')
