@@ -278,7 +278,6 @@ Both lat and lng has to be used if one of them are used, or radius is used,
 
 ### Add a restaurant [POST]
 
-
 + Parameters
 
  + name (string, required) - Name of the restaurant
@@ -305,8 +304,6 @@ Both lat and lng has to be used if one of them are used, or radius is used,
  + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
      + Default: false
 
-
-
 + Request (application/json)
 
 {
@@ -320,7 +317,6 @@ Both lat and lng has to be used if one of them are used, or radius is used,
  "longitude": 13.00073,
  "latitude": 55.60587
 }
-
 
 + Response 201(application/json)
 
@@ -337,8 +333,6 @@ Both lat and lng has to be used if one of them are used, or radius is used,
             "photo": "http://photo.com/1234.jpg",
             "priceRate": 4,
             "rating": 5,
-            "numberOfPolls": 0,
-            "numberOfPollsWon": 0,
             "longitude": 13.00073,
             "latitude": 55.60587,
             "temporary": false,
