@@ -33,21 +33,30 @@ describe('Testing Eats-API HTTP requests', function() {
         });
     });
 
-    /*
-    it('Should return json response with false authentication', function(done) {
+    it('Should return json response for POST /auth', function(done) {
       request(app)
         .post('/auth')
-        .set('Content-Type', 'application/json')
+        .expect(200)
         .end(function(err, res) {
           var response = JSON.parse(res.text);
-          expect(response).to.deep.equal({
-            authentication: false,
-            message: 'You need to POST email and password',
-            token: false
+          expect(response).to.be.jsonSchema({
+            'title': 'auth post schema',
+            'type': 'object',
+            'properties': {
+              'authentication': {
+                'type': 'boolean'
+              },
+              'message': {
+                'type': 'string'
+              },
+              'token': {
+                'type': 'boolean'
+              }
+            }
           });
           done();
         });
-    });*/
+    });
 
     it('Should load the root page for GET /', function(done) {
       request(app)
