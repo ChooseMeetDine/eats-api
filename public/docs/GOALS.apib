@@ -871,3 +871,31 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Response 200 (application/json)
 
         Retrieve specific group if user has access to the group.
+
+# Group /auth
+
+## For authentication of registered user and authorization to restricted endpoints [/auth]
+
+### Authenticate user [POST]
+
++ Parameters
+
+  + email (string, required) - email of registered account
+
+  + password (string, required) - password of registered account
+
+
++ Request (application/json)
+
+{
+  "email":"user_email@mail.com",
+  "password": "yourpassword"
+}
+
++ Response 200 (application/json)
+
+{
+  "authentication": true,
+  "message": "Welcome user_name",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
+}
