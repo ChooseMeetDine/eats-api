@@ -1,6 +1,6 @@
 var router = require('express').Router();
 var jwt = require('jsonwebtoken');
-var knex = require('../shared/knex');
+var knex = require('../shared/database/knex');
 var bodyParser = require('body-parser');
 var cert = process.env.JWTSECRET;
 var authRequest = require('../validators/auth');
