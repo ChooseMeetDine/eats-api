@@ -165,29 +165,31 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ## Any user [/restaurants]
 
 ### Add a restaurant [POST]
+
+### Add a restaurant [POST]
 {
 + Parameters
 
  + name (string, required) - Name of the restaurant
 
- + category (array, optional) - food categories IDs to add to this restaurant
+ + category (array, optional) - Food category IDs to add to this restaurant
      + Default: []
 
- + priceRate (number, optional) - price-rate for this restaurent from 1 to 5 range
+ + priceRate (number, optional) - Price rate for this restaurant from 1 to 5 range
      + Default: null
 
- + rating (number, optional) - rating star for this restaurent from 1 to 5 range
+ + rating (number, optional) - Rating star for this restaurant from 1 to 5 range
      + Default: null
 
- + info (string, optional) - address and other additional information relevant to this restaurant
+ + info (string, optional) - Address and other additional information relevant to this restaurant
      + Default: null
 
- + photo (string, optional) - link to the photo of the restaurant
+ + photo (string, optional) - Link to the photo of the restaurant
      + Default: null
 
- + longitude (number, required) - longitude coordinate of this restaurant in WGS84 format
+ + longitude (number, required) - Longitude coordinate of this restaurant in WGS84 format
 
- + latitude (number, required) - latitude coordinate of this restaurant in WGS84 format
+ + latitude (number, required) - Latitude coordinate of this restaurant in WGS84 format
 
  + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
      + Default: false
@@ -209,8 +211,6 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 }
 
 
-        Add restaurant.
-
 + Response 201(application/json)
 
 {
@@ -224,13 +224,14 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
             "name": "Restaurant name",
             "info": "Nordenskiöldsgatan 1, Malmö",
             "photo": "http://photo.com/1234.jpg",
-            "price-rate": 4,
+            "priceRate": 4,
             "rating": 5,
             "numberOfPolls": 0,
             "numberOfPollsWon": 0,
             "longitude": 13.00073,
             "latitude": 55.60587,
-            "temporary": false
+            "temporary": false,
+            "status": "unexamined" 
         },
         "relationships": {
             "category": {
