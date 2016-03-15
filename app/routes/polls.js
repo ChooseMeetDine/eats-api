@@ -17,7 +17,7 @@ router.post('/', pollValidator.post, function(req, res) {
       });
     });
 });
-router.post('/', pollValidator.getID, function(req, res) {
+router.get('/:id', pollValidator.getID, function(req, res) {
   return pollHandler
     .getID(req)
     .then(function(response) {

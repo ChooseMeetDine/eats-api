@@ -8,8 +8,36 @@ var pollValidator = {};
 //exported middleware that validates a post body
 pollValidator.post = function(req, res, next) {
 
-  //Schema that defines the accepted variations of a post body
-  var schema = {
+  //Use the schema to validate
+  isvalid(req.body, getPollPostSchema(), function(validationError, validData) {
+    if (validationError) {
+      next(validationError); //Handle errors in another middleware
+    } else {
+      req.validBody = validData;
+      next();
+    }
+  });
+};
+//exported middleware that validates a post body
+pollValidator.getID = function(req, res, next) {
+
+  //No schema needed to validate a single parameter
+  validatePollID(req.params.id)
+    .then(function(id) {
+      req.validparams = {
+        id: id
+      };
+      next();
+    })
+    .catch(function(error) {
+      next(error);
+    });
+
+};
+
+//Schema that defines the accepted variations of a post body
+var getPollPostSchema = function() {
+  return {
     type: Object,
     unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
     required: 'implicit', //Parent of required parameter becomes required.
@@ -89,16 +117,6 @@ pollValidator.post = function(req, res, next) {
       }
     }
   };
-
-  //Use the schema to validate
-  isvalid(req.body, schema, function(validationError, validData) {
-    if (validationError) {
-      next(validationError); //Handle errors in another middleware
-    } else {
-      req.validBody = validData;
-      next();
-    }
-  });
 };
 
 // Uses the array of restaurant ID's from parameter "data" and selects
@@ -170,6 +188,21 @@ var validateGroupID = function(data, schema, done) {
     }).catch(function(err) {
       console.log(err);
       done(new Error('Invalid group ID:' + data));
+    });
+};
+
+// Check if the ID exists in database
+var validatePollID = function(id) {
+  return pg.schema //Returns rows-object as either: [{exists:true}] or [{exists:false}]
+    .raw('select exists(select 1 from "poll" where id=' + id + ') AS "exists"')
+    .catch(function() {
+      return Promise.reject(new Error(id + ' is not a valid poll ID'));
+    })
+    .then(function(res) {
+      if (res.rows[0].exists) {
+        return id;
+      }
+      return Promise.reject(new Error(id + ' is not a valid poll ID'));
     });
 };
 
