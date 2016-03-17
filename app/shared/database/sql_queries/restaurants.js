@@ -157,6 +157,7 @@ restaurantsQueries.selectCategoryData = function(restaurantID) {
     });
 };
 
+//How many polls this restaurant has been part of
 restaurantsQueries.selectNumberOfPollsData = function(restaurantID) {
   return knex.select('restaurant_id')
     .from('restaurant_polls')
@@ -167,7 +168,7 @@ restaurantsQueries.selectNumberOfPollsData = function(restaurantID) {
 };
 
 restaurantsQueries.selectNumberOfPollsWon = function(restaurantID) {
-  //This query is to complicated for me to write with knex. Hence the long string..ss
+  //This query is to complicated for me to write with knex. Hence the long string..
   var query = 'select count(*) from ' +
     '(select max(restaurant_id) as restaurant_id, poll_id from ' +
     '(select count(restaurant_id), poll_id, restaurant_id from ' +
