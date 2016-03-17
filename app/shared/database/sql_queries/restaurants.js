@@ -74,7 +74,7 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
       'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
     .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
-    //.where(knex.raw(locationQuery))
+    //.where(knex.raw(locationQuery)) TODO: Fix this when new database is up and running
     .then(function(res) {
       var restaurants = [];
       for (var i = 0; i < res.length; i++) {
