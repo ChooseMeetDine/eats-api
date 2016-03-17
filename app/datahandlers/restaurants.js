@@ -55,10 +55,12 @@ var createRestaurantPostResponse = function(restaurantID) {
     queries.selectRestaurantData(restaurantID), // returns a knex-select-promise
     queries.selectCreatorData(restaurantID),
     queries.selectCategoryData(restaurantID),
+    queries.selectRatingData(restaurantID),
     queries.selectNumberOfPollsData(restaurantID),
     queries.selectNumberOfPollsWon(restaurantID)
-  ).spread(function(restaurant, creator, categories, pollCount, wonCount) {
+  ).spread(function(restaurant, creator, categories, rating, pollCount, wonCount) {
     var i;
+    restaurant.data.rating = rating;
     restaurant.data.numberOfPolls = pollCount;
     restaurant.data.numberOfPollsWon = wonCount;
     var response = new responseModule(restaurant); // creates a new JSON-API-restaurant object

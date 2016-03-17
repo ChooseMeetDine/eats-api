@@ -40,17 +40,33 @@ restaurantsQueries.insertRating = function(trx, req, restaurantID) {
   }).into('rating');
 };
 
+restaurantsQueries.selectRatingData = function(restaurantID) {
+  var ratingQuery = 'select restaurant_id, avg(rating) as' +
+    ' rating from rating where restaurant_id =  ' + restaurantID.toString() +
+    ' group by restaurant_id';
+  return knex.raw(ratingQuery)
+    .then(function(res) {
+      if (res.rows[0] && res.rows[0].rating) {
+        return parseFloat(parseFloat(res.rows[0].rating).toFixed(1));
+      } else {
+        return null;
+      }
+    });
+};
+
+
 restaurantsQueries.selectRestaurantData = function(restaurantID) {
-  var ratingQuery = '(select restaurant_id, avg(rating) as' +
-    ' rating from rating group by restaurant_id) as t1';
 
   return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
-      'lng', 'price_rate as priceRate', 'status', 'rating')
+      'lng', 'price_rate as priceRate', 'status')
     .from('restaurant')
-    .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
     .where('id', restaurantID.toString())
     .then(function(res) {
-      res[0].rating = parseFloat(parseFloat(res[0].rating).toFixed(1));
+      if (res[0] && res[0].rating) {
+        res[0].rating = parseFloat(parseFloat(res[0].rating).toFixed(1));
+      } else {
+        res[0].rating = null;
+      }
       return {
         type: 'restaurant',
         resource: 'restaurants',
@@ -81,10 +97,10 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
         res[i].rating = parseFloat(parseFloat(res[i].rating).toFixed(1));
         var restaurant = {
           data: res[i],
-          relation: 'votes',
+          relation: 'restaurants',
           multiple: true,
-          type: 'vote',
-          resource: 'votes'
+          type: 'restaurant',
+          resource: 'restaurants'
         };
         restaurants.push(restaurant);
       }
@@ -107,10 +123,10 @@ restaurantsQueries.selectAllRestaurants = function() {
         res[i].rating = parseFloat(parseFloat(res[i].rating).toFixed(1));
         var restaurant = {
           data: res[i],
-          relation: 'votes',
+          relation: 'restaurants',
           multiple: true,
-          type: 'vote',
-          resource: 'votes'
+          type: 'restaurant',
+          resource: 'restaurants'
         };
         restaurants.push(restaurant);
       }
