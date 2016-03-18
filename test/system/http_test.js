@@ -83,7 +83,8 @@ describe('Testing Eats-API HTTP requests', function() {
     });
 
     it('Should return valid data for POST /auth', function(done) {
-      var port = process.env.PORT || 5000;
+      var port = process.env.PORT || 3001;
+      //console.log(port);
       request('http://localhost:' + port.toString())
         .post('/auth')
         .send({
@@ -92,7 +93,7 @@ describe('Testing Eats-API HTTP requests', function() {
         })
         .expect(200)
         .end(function(err, res) {
-          console.log(res.body);
+          //console.log(res.body);
           var response = res.body;
           expect(response).to.be.jsonSchema({
             'title': 'auth valid schema',

@@ -33,6 +33,7 @@ app.use(function(err, req, res, next) {
     error: err.message,
     stack: err.stack
   });
+  next();
 });
 
 //test route for login
