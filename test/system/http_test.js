@@ -32,20 +32,7 @@ describe('Testing Eats-API HTTP requests', function() {
           done();
         });
     });
-    /*
-        it('Should post stuff', function () {
-          request(app)
-            .post('/users')
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .end(function (err, res) {
-              var response = JSON.parse(res.text);
-              expect(response).to.deep.equal({
-                message: 'done'
-              });
-              done();
-            });
-        });*/
+
 
     it('Should load the root page for GET /', function(done) {
       request(app)
@@ -70,6 +57,32 @@ describe('Testing Eats-API HTTP requests', function() {
         .expect(200)
         .end(done);
     });
+
+    it('Should return json response for POST /auth', function(done) {
+      request(app)
+        .post('/auth')
+        .expect(200)
+        .end(function(err, res) {
+          var response = JSON.parse(res.text);
+          expect(response).to.be.jsonSchema({
+            'title': 'auth post schema',
+            'type': 'object',
+            'properties': {
+              'authentication': {
+                'type': 'boolean'
+              },
+              'message': {
+                'type': 'string'
+              },
+              'token': {
+                'type': 'boolean'
+              }
+            }
+          });
+          done();
+        });
+    });
+
     /*
         it('POSTs a vote', function (done) {
           request('http://localhost:3001')
