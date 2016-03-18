@@ -12,12 +12,12 @@ var auth = {};
 
 auth.validate = function(req, res, next) {
 
-  var token = req.headers['x-access-token'];
+  var token = req.headers['x-access-token'] || req.query.token;
 
   if (token) {
     jwt.verify(token, cert, function(err, decoded) {
       if (err) {
-        return res.json({
+        return res.status(403).json({
           message: 'Failed to authenticate token, please log in again'
         });
       } else {

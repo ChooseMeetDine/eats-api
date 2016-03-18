@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script>
+      var app = angular.module('app', []);
+      app.controller('registerUser', function($scope, $location, $http) {
+
+       var user;
+       var token;
+
+       $scope.submit = function (){
+           user = {
+           'email' : $scope.email,
+           'password' : $scope.password
+
+           };
+
+           $http({
+               method: 'POST',
+               url: '/auth',
+               headers: {'Content-Type': 'application/json'},
+               data: user
+           }).then(function successCallback(response){
+               token = response.data.token;
+               var message = response.data.message;
+               $scope.submitted = message + ' your token: ' + token;
+               $location.absUrl() == 'http://localhost:5000/authtest';
+           }, function errorCallback(){
+               $scope.submitted = "error";
+           });
+       };
+      });
+    </script>
+  </head>
+  <body ng-app="app" ng-controller="registerUser">
+     <form ng-submit="submit()">
+         <input type="text" ng-model="email" name="email"> Email
+         <br>
+         <input type="text" ng-model="password" name="password"> Password
+         <br>
+         <input type="submit" id="submit" value="Logga in">
+     </form>
+     <span>{{ submitted }}</span>
+   </body>
+</html>
