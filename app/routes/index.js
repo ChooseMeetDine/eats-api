@@ -4,18 +4,9 @@ var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
 //var authTest = require('../routes/authTest'); Route for testing auth
-var knex = require('../shared/database/knex');
 
 router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');
-});
-
-router.get('/dbtest', function(req, res) {
-  knex.select('*').from('restaurant')
-     .then(function(result){
-       console.log('Request for /dbtest');
-       res.send(result);
-  });
 });
 
 router.get('/testauth', auth.validate, function(req, res) {
@@ -44,12 +35,12 @@ router.get('/', function(req, res) {
 });
 
 router.get('/docs', function(req, res) {
-    res.sendFile(path.join(__dirname, '../../public/docs', 'documentation.html'));
+  res.sendFile(path.join(__dirname, '../../public/docs', 'documentation.html'));
 });
 
 
 router.get('/goaldocs', function(req, res) {
-   res.sendFile(path.join(__dirname, '../../public/docs', 'goaldocs.html'));
+  res.sendFile(path.join(__dirname, '../../public/docs', 'goaldocs.html'));
 });
 
 
