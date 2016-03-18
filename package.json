@@ -7,7 +7,6 @@
     "node": "4.3.1"
   },
   "dependencies": {
-    "aglio": "~2.2.0",
     "bluebird": "~3.0.6",
     "body-parser": "~1.15.0",
     "chai-as-promised": "~5.2.0",
