@@ -49,7 +49,7 @@ router.post('/', authRequest.checkData, function(req, res) {
         });
       }
     }).catch(function() {
-      res.json({
+      res.status(403).json({
         authentication: false,
         message: 'You need to POST email and password',
         token: false
