@@ -38,7 +38,8 @@
     "start": "node app.js",
     "test": "mocha --recursive test",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --recursive test",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "docs": "aglio -i public/docs/GOALS.apib -o public/docs/goaldocs.html && aglio -i public/docs/README.apib -o public/docs/documentation.html"
   },
   "repository": {
     "type": "git",

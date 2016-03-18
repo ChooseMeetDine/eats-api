@@ -36,9 +36,3 @@ node_modules
 
 # Development environment variables
 .env
-
-
-
-# .html
-public/docs/documentation.html
-public/docs/goaldocs.html
