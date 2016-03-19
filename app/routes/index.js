@@ -11,6 +11,10 @@ router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');
 });
 
+// Dummy route for testing socketio
+// Appends the name of pollid 15 with ' UPDATE' and sends new poll
+// data via socketio to any listeners for that pollid
+// Created a client on the spike repo (/public/index.html) to use in the test
 router.get('/socketiotest', function(req, res) {
   knex('poll').pluck('name').where('id', '15')
     .then(function(result) {
