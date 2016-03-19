@@ -3,10 +3,34 @@ var pollRouter = require('../routes/polls');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
+var socketio = require('../socketio/polls_socket');
+var knex = require('../shared/database/knex');
 //var authTest = require('../routes/authTest'); Route for testing auth
 
 router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');
+});
+
+router.get('/socketiotest', function(req, res) {
+  knex('poll').pluck('name').where('id', '15')
+    .then(function(result) {
+      return knex('poll')
+        .update({
+          name: result[0] + ' UPDATE'
+        }).where('id', '15')
+        .returning('name')
+        .then(function(result) {
+          console.log('Updated name for pollid 15 with: ' + result);
+          console.log('Sending new poll data via socketio');
+          socketio.fetchAndSendNewPollData(15);
+          res.send('Updated name for pollid 15 with: "' + result[0] +
+            '" -- Sending new poll data via socketio');
+        });
+    })
+    .catch(function(error) {
+      console.log(error);
+      res.send(error);
+    });
 });
 
 router.get('/testauth', auth.validate, function(req, res) {
