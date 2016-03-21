@@ -38,7 +38,7 @@ router.post('/', authRequest.checkData, function(req, res) {
 
         res.json({
           authentication: true,
-          message: 'Enjoy your token ' + user.name,
+          message: 'Welcome ' + user.name,
           token: token
         });
       } else {
