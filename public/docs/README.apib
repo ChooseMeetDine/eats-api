@@ -4,6 +4,26 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 # GET /docs
 + response 200 (text/html)
 
+# Group Realtime updates for polls
+
+### Realtime updates
+
+Every time a poll is updated, for example a new vote is added or a user leaves the poll,
+realtime updates are sent through web sockets.
+
+To get these updates with socket.io, use the poll ID as event identifier as illustrated below
+
+```javascript
+var socket = io('http://path-to.server');
+
+socket.on(pollID, function(data){
+  console.log(data);
+});
+```
+
+The data sent through the socket is identical to the response from a GET-request for /polls/:id for the corresponding poll ID
+
+
 # Group /polls
 
 ## Only registered users [/polls]
