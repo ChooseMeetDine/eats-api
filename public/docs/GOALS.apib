@@ -10,16 +10,20 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 ### Retrieve restaurants [GET /restaurant?lat=123&lng=32&radius=15000]
 
 Query parameters
-Both lat and lng has to be used if one of them are used, or radius is used,
+Both lat and lng has to be used if one of them are used, or radius is used
+
+The variable "status" on restaurants have three values: "unexamined", "accepted" and "removed".
+Unexamined are new restaurants that have not been examined and validated by admins.
+Once an admin examines a restaurant, the status will be changed to either "accepted" or "removed"
 
 
 + Parameters
 
- + lng (number, optional) - Longitude coordinate in WGS84 format
+ + lng (number, optional) - Longitude coordinate in WGS84 format. Requires lat
 
- + lat (number, optional) - Latitude coordinate in WGS84 format
+ + lat (number, optional) - Latitude coordinate in WGS84 format. Requires lng
 
- + radius (number, optional) - Radius in meters from coordinates. Defines the area from which restaurants will be returned
+ + radius (number, optional) - Radius in meters from coordinates. Defines the area from which restaurants will be returned. Requires lat and lng
      + Default: 1000
 
 + Response 200 (application/json)
