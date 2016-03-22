@@ -12,6 +12,7 @@ router.use(bodyParser.urlencoded({
 router.post('/', authRequest.checkData, function(req, res) {
 
   var user = {
+    id: undefined,
     name: undefined,
     email: undefined,
     admin: undefined
@@ -20,6 +21,7 @@ router.post('/', authRequest.checkData, function(req, res) {
   knex.select('*').from('user').where('email', '=', req.body.email)
     .then(function(result) {
       if (req.body.email === result[0].email && req.body.password === result[0].password) {
+        user.id = result[0].id;
         user.name = result[0].name;
         user.email = result[0].email;
         user.admin = result[0].admin;
@@ -32,7 +34,7 @@ router.post('/', authRequest.checkData, function(req, res) {
           });
         } else {
           token = jwt.sign(user, cert, {
-            expiresIn: '1m' // expires in 1 minute
+            expiresIn: '5m' // expires in 1 minute
           });
         }
 
