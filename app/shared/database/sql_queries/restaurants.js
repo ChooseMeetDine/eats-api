@@ -78,7 +78,7 @@ restaurantsQueries.selectRestaurantData = function(restaurantID) {
 //With lat, lng, radius
 restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
 
-  var dbLoc = 'ST_SetSRID(ST_MakePoint(lng,lat),4326)::geography';
+  var dbLoc = 'ST_SetSRID(ST_MakePoint(restaurant.lng,restaurant.lat),4326)::geography';
   var userLoc = 'ST_GeogFromText(\'SRID=4326;POINT(' + req.validQuery.lng + ' ' +
     req.validQuery.lat + ')\')';
   var locationQuery = 'ST_DWithin( ' + dbLoc + ', ' + userLoc + ', ' + req.validQuery.radius + ')';
@@ -90,7 +90,7 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
       'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
     .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
-    //.where(knex.raw(locationQuery)) TODO: Fix this when new database is up and running
+    .where(knex.raw(locationQuery))
     .then(function(res) {
       var restaurants = [];
       for (var i = 0; i < res.length; i++) {
