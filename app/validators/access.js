@@ -19,19 +19,17 @@ access.toAdmin = function(req, res, next) {
     });
   }
 };
-/*
-access.typeOfUser = function(req, res, next) {
-  var userId = req.validUser.id;
-  var admin = req.validUser.admin;
-};*/
 
-access.toGroupCreator = function(req, res, next) {
+access.setRoleForGetUserId = function(req, res, next) {
   knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
-      if (req.validUser.id === result[0].creator_id) {
-        req.validData = result[0];
-        console.log(req.validData);
+      if (req.validUser.admin) {
         next();
+      } else if (req.validUser.id === result[0].creator_id) {
+        req.validUser.role = 'creator';
+        next();
+      } else {
+        req.validUser.role = ' user';
       }
     }).catch(function() {
       res.status(403).json({
