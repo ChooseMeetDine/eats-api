@@ -1,3 +1,4 @@
+require('dotenv').config();
 var request = require('supertest');
 var rewire = require('rewire');
 var app = rewire('../../app');
@@ -91,6 +92,36 @@ describe('Testing Eats-API HTTP requests', function() {
               },
               'token': {
                 'type': 'boolean'
+              }
+            }
+          });
+          done();
+        });
+    });
+
+    it('Should return valid data for POST /auth', function(done) {
+      var port = process.env.PORT || 3001;
+      request('http://localhost:' + port.toString())
+        .post('/auth')
+        .send({
+          'email': 'musse@mail.se',
+          'password': 'password123'
+        })
+        .expect(200)
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.be.jsonSchema({
+            'title': 'auth valid schema',
+            'type': 'object',
+            'properties': {
+              'authentication': {
+                'type': 'boolean'
+              },
+              'message': {
+                'type': 'string'
+              },
+              'token': {
+                'type': 'string'
               }
             }
           });
