@@ -71,7 +71,8 @@ var createRestaurantPostResponse = function(restaurantID) {
     return response;
   }).catch(function(err) {
     console.log(err.stack);
-    return Promise.reject(new Error('Could insert but not retrieve restaurant data from database'));
+    return Promise.reject(new Error('Could not retrieve restaurant data from database' +
+      '(If you inserted, the insertion was successful)'));
   });
 };
 
