@@ -18,7 +18,7 @@ router.get('/testauth', auth.validate, function(req, res) {
 
 router.use('/polls', pollRouter);
 router.use('/auth', authRouter);
-router.use('/authtest', auth.validate, access.toUserData, authTest);
+router.use('/authtest', auth.validate, access.setRoleForGetUserId, authTest);
 
 //TODO: Fix routers for everything below this comment.
 

@@ -32,12 +32,22 @@ access.setRoleForGetUserId = function(req, res, next) {
         req.validUser.role = ' user';
       }
     }).catch(function() {
-      res.status(403).json({
-        error: 'no group creator error',
-        message: 'Try creating the group to access route'
+      res.status(400).json({
+        'errors': [
+          {
+            'status': '400',
+            'source': {
+              'pointer': '/jsonPointer/lookIntoThis'
+            },
+            'title': 'Bad Request',
+            'detail': 'Provided ID does not exist in group.'
+          }
+        ]
       });
     });
 };
+
+access.setRoleForGetUserId;
 
 access.toPollCreator = function(req, res, next) {
   knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
@@ -52,7 +62,7 @@ access.toPollCreator = function(req, res, next) {
       });
     });
 };
-
+/*
 access.toUserData = function(req, res, next) {
 
   usersAllArray = [];
@@ -101,13 +111,6 @@ access.toUserData = function(req, res, next) {
         message: 'error'
       });
     });
-
-  access.toUserDataId = function(req, res, next) {
-
-  };
-
-
-
-};
+};*/
 
 module.exports = access;

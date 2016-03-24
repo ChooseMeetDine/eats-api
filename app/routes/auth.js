@@ -15,7 +15,8 @@ router.post('/', authRequest.checkData, function(req, res) {
     id: undefined,
     name: undefined,
     email: undefined,
-    admin: undefined
+    admin: undefined,
+    role: undefined
   };
 
   knex.select('*').from('user').where('email', '=', req.body.email)

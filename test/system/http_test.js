@@ -74,31 +74,6 @@ describe('Testing Eats-API HTTP requests', function() {
         .end(done);
     });
 
-    it('Should return json response for POST /auth', function(done) {
-      request(app)
-        .post('/auth')
-        .expect(200)
-        .end(function(err, res) {
-          var response = JSON.parse(res.text);
-          expect(response).to.be.jsonSchema({
-            'title': 'auth post schema',
-            'type': 'object',
-            'properties': {
-              'authentication': {
-                'type': 'boolean'
-              },
-              'message': {
-                'type': 'string'
-              },
-              'token': {
-                'type': 'boolean'
-              }
-            }
-          });
-          done();
-        });
-    });
-
     it('Should return valid data for POST /auth', function(done) {
       var port = process.env.PORT || 3001;
       request('http://localhost:' + port.toString())
@@ -129,21 +104,5 @@ describe('Testing Eats-API HTTP requests', function() {
         });
     });
 
-    /*
-        it('POSTs a vote', function (done) {
-          request('http://localhost:3001')
-            .post('/vote')
-            .send({})
-            .expect(200)
-            .end(done);
-        });
-
-        it('PUTs ....', function (done) {
-          request(app).put('/../id').send({}).expect(200).end(done);
-        });
-
-        it('DELETEs ....', function (done) {
-          request(app).delete('/../id').expect(200).end(done);
-        });*/
   });
 });
