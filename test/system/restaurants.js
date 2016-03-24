@@ -3,16 +3,15 @@ var expect = require('chai').expect;
 var chai = require('chai');
 chai.use(require('chai3-json-schema'));
 
-module.exports = function(appInstance) {
-  app = appInstance;
+module.exports = function(app, tokens) {
   describe('Testing restaurants endpoint', function() {
-    it('should return valid json data for GET /restaurants', function(done) {
+    it('should return valid JSON for GET', function(done) {
       request(app)
         .get('/restaurants')
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
-          var response = JSON.parse(res.text);
+          var response = res.body;
           expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
           done();
         });
@@ -20,12 +19,11 @@ module.exports = function(appInstance) {
   });
 };
 
-
+// schema is built according to standard Shcema Draft4 by using http://jsonschema.net/#/
+// defined in API documentation json-format was translated to json-schema
+// extra id-s which were added by service are deleted, required attributes were defined
 var jsonSchemaRestaurantGet = function() {
   return {
-    // schema is built according to standard Shcema Draft4 by using http://jsonschema.net/#/
-    // defined in API documentation json-format was translated to json-schema
-    // extra id-s which were added by service are deleted, required attributes were defined
     '$schema': 'http://json-schema.org/draft-04/schema#',
     'type': 'object',
     'properties': {

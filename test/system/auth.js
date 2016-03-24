@@ -1,11 +1,11 @@
 var request = require('supertest');
-var app;
 var chai = require('chai');
 var expect = chai.expect;
 chai.use(require('chai3-json-schema'));
 
-module.exports = function(appInstance) {
-  app = appInstance;
+module.exports = function(appInstance, tokensObject) {
+  var app = appInstance;
+  var tokens = tokensObject;
   describe('Testing auth endpoint', function() {
     it('Should return json response for POST /auth', function(done) {
       request(app)
@@ -33,19 +33,15 @@ module.exports = function(appInstance) {
     });
 
     it('Should return valid data for POST /auth', function(done) {
-      var port = process.env.PORT || 3001;
-      console.log(port);
-      request('http://localhost:' + port.toString())
+      request(app)
         .post('/auth')
         .send({
-          'email': 'musse@mail.se',
-          'password': 'password123'
+          email: 'jenny@mail.se',
+          password: 'password123'
         })
-        .expect(200)
+        .set('Content-Type', 'application/json')
         .end(function(err, res) {
-          console.log(res);
           var response = res.body;
-          console.log(response);
           expect(response).to.be.jsonSchema({
             'title': 'auth valid schema',
             'type': 'object',
