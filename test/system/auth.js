@@ -3,9 +3,7 @@ var chai = require('chai');
 var expect = chai.expect;
 chai.use(require('chai3-json-schema'));
 
-module.exports = function(appInstance, tokensObject) {
-  var app = appInstance;
-  var tokens = tokensObject;
+module.exports = function(app, tokens) {
   describe('Testing auth endpoint', function() {
     it('Should return json response for POST /auth', function(done) {
       request(app)

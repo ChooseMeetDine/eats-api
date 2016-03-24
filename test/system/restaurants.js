@@ -5,54 +5,115 @@ chai.use(require('chai3-json-schema'));
 
 module.exports = function(app, tokens) {
   describe('Testing restaurants endpoint', function() {
-    it('should return valid JSON for GET /restaurants with user-token', function(done) {
-      request(app)
-        .get('/restaurants')
-        .set('x-access-token', tokens.user)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          var response = res.body;
-          expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
-          done();
-        });
+
+    describe('with GET /restaurants', function() {
+      it('should return valid JSON for GET /restaurants with user-token', function(done) {
+        request(app)
+          .get('/restaurants')
+          .set('x-access-token', tokens.user)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
+            done();
+          });
+      });
+
+      it('should return valid JSON for GET /restaurants with user-token', function(done) {
+        request(app)
+          .get('/restaurants')
+          .set('x-access-token', tokens.admin)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
+            done();
+          });
+      });
+
+      it('should return error when no token is used for GET /restaurants', function(done) {
+        request(app)
+          .get('/restaurants')
+          .expect(403)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            expect(res.body.message).to.equal('No token provided.');
+            done();
+          });
+      });
+
+      it('should return error when a mock-token is used for GET /restaurants', function(done) {
+        request(app)
+          .get('/restaurants')
+          .set('x-access-token', 'k1m23,m12.,3m1.2,3m1.,2m31,2m3.1,m23')
+          .expect(403)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            expect(res.body.message).to.equal('Failed to authenticate token, please log in again');
+            done();
+          });
+      });
     });
 
-    it('should return valid JSON for GET /restaurants with user-token', function(done) {
-      request(app)
-        .get('/restaurants')
-        .set('x-access-token', tokens.admin)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          var response = res.body;
-          expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
-          done();
-        });
+    describe('with POST /restaurants', function() {
+      it.skip('should return valid JSON for POST /restaurants with user-token', function(done) {
+        request(app)
+          .post('/restaurants')
+          .send({
+            name: 'Testaurant',
+            temporary: false,
+            info: 'Not needed',
+            lng: 123.1,
+            lat: 123.1,
+            photo: 'www.not-a-real-photo.com',
+            priceRate: 1,
+            rating: 2,
+            categories: ['13']
+          })
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.user)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            //TODO: Make a real schema for this one
+            expect(true).to.equal('implementera testet tack');
+            done();
+          });
+      });
+
+      it('should return error for POST /restaurants without token', function(done) {
+        request(app)
+          .post('/restaurants')
+          .send({
+            name: 'Testaurant',
+            temporary: false,
+            info: 'Not needed',
+            lng: 123.1,
+            lat: 123.1,
+            photo: 'www.not-a-real-photo.com',
+            priceRate: 1,
+            rating: 2,
+            categories: ['13']
+          })
+          .set('Content-Type', 'application/json')
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            expect(res.body.message).to.equal('No token provided.');
+            done();
+          });
+      });
+
+      //TODO: Test that restaurants get the status 'accepted' if admins add them
+
+      //TODO: Test that restaurants can be added by anonymous users
+
     });
 
-    it('should return error when no token is used for GET /restaurants', function(done) {
-      request(app)
-        .get('/restaurants')
-        .expect(403)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          expect(res.body.message).to.equal('No token provided.');
-          done();
-        });
-    });
 
-    it('should return error when a mock-token is used for GET /restaurants', function(done) {
-      request(app)
-        .get('/restaurants')
-        .set('x-access-token', 'k1m23,m12.,3m1.2,3m1.,2m31,2m3.1,m23')
-        .expect(403)
-        .expect('Content-Type', /json/)
-        .end(function(err, res) {
-          expect(res.body.message).to.equal('Failed to authenticate token, please log in again');
-          done();
-        });
-    });
   });
 };
 
