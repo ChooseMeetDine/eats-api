@@ -37,11 +37,7 @@
   },
   "scripts": {
     "start": "nf start --trim 350",
-    "test": "node testenv/setup.js; mocha --recursive test; node testenv/cleanup.js",
-    "a": "npm run d && npm run c && npm run d",
-    "b": "node test/testenv/cleanup.js",
-    "c": "mocha --recursive test",
-    "d": "node test/testenv/setup.js",
+    "test": "node ./testenv/setup.js; mocha --recursive test; node ./testenv/cleanup.js",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --recursive test",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
