@@ -5,14 +5,51 @@ chai.use(require('chai3-json-schema'));
 
 module.exports = function(app, tokens) {
   describe('Testing restaurants endpoint', function() {
-    it('should return valid JSON for GET', function(done) {
+    it('should return valid JSON for GET /restaurants with user-token', function(done) {
       request(app)
         .get('/restaurants')
+        .set('x-access-token', tokens.user)
         .expect(200)
         .expect('Content-Type', /json/)
         .end(function(err, res) {
           var response = res.body;
           expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
+          done();
+        });
+    });
+
+    it('should return valid JSON for GET /restaurants with user-token', function(done) {
+      request(app)
+        .get('/restaurants')
+        .set('x-access-token', tokens.admin)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
+          done();
+        });
+    });
+
+    it('should return error when no token is used for GET /restaurants', function(done) {
+      request(app)
+        .get('/restaurants')
+        .expect(403)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          expect(res.body.message).to.equal('No token provided.');
+          done();
+        });
+    });
+
+    it('should return error when a mock-token is used for GET /restaurants', function(done) {
+      request(app)
+        .get('/restaurants')
+        .set('x-access-token', 'k1m23,m12.,3m1.2,3m1.,2m31,2m3.1,m23')
+        .expect(403)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          expect(res.body.message).to.equal('Failed to authenticate token, please log in again');
           done();
         });
     });

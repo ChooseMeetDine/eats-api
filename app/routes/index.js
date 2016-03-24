@@ -18,7 +18,7 @@ router.get('/testauth', auth.validate, function(req, res) {
 });
 
 router.use('/polls', pollRouter);
-router.use('/restaurants', restaurantRouter);
+router.use('/restaurants', auth.validate, restaurantRouter);
 router.use('/auth', authRouter);
 //router.use('/authtest', auth.validate, authTest); Route for testing auth
 
