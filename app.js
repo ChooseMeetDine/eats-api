@@ -35,7 +35,11 @@ app.use(function(err, req, res, next) {
   });
 });
 
-var port = process.env.PORT || 3001;
+io.on('connection', function() {
+  console.log('Someone connected to the API via socketIO!');
+});
+
+var port = process.env.PORT || 3000;
 
 http.listen(port, function() {
   console.log('Eats API-server listening on port ' + port);

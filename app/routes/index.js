@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var aglio = require('aglio');
 var pollRouter = require('../routes/polls');
+var restaurantRouter = require('../routes/restaurants');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
@@ -17,6 +18,7 @@ router.get('/testauth', auth.validate, function(req, res) {
 });
 
 router.use('/polls', pollRouter);
+router.use('/restaurants', restaurantRouter);
 router.use('/auth', authRouter);
 //router.use('/authtest', auth.validate, authTest); Route for testing auth
 
