@@ -83,8 +83,8 @@ describe('Testing Eats-API HTTP requests', function() {
           'password': 'password123'
         })
         .expect(200)
-        .end(function(err, res) {
-          var response = res.body;
+        .end(function(err, response) {
+          console.log(response.body);
           expect(response).to.be.jsonSchema({
             'title': 'auth valid schema',
             'type': 'object',
