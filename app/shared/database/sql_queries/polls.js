@@ -7,7 +7,7 @@ var pollsQueries = {};
 pollsQueries.insertPoll = function(trx, req) {
   return trx('poll')
     .insert({
-      creator_id: req.validUser,
+      creator_id: req.validUser.id,
       name: req.validBody.name,
       expires: req.validBody.expires,
       group_id: req.validBody.group,

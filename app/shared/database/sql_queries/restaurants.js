@@ -6,7 +6,7 @@ var restaurantsQueries = {};
 restaurantsQueries.insertRestaurant = function(trx, req) {
   return trx('restaurant')
     .insert({
-      creator_id: req.validUser,
+      creator_id: req.validUser.id,
       name: req.validBody.name,
       info: req.validBody.info,
       lat: req.validBody.lat,
@@ -33,7 +33,7 @@ restaurantsQueries.insertRating = function(trx, req, restaurantID) {
     return Promise.resolve();
   }
   return trx.insert({
-    rater_id: req.validUser,
+    rater_id: req.validUser.id,
     rating: req.validBody.rating,
     restaurant_id: restaurantID.toString(),
     created: knex.raw('now()')

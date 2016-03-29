@@ -12,6 +12,16 @@ router.get('/', function(req, res) {
 });
 
 if (env === 'development') {
+
+  //Set fake user so that tokens are not needed when in dev-mode
+  router.use(function(req, res, next) {
+    req.validUser = {
+      id: 10,
+      role: 'admin'
+    };
+    next();
+  });
+
   router.use('/restaurants', restaurantRouter);
   router.use('/polls', pollRouter);
   router.get('/testauth', auth.validate, function(req, res) {

@@ -12,15 +12,11 @@ var queries = require('../shared/database/sql_queries/restaurants');
 // Error handling is handled in the two promises separately, to be able to distinguish what error
 // was thrown and to be able to return a useful message to the user.
 restaurantDatahandler.post = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return executeInsertionTransaction(req)
     .then(createRestaurantPostResponse);
 };
 
 restaurantDatahandler.get = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return createRestaurantGetResponse(req);
 };
 
