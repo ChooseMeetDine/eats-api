@@ -49,6 +49,22 @@ pollValidator.postRestaurant = function(req, res, next) {
     });
 };
 
+// Exported middleware that validates a POST body to /polls/:id/votes
+pollValidator.postVote = function(req, res, next) {
+  // Use the schema for POST restaurant to validate
+  isvalid(
+    req.body,
+    getPollPostVoteSchema(req.validParams.id),
+    function(validationError, validData) {
+      if (validationError) {
+        next(validationError); //Handle errors in another middleware
+      } else {
+        req.validBody = validData;
+        next();
+      }
+    });
+};
+
 //Schema that defines the accepted variations of a post body
 var getPollPostSchema = function() {
   return {
@@ -76,7 +92,7 @@ var getPollPostSchema = function() {
         type: Array,
         required: false, //not required
         custom: validateRestaurantIDs, //Validate all ID's in database
-        default: [], //defaults to epmty array
+        default: [], //defaults to empty array
         schema: { //Defines what the array contains
           type: String
         },
@@ -235,7 +251,7 @@ var getPollPostRestaurantSchema = function(pollId) {
         options: {
           pollId: pollId
         },
-        custom: validateRestaurantId,
+        custom: validateRestaurantIdAndIfUniqueToPoll,
         errors: {
           type: 'restaurantId must be a String', //error if type: String throws error
           required: 'restaurantId is required.' //error if restaurantId is not present
@@ -246,7 +262,7 @@ var getPollPostRestaurantSchema = function(pollId) {
 };
 
 // Check if a restaurant ID is valid and has not been added to the poll before
-var validateRestaurantId = function(data, schema, done) {
+var validateRestaurantIdAndIfUniqueToPoll = function(data, schema, done) {
   if (!data || data.length === 0) {
     return done(new Error('Restaurant ID cannot be empty'));
   }
@@ -275,5 +291,67 @@ var validateRestaurantId = function(data, schema, done) {
       return done(new Error('Invalid restaurant ID: ' + data));
     });
 };
+
+// Schema to validate a POST for /polls/<id>/votes
+var getPollPostVoteSchema = function(pollId) {
+  return {
+    type: Object,
+    unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
+    required: 'implicit', //Parent of required parameter becomes required.
+    options: {
+      pollId: pollId
+    },
+    custom: checkIfVoteCanBeAddedToPoll,
+    schema: {
+      'restaurantId': {
+        type: String, //Has to be a string
+        required: true, //is required
+        custom: validateRestaurantId,
+        errors: {
+          type: 'restaurantId must be a String', //error if type: String throws error
+          required: 'restaurantId is required.' //error if restaurantId is not present
+        }
+      }
+    }
+  };
+};
+
+// Check if the poll allows new votes to be added (that the poll isn't over)
+var checkIfVoteCanBeAddedToPoll = function(data, schema, done) {
+  return pg.select('expires')
+    .from('poll')
+    .where('id', schema.options.pollId)
+    .then(function(res) {
+      // Check that the poll hasn't expired ('expires' is after now())
+      var now = moment();
+      if (res[0] && moment(res[0].expires).isAfter(now)) {
+        return done(null, data);
+      }
+      return done(new Error('Poll ID ' + schema.options.pollId +
+        ' has expired and does not allow new votes: ' + res[0].expires));
+    });
+};
+
+// Check if a restaurant ID is valid (if it exists in DB)
+var validateRestaurantId = function(data, schema, done) {
+  if (!data || data.length === 0) {
+    return done(new Error('Restaurant ID cannot be empty'));
+  }
+  pg.select('id')
+    .from('restaurant')
+    .where('id', data)
+    .then(function(res) {
+      if (_.isEmpty(res)) { // if res is an empty array, the ID wasn't found in DB
+        return done(new Error(data + ' is not a valid restaurant ID'));
+      }
+      return done(null, data);
+    })
+    .catch(function(err) {
+      console.log(err);
+      return done(new Error('Invalid restaurant ID: ' + data));
+    });
+};
+
+
 
 module.exports = pollValidator;
