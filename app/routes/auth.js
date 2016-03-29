@@ -99,6 +99,4 @@ router.get('/anonymous', function(req, res) {
   });
 });
 
-console.log(moniker.choose());
-
 module.exports = router;

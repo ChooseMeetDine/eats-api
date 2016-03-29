@@ -4,7 +4,6 @@ var restaurantRouter = require('../routes/restaurants');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
-var authTest = require('../routes/authTest');
 var access = require('../validators/access');
 
 router.get('/', function(req, res) {
@@ -20,6 +19,7 @@ router.use('/polls', pollRouter);
 router.use('/restaurants', restaurantRouter);
 router.use('/auth', authRouter);
 router.use('/authtest', auth.validate, access.setRoleForUser, authTest);
+
 
 //TODO: Fix routers for everything below this comment.
 
