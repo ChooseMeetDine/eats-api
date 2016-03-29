@@ -3,9 +3,7 @@ var expect = require('chai').expect;
 var chai = require('chai');
 chai.use(require('chai3-json-schema'));
 
-module.exports = function(appInstance, tokensObject) {
-  var app = appInstance;
-  var tokens = tokensObject;
+module.exports = function(app, tokens) {
   describe.skip('Testing polls endpoint', function() {
     it('should return valid json data for GET /polls', function(done) {
       request(app)
