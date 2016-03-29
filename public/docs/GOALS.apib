@@ -682,34 +682,33 @@ The data sent through the socket is identical to the response from a GET-request
       "expires": "2017-08-07T10:46:40Z",
       "created": "2016-02-01T15:20:05Z",
       "allowNewRestaurants": true
-    }
-  },
+    },
   "relationships": {
     "creator": {
       "data": {
         "type": "user",
-        "id": "7545345",
+        "id": "7545345"
       }
     },
     "restaurants": {
       "data": [{
         "type": "restaurant",
-        "id": "234123",
+        "id": "234123"
       }, {
         "type": "restaurant",
-        "id": "12412332",
+        "id": "12412332"
       }]
     },
     "users": {
       "data": [{
         "type": "user",
-        "id": "7545345",
+        "id": "7545345"
       }, {
         "type": "user",
-        "id": "6663523",
+        "id": "6663523"
       }, {
         "type": "user",
-        "id": "45656855",
+        "id": "45656855"
       }]
     },
     "group": {
@@ -721,6 +720,7 @@ The data sent through the socket is identical to the response from a GET-request
   },
   "links": {
     "self": "www.path.to.api/polls/123123123"
+  }
   },
   "included": [{
     "type": "restaurant",
@@ -729,7 +729,7 @@ The data sent through the socket is identical to the response from a GET-request
       "name": "Din Restaurang",
       "latitude": 56.1234,
       "longitude": 14.1234,
-      "temporary": false,
+      "temporary": false
     },
     "links": {
       "self": "/restaurants/234123"
@@ -741,7 +741,7 @@ The data sent through the socket is identical to the response from a GET-request
       "name": "Vår Restaurang",
       "latitude": 56.1234,
       "longitude": 14.1234,
-      "temporary": false,
+      "temporary": false
     },
     "links": {
       "self": "/restaurants/12412332"

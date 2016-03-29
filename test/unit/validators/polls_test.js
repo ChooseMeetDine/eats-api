@@ -874,6 +874,10 @@ describe('Testing the validators for /polls', function() {
             }]);
           } else if (step === 2) { // 2nd DB-query, EMPTY array = success
             query.response([]);
+          } else if (step === 3) { // 3rd DB-query
+            query.response([{
+              allowNewRestaurants: true
+            }]);
           }
         });
         request.body = {
@@ -890,13 +894,16 @@ describe('Testing the validators for /polls', function() {
       it('should pass for "0"', function(done) {
         tracker.on('query', function gotQuery(query, step) {
           query.index = step;
-
           if (step === 1) {
             query.response([{ // 1st DB-query, NOT empty array = success
               id: '0'
             }]);
           } else if (step === 2) { // 2nd DB-query, EMPTY array = success
             query.response([]);
+          } else if (step === 3) { // 3rd DB-query
+            query.response([{
+              allowNewRestaurants: true
+            }]);
           }
         });
         request.body = {

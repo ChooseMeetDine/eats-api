@@ -1,3 +1,4 @@
+require('dotenv').config();
 var request = require('supertest');
 var rewire = require('rewire');
 var app = rewire('../../app');
@@ -33,6 +34,21 @@ describe('Testing Eats-API HTTP requests', function() {
         });
     });
 
+    /*
+    it('Should return json response with false authentication', function(done) {
+      request(app)
+        .post('/auth')
+        .set('Content-Type', 'application/json')
+        .end(function(err, res) {
+          var response = JSON.parse(res.text);
+          expect(response).to.deep.equal({
+            authentication: false,
+            message: 'You need to POST email and password',
+            token: false
+          });
+          done();
+        });
+    });*/
 
     it('Should load the root page for GET /', function(done) {
       request(app)
@@ -57,15 +73,20 @@ describe('Testing Eats-API HTTP requests', function() {
         .expect(200)
         .end(done);
     });
-
-    it('Should return json response for POST /auth', function(done) {
-      request(app)
+    //TODO: Implement this when branch systemtest_with_tokens is merged with develop
+    it.skip('Should return valid data for POST /auth', function(done) {
+      var port = process.env.PORT || 3001;
+      request('http://localhost:' + port.toString())
         .post('/auth')
+        .send({
+          'email': 'musse@mail.se',
+          'password': 'password123'
+        })
         .expect(200)
-        .end(function(err, res) {
-          var response = JSON.parse(res.text);
+        .end(function(err, response) {
+          console.log(response.body);
           expect(response).to.be.jsonSchema({
-            'title': 'auth post schema',
+            'title': 'auth valid schema',
             'type': 'object',
             'properties': {
               'authentication': {
@@ -75,7 +96,7 @@ describe('Testing Eats-API HTTP requests', function() {
                 'type': 'string'
               },
               'token': {
-                'type': 'boolean'
+                'type': 'string'
               }
             }
           });
@@ -83,21 +104,5 @@ describe('Testing Eats-API HTTP requests', function() {
         });
     });
 
-    /*
-        it('POSTs a vote', function (done) {
-          request('http://localhost:3001')
-            .post('/vote')
-            .send({})
-            .expect(200)
-            .end(done);
-        });
-
-        it('PUTs ....', function (done) {
-          request(app).put('/../id').send({}).expect(200).end(done);
-        });
-
-        it('DELETEs ....', function (done) {
-          request(app).delete('/../id').expect(200).end(done);
-        });*/
   });
 });

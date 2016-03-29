@@ -244,6 +244,10 @@ var getPollPostRestaurantSchema = function(pollId) {
     type: Object,
     unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
     required: 'implicit', //Parent of required parameter becomes required.
+    options: {
+      pollId: pollId
+    },
+    custom: checkIfRestaurantsCanBeAddedToPoll,
     schema: {
       'restaurantId': {
         type: String, //Has to be a string
@@ -259,6 +263,20 @@ var getPollPostRestaurantSchema = function(pollId) {
       }
     }
   };
+};
+
+// Check if poll allows new restaurants
+var checkIfRestaurantsCanBeAddedToPoll = function(data, schema, done) {
+  return pg.select('allow_new_restaurants as allowNewRestaurants')
+    .from('poll')
+    .where('id', schema.options.pollId)
+    .then(function(res) {
+      if (res[0] && res[0].allowNewRestaurants) {
+        return done(null, data);
+      }
+      return done(new Error('Poll ID ' + schema.options.pollId +
+        ' does not accept restaurants to be added'));
+    });
 };
 
 // Check if a restaurant ID is valid and has not been added to the poll before
@@ -351,7 +369,5 @@ var validateRestaurantId = function(data, schema, done) {
       return done(new Error('Invalid restaurant ID: ' + data));
     });
 };
-
-
 
 module.exports = pollValidator;
