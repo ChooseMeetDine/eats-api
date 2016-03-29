@@ -77,26 +77,25 @@ router.get('/anonymous', function(req, res) {
     .into('user')
     .returning('id')
     .then(function(result) {
-      console.log(result[0]);
       anonymousId = result[0];
-    }).catch(function(error) {
-      console.log(error);
+
+      var anonymousUser = {
+        id: anonymousId,
+        anon: true,
+        role: 'anonymous'
+      };
+
+      var token = jwt.sign(anonymousUser, cert, {
+        expiresIn: '24h' //NOTE expires in 24h
+      });
+
+      res.json({
+        message: 'Welcome anonymous ' + randomNameGenerator,
+        token: token
+      });
+    }).catch(function() {
+      throw new Error('Could not create token for anonymous user');
     });
-
-  var anonymousUser = {
-    id: anonymousId,
-    anon: true,
-    role: 'anonymous'
-  };
-
-  var token = jwt.sign(anonymousUser, cert, {
-    expiresIn: '24h' //NOTE expires in 24h
-  });
-
-  res.json({
-    message: 'Welcome anonymous ' + randomNameGenerator,
-    token: token
-  });
 });
 
 module.exports = router;
