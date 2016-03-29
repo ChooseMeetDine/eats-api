@@ -8,21 +8,71 @@ router.use(bodyParser.urlencoded({
 
 var access = {};
 
+//If user is admin, grant access.
 access.toAdmin = function(req, res, next) {
   var admin = req.validUser.admin;
   if (admin) {
     next();
   } else {
-    res.status(403).json({
+    res.status(401).json({
       'errors': [
         {
-          'status': '403',
-          'title': 'Forbidden',
+          'status': '401',
+          'title': 'Unathourized',
           'detail': 'ID is not administrator.'
         }
       ]
     });
   }
+};
+
+//Set user role.
+access.setRoleForGetUserId = function(req, res, next) {
+  knex.select('*').from('user').where('id', '=', req.validUser.id)
+    .then(function() {
+      if (req.validUser.admin) {
+        console.log('admin');
+        req.validUser.role = 'admin';
+        next();
+      } else if (req.validUser.anon === false) {
+        console.log('user');
+        req.validUser.role = 'user';
+        next();
+      } else {
+        console.log('anonymous');
+        req.validUser.role = 'anonymous';
+        next();
+      }
+    }).catch(function() {
+      res.status(400).json({
+        'errors': [
+          {
+            'status': '400',
+            'title': 'Bad Request',
+            'detail': 'Provided ID is not a user.'
+          }
+        ]
+      });
+    });
+};
+
+access.setRoleForGetPoll = function(req, res, next) {
+  knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
+    .then(function(result) {
+      if (req.validUser.id === result[0].creator_id) {
+        next();
+      }
+    }).catch(function() {
+      res.status(401).json({
+        'errors': [
+          {
+            'status': '401',
+            'title': 'Unathourized',
+            'detail': 'ID is not administrator.'
+          }
+        ]
+      });
+    });
 };
 
 access.setRoleForGetGroup = function(req, res, next) {
@@ -49,46 +99,6 @@ access.setRoleForGetGroup = function(req, res, next) {
     });
 };
 
-access.setRoleForGetUserId = function(req, res, next) {
-  knex.select('*').from('user').where('id', '=', req.validUser.id)
-    .then(function(result) {
-      if (req.validUser.admin) {
-        next();
-      } else if (req.validUser.id === result[0].creator_id) {
-        req.validUser.role = 'creator';
-        next();
-      } else {
-        req.validUser.role = ' user';
-      }
-    }).catch(function() {
-      res.status(400).json({
-        'errors': [
-          {
-            'status': '400',
-            'title': 'Bad Request',
-            'detail': 'Provided ID does not exist in group.'
-          }
-        ]
-      });
-    });
-};
-
-
-access.setRoleForGetUserId;
-
-access.toPollCreator = function(req, res, next) {
-  knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
-    .then(function(result) {
-      if (req.validUser.id === result[0].creator_id) {
-        next();
-      }
-    }).catch(function() {
-      res.status(403).json({
-        error: 'no poll creator error',
-        message: 'Try creating the poll to access route'
-      });
-    });
-};
 /*
 access.toUserData = function(req, res, next) {
 

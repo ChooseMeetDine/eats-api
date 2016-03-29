@@ -16,6 +16,7 @@ router.post('/', authRequest.checkData, function(req, res) {
     name: undefined,
     email: undefined,
     admin: undefined,
+    anon: undefined,
     role: undefined
   };
 
@@ -26,6 +27,7 @@ router.post('/', authRequest.checkData, function(req, res) {
         user.name = result[0].name;
         user.email = result[0].email;
         user.admin = result[0].admin;
+        user.anon = result[0].anon;
 
         var token;
 

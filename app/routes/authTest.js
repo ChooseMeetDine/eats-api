@@ -11,14 +11,8 @@ router.get('/', function(req, res) {
     res.status(403).send('I am sorry ' + req.validUser.name +
       ' but you are not allowed to access this data');
   }*/
-  if (req.validUser.admin === true) {
-    res.json({
-      message: 'Welcome admin'
-    });
-  } else {
-    console.log('testing ---- >' + req.validUser.role);
-    res.json(req.validUser.role);
-  }
+  console.log('testing ---- >' + req.validUser.role + ', admin: ' + req.validUser.admin);
+  res.send('testing ---- >' + req.validUser.role + ', admin: ' + req.validUser.admin);
 
 });
 
