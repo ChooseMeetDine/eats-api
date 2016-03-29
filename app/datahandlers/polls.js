@@ -30,6 +30,14 @@ pollsDatahandler.postRestaurant = function(req) {
     .then(createPollResponse);
 };
 
+// Handles requests for POSTing a new vote to a poll ID
+pollsDatahandler.postVote = function(req) {
+  req.validUser = 10; //TODO: Remove once auth works
+
+  return executeInsertVoteToPoll(req)
+    .then(createPollResponse);
+};
+
 // Executes several INSERT to the database as a transaction,
 // so if one insertion fails, everything is rolled back to the previous state.
 //
@@ -116,6 +124,24 @@ var executeInsertRestaurantToPoll = function(req) {
       console.log(error.stack);
       return Promise.reject(new Error('Could not insert restaurant with ID ' +
         req.validBody.restaurantId + ' to poll with ID ' + pollId + ' into the database'));
+    });
+};
+
+
+// Executes an INSERT query to add restaurant ID, user ID and poll ID to the
+// table "vote" in the DB
+var executeInsertVoteToPoll = function(req) {
+  var pollId = req.validParams.id;
+
+  return pollsQueries.insertVote(req, pollId)
+    .then(function() {
+      return Promise.resolve(pollId); // send pollId to next function
+    })
+    .catch(function(error) {
+      console.log(error.stack);
+      return Promise.reject(new Error('Could not insert vote for restaurant ' +
+        req.validBody.restaurantId + ' and user ' + req.validUser + ' to poll with ID ' +
+        pollId + ' into the database'));
     });
 };
 

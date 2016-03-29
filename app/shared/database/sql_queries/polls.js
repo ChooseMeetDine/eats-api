@@ -55,6 +55,18 @@ pollsQueries.insertSingleRestaurant = function(req, pollid) {
     .into('restaurant_polls');
 };
 
+// Inserts one VOTE into vote table (NOTE: not using transaction-object)
+pollsQueries.insertVote = function(req, pollid) {
+  return knex.insert({
+      user_id: req.validUser,
+      restaurant_id: req.validBody.restaurantId,
+      poll_id: pollid.toString(),
+      created: knex.raw('now()'),
+      updated: knex.raw('now()')
+    })
+    .into('vote');
+};
+
 // Returns STANDARD POLL data as JSON-API object
 pollsQueries.selectPollData = function(pollId) {
   return knex.select('id', 'name', 'expires', 'created',
