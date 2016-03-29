@@ -2,9 +2,8 @@ var knex = require('../shared/database/knex');
 
 var access = {};
 
-//NOTE Kanske byta namn till onlyAdminAllowed eller liknande? Så blir det tydligare när man bara ser anropet till denna
 //If user is admin, grant access.
-access.toAdmin = function(req, res, next) {
+access.onlyAdminAllowed = function(req, res, next) {
   var admin = req.validUser.admin;
   if (admin) {
     next();
@@ -19,87 +18,87 @@ access.toAdmin = function(req, res, next) {
   }
 };
 
-//NOTE  Du använder inte resultatet från databasen
-//      Det är lite otydligt vad denna funktionen gör. Sätter den role för användare till
-//      vilket anrop som helst eller är det specifikt för GET mot /users/:id ?
-//      Om det inte är för GET /users/:id så byt namn till något utan Get i, typ setRoleForUser
-
 //Set user role
-access.setRoleForGetUserId = function(req, res, next) {
-  knex.select('*').from('user').where('id', '=', req.validUser.id)
-    .then(function() {
-      if (req.validUser.admin) {
-        req.validUser.role = 'admin';
-        next();
-      } else if (req.validUser.anon === false) {
-        req.validUser.role = 'user';
-        next();
-      } else {
-        req.validUser.role = 'anonymous';
-        next();
-      }
-      //NOTE Här kan next(); ligga istället (lite mindre kodrader då)
-    }).catch(function() {
-      res.status(401).json({
-        'errors': [{
-          'status': '401',
-          'title': 'Unathourized',
-          'detail': 'ID does not exist.'
-        }]
-      });
+access.setRoleForUser = function(req, res, next) {
+  try {
+    if (req.validUser.admin) {
+      req.validUser.role = 'admin';
+      next();
+    } else if (req.validUser.anon === false) {
+      req.validUser.role = 'user';
+      next();
+    } else {
+      req.validUser.role = 'anonymous';
+      next();
+    }
+  } catch (err) {
+    res.status(401).json({
+      'errors': [{
+        'status': '401',
+        'title': 'Unathourized',
+        'detail': 'ID does not exist.'
+          }]
     });
+  }
 };
 
 //Set user role for GET/poll
 access.setRoleForGetPoll = function(req, res, next) {
-  knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
-    .then(function(result) {
-      if (req.validUser.admin) { //NOTE Detta kan ligga utanför knex-satsen, så behöver inte databasen anropas
+  if (req.validUser.admin) {
+    next();
+  } else {
+    knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
+      .then(function(result) {
+        if (req.validUser.id === result[0].creator_id) {
+          req.validUser.role = 'creator';
+        } else if (result[0] === []) {
+          req.validUser.role = 'user';
+        } else {
+          req.validUser.role = 'user';
+        }
         next();
-      } else if (req.validUser.id === result[0].creator_id) { //NOTE om result är en tom array så kommer detta leda till krasch.
-        req.validUser.role = 'creator'; //                     'Cannot read property "creator_id" of undefined'. Samma sak för "setRoleForGetGroup"
-        next();
-      } else {
-        req.validUser.role = 'user';
-        //NOTE Saknas next här. Och next kan anropas efter if-satserna
-      }
-      //NOTE Här kan next(); ligga istället (lite mindre kodrader då)
-    }).catch(function() {
-      res.status(400).json({
-        'errors': [{
-          'status': '401',
-          'title': 'Unathourized',
-          'detail': 'ID does not exist in poll.'
-        }]
+      }).catch(function() {
+        res.status(400).json({
+          'errors': [{
+            'status': '401',
+            'title': 'Unathourized',
+            'detail': 'ID does not exist in poll.'
+          }]
+        });
       });
-    });
+  }
+
 };
 
 //Set user role for GET/group
 access.setRoleForGetGroup = function(req, res, next) {
-  knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
-    .then(function(result) {
-      if (req.validUser.admin) { //NOTE Detta kan ligga utanför knex-satsen, så behöver inte databasen anropas
+  if (req.validUser.admin) {
+    next();
+  } else {
+    knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
+      .then(function(result) {
+        if (req.validUser.id === result[0].creator_id) {
+          req.validUser.role = 'creator';
+        } else if (result[0] === []) {
+          req.validUser.role = 'user';
+        } else {
+          req.validUser.role = 'user';
+        }
         next();
-      } else if (req.validUser.id === result[0].creator_id) {
-        req.validUser.role = 'creator';
-        next();
-      } else {
-        req.validUser.role = 'user';
-        //NOTE Saknas next här. Och next kan anropas efter if-satserna
-      }
-    }).catch(function() {
-      res.status(400).json({
-        'errors': [{
-          'status': '401',
-          'title': 'Unathourized',
-          'detail': 'ID does not exist in group.'
-        }]
+      }).catch(function() {
+        res.status(400).json({
+          'errors': [{
+            'status': '401',
+            'title': 'Unathourized',
+            'detail': 'ID does not exist in group.'
+          }]
+        });
       });
-    });
+  }
+
 };
 
-//NOTE om koden här under inte längre är aktuell, ta bort den
+//NOTE Koden under kan möjligtvis användas för USERS datahanterare
 
 /*
 access.toUserData = function(req, res, next) {
