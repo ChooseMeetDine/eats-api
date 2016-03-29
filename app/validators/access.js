@@ -31,15 +31,12 @@ access.setRoleForGetUserId = function(req, res, next) {
   knex.select('*').from('user').where('id', '=', req.validUser.id)
     .then(function() {
       if (req.validUser.admin) {
-        console.log('admin');
         req.validUser.role = 'admin';
         next();
       } else if (req.validUser.anon === false) {
-        console.log('user');
         req.validUser.role = 'user';
         next();
       } else {
-        console.log('anonymous');
         req.validUser.role = 'anonymous';
         next();
       }
@@ -59,18 +56,23 @@ access.setRoleForGetUserId = function(req, res, next) {
 access.setRoleForGetPoll = function(req, res, next) {
   knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
-      if (req.validUser.id === result[0].creator_id) {
+      if (req.validUser.admin) {
         next();
+      } else if (req.validUser.id === result[0].creator_id) {
+        req.validUser.role = 'creator';
+        next();
+      } else {
+        req.validUser.role = ' user';
       }
     }).catch(function() {
-      res.status(401).json({
+      res.status(400).json({
         'errors': [
           {
-            'status': '401',
-            'title': 'Unathourized',
-            'detail': 'ID is not administrator.'
-          }
-        ]
+            'status': '400',
+            'title': 'Bad Request',
+            'detail': 'Provided ID does not exist in group.'
+        }
+      ]
       });
     });
 };
