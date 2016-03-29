@@ -115,5 +115,37 @@ it('Should return json response with false authentication', function(done) {
       });
       done();
     });
+    //TODO: Implement this when branch systemtest_with_tokens is merged with develop
+    it.skip('Should return valid data for POST /auth', function(done) {
+      var port = process.env.PORT || 3001;
+      request('http://localhost:' + port.toString())
+        .post('/auth')
+        .send({
+          'email': 'musse@mail.se',
+          'password': 'password123'
+        })
+        .expect(200)
+        .end(function(err, response) {
+          console.log(response.body);
+          expect(response).to.be.jsonSchema({
+            'title': 'auth valid schema',
+            'type': 'object',
+            'properties': {
+              'authentication': {
+                'type': 'boolean'
+              },
+              'message': {
+                'type': 'string'
+              },
+              'token': {
+                'type': 'string'
+              }
+            }
+          });
+          done();
+        });
+    });
+
+  });
 });
 */
