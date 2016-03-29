@@ -66,10 +66,10 @@ router.post('/', authRequest.checkData, function(req, res) {
 router.get('/anonymous', function(req, res) {
 
   var anonymousId;
-  var randomNameGenerator = moniker.choose();
+  var randomName = 'anonymous ' + moniker.choose();
 
   knex.insert({
-      name: 'anonymous ' + randomNameGenerator,
+      name: randomName,
       last_login: knex.raw('now()'),
       registration_date: knex.raw('now()'),
       anon: true
@@ -82,6 +82,7 @@ router.get('/anonymous', function(req, res) {
       var anonymousUser = {
         id: anonymousId,
         anon: true,
+        name: randomName,
         role: 'anonymous'
       };
 
@@ -90,11 +91,17 @@ router.get('/anonymous', function(req, res) {
       });
 
       res.json({
-        message: 'Welcome anonymous ' + randomNameGenerator,
+        message: 'Welcome ' + randomName,
         token: token
       });
     }).catch(function() {
-      throw new Error('Could not create token for anonymous user');
+      res.status(500).send({
+        'errors': [{
+          'status': '500',
+          'title': 'Creation of JWT',
+          'detail': 'Could not create token for anonymous user'
+        }]
+      });
     });
 });
 

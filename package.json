@@ -18,7 +18,8 @@
     "moment": "~2.12.0",
     "pg": "^4.4.0",
     "socket.io": "~1.4.5",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "moniker": "~0.1.2"
   },
   "devDependencies": {
     "chai": "~3.5.0",
