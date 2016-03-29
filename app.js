@@ -8,6 +8,7 @@ var pollsSocket = require('./app/socketio/polls_socket');
 
 var env = process.env.NODE_ENV || 'development';
 
+// Enables CORS for development (to allow sites not hosted on same server to reach the API)
 if (env === 'development') {
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
