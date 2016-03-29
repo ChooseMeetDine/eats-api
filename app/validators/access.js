@@ -14,8 +14,16 @@ access.toAdmin = function(req, res, next) {
     next();
   } else {
     res.status(403).json({
-      error: 'no admin error',
-      message: 'Try logging is admin to access route'
+      'errors': [
+        {
+          'status': '403',
+          'source': {
+            'pointer': '/jsonPointer/lookIntoThis'
+          },
+          'title': 'Forbidden',
+          'detail': 'ID is not administrator.'
+        }
+      ]
     });
   }
 };
