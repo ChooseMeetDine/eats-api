@@ -41,12 +41,12 @@ access.setRoleForGetUserId = function(req, res, next) {
         next();
       }
     }).catch(function() {
-      res.status(400).json({
+      res.status(401).json({
         'errors': [
           {
-            'status': '400',
-            'title': 'Bad Request',
-            'detail': 'Provided ID is not a user.'
+            'status': '401',
+            'title': 'Unathourized',
+            'detail': 'ID does not exist.'
           }
         ]
       });
@@ -68,11 +68,11 @@ access.setRoleForGetPoll = function(req, res, next) {
       res.status(400).json({
         'errors': [
           {
-            'status': '400',
-            'title': 'Bad Request',
-            'detail': 'Provided ID does not exist in group.'
-        }
-      ]
+            'status': '401',
+            'title': 'Unathourized',
+            'detail': 'ID does not exist in poll.'
+          }
+        ]
       });
     });
 };
@@ -92,9 +92,9 @@ access.setRoleForGetGroup = function(req, res, next) {
       res.status(400).json({
         'errors': [
           {
-            'status': '400',
-            'title': 'Bad Request',
-            'detail': 'Provided ID does not exist in group.'
+            'status': '401',
+            'title': 'Unathourized',
+            'detail': 'ID does not exist in group.'
           }
         ]
       });
