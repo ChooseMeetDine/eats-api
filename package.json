@@ -9,7 +9,6 @@
   "dependencies": {
     "bluebird": "~3.0.6",
     "body-parser": "~1.15.0",
-    "chai-as-promised": "~5.2.0",
     "dotenv": "~2.0.0",
     "express": "~4.13.4",
     "foreman": "1.4.1",
@@ -24,6 +23,7 @@
   "devDependencies": {
     "chai": "~3.5.0",
     "chai3-json-schema": "~1.2.0",
+    "chai-as-promised": "^5.2.0",
     "coveralls": "~2.11.6",
     "istanbul": "~0.4.2",
     "mocha": "~2.4.5",
@@ -37,6 +37,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "mocha --recursive test",
+    "docs": "aglio --theme-template ./public/aglio-theme-olio/templates/index.jade -i ./public/docs/README.apib -o ./public/docs/documentation.html && aglio --theme-template ./public/aglio-theme-olio/templates/index.jade -i ./public/docs/GOALS.apib -o ./public/docs/goaldocs.html ",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --recursive test",
     "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "docs": "aglio -i public/docs/GOALS.apib -o public/docs/goaldocs.html && aglio -i public/docs/README.apib -o public/docs/documentation.html"

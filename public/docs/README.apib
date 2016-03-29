@@ -4,6 +4,26 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 # GET /docs
 + response 200 (text/html)
 
+# Group Realtime updates for polls
+
+### Realtime updates
+
+Every time a poll is updated, for example a new vote is added or a user leaves the poll,
+realtime updates are sent through web sockets.
+
+To get these updates with socket.io, use the poll ID as event identifier as illustrated below
+
+```javascript
+var socket = io('http://path-to.server');
+
+socket.on(pollID, function(data){
+  console.log(data);
+});
+```
+
+The data sent through the socket is identical to the response from a GET-request for /polls/:id for the corresponding poll ID
+
+
 # Group /polls
 
 ## Only registered users [/polls]
@@ -33,7 +53,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Request (application/json)
 
 {
-  "name": "Name of the restaurant",
+  "name": "Name of the poll",
   "expires": "2017-08-07T10:46:40+00:00",
   "restaurants": ["234123","12412332"],
   "users": ["7545345", "6663523", "45656855"],
@@ -41,7 +61,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
   "allowNewRestaurants": true
 }
 
-+ Response 200 (application/json)
++ Response 201 (application/json)
 
 {
   "data": {
@@ -52,40 +72,40 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "expires": "2017-08-07T10:46:40Z",
       "created": "2016-02-01T15:20:05Z",
       "allow_new_restaurants": true
-    }
-  },
-  "relationships": {
-    "creator": {
-      "data": {
-        "type": "user",
-        "id": "7545345",
-      }
     },
-    "restaurants": {
-      "data": [{
-        "type": "restaurant",
-        "id": "234123",
-      }, {
-        "type": "restaurant",
-        "id": "12412332",
-      }]
-    },
-    "users": {
-      "data": [{
-        "type": "user",
-        "id": "7545345",
-      }, {
-        "type": "user",
-        "id": "6663523",
-      }, {
-        "type": "user",
-        "id": "45656855",
-      }]
-    },
-    "group": {
-      "data": {
-        "type": "group",
-        "id": "45656855"
+    "relationships": {
+      "creator": {
+        "data": {
+          "type": "user",
+          "id": "7545345",
+        }
+      },
+      "restaurants": {
+        "data": [{
+          "type": "restaurant",
+          "id": "234123",
+        }, {
+          "type": "restaurant",
+          "id": "12412332",
+        }]
+      },
+      "users": {
+        "data": [{
+          "type": "user",
+          "id": "7545345",
+        }, {
+          "type": "user",
+          "id": "6663523",
+        }, {
+          "type": "user",
+          "id": "45656855",
+        }]
+      },
+      "group": {
+        "data": {
+          "type": "group",
+          "id": "45656855"
+        }
       }
     }
   },
@@ -100,6 +120,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "latitude": 56.1234,
       "longitude": 14.1234,
       "temporary": false,
+      "status": "accepted"
     },
     "links": {
       "self": "/restaurants/234123"
@@ -112,6 +133,7 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "latitude": 56.1234,
       "longitude": 14.1234,
       "temporary": false,
+      "status": "accepted"
     },
     "links": {
       "self": "/restaurants/12412332"
@@ -158,6 +180,655 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
       "self": "/groups/45656855"
     }
   }]
+}
+
+# Group /polls/:id
+
+## Only registered users [/polls/:id]
+
+### Retrieve poll [GET /polls/51515151]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "poll",
+        "id": "51515151",
+        "attributes": {
+            "name": "Odd Hill, team 2",
+            "expires": "2016-02-23T22:49:05Z",
+            "created": "2016-02-01T15:20:05Z",
+            "allowNewRestaurants": false
+        },
+        "relationships": {
+            "creator": {
+                "data": {
+                    "type": "user",
+                    "id": "USER_ID_1"
+                }
+            },
+            "restaurants": {
+                "data": [
+                    {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    },
+                    {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                ]
+            },
+            "users": {
+                "data": [
+                    {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                ]
+            },
+            "group": {
+                "data": {
+                    "type": "group",
+                    "id": "GROUP_ID_1"
+                }
+            },
+            "votes": {
+                "data": [
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_1"
+                    },
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_2"
+                    },
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_3"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Din Restaurang",
+                "latitude": 56.1234,
+                "longitude": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Vår Restaurang",
+                "latitude": 56.1234,
+                "longitude": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Per Persson",
+                "photo": "https://imgur.com/erqwfdsco92.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/USER_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Lukas Lukasson",
+                "photo": "http://photo.com/1234.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/0USER_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_3",
+            "attributes": {
+                "name": "Mats Mattsson",
+                "anonymous": true
+            },
+            "links": {
+                "self": "/users/USER_ID_3"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_1",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_2",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_2"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_3",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_3"
+            }
+        }
+    ]
+}
+
+
+# Group /polls/:id/restaurants
+
+## Only members of the poll [/polls/:id]
+
+### Add restaurant to poll [POST /polls/51515151/restaurants]
+
+This request will add a restaurant ID to a specific poll, which let you or other users
+vote for that restaurant in that poll.
+
++ Parameters
+
+ + restaurantId (string) - ID of the restaurant to add to
+
++ Request (application/json)
+
+{
+  "restaurantId": "6767676767"
+}
+
++ Response 200(application/json)
+
+{
+    "data": {
+        "type": "poll",
+        "id": "51515151",
+        "attributes": {
+            "name": "Odd Hill, team 2",
+            "expires": "2016-02-23T22:49:05Z",
+            "created": "2016-02-01T15:20:05Z",
+            "allowNewRestaurants": true
+        },
+        "relationships": {
+            "creator": {
+                "data": {
+                    "type": "user",
+                    "id": "999999999"
+                }
+            },
+            "restaurants": {
+                "data": [
+                    {
+                        "type": "restaurant",
+                        "id": "123123123123"
+                    },
+                    {
+                        "type": "restaurant",
+                        "id": "6767676767"
+                    }
+                ]
+            },
+            "users": {
+                "data": [
+                    {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                ]
+            },
+            "group": {
+                "data": {
+                    "type": "group",
+                    "id": "GROUP_ID_1"
+                }
+            },
+            "votes": {
+                "data": [
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_1"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Din Restaurang",
+                "latitude": 56.1234,
+                "longitude": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "6767676767",
+            "attributes": {
+                "name": "Vår Restaurang",
+                "latitude": 56.1234,
+                "longitude": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/6767676767"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Per Persson",
+                "photo": "https://imgur.com/erqwfdsco92.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/USER_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Lukas Lukasson",
+                "photo": "http://photo.com/1234.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/0USER_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_3",
+            "attributes": {
+                "name": "Mats Mattsson",
+                "anonymous": true
+            },
+            "links": {
+                "self": "/users/USER_ID_3"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_1",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_1"
+            }
+        }
+    ]
+}
+
+
+
+# Group /restaurants
+
+## Any user [/restaurant]
+
+### Retrieve restaurants [GET /restaurant?lat=123&lng=32&radius=15000]
+
+Query parameters
+Both lat and lng has to be used if one of them are used, or radius is used
+
+The variable "status" on restaurants have three values: "unexamined", "accepted" and "removed".
+Unexamined are new restaurants that have not been examined and validated by admins.
+Once an admin examines a restaurant, the status will be changed to either "accepted" or "removed"
+
+
++ Parameters
+
+ + lng (number, optional) - Longitude coordinate in WGS84 format. Requires lat
+
+ + lat (number, optional) - Latitude coordinate in WGS84 format. Requires lng
+
+ + radius (number, optional) - Radius in meters from coordinates. Defines the area from which restaurants will be returned. Requires lat and lng
+     + Default: 1000
+
++ Response 200 (application/json)
+
+{
+    "links": {
+        "self": "/restaurants"
+    },
+    "data": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Bamboo City",
+                "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.",
+                "photo": "http://photo.com/1234.jpg",
+                "priceRate": 3,
+                "rating": 4,
+                "longitude": 13.00073,
+                "latitude": 55.60587,
+                "temporary": false
+            },
+            "relationships": {
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_1"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Krua Thai",
+                "info": "Helt vanlig Thairestaurang",
+                "photo": "http://photo.com/2345.jpg",
+                "priceRate": 3,
+                "rating": 3,
+                "longitude": 13.00173,
+                "latitude": 55.60587,
+                "temporary": false
+            },
+            "relationships": {
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_2"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_1",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_2",
+            "attributes": {
+                "name": "vegan"
+            }
+        },
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_3",
+            "attributes": {
+                "name": "thai"
+            }
+        }
+    ]
+}
+
+### Add a restaurant [POST]
+
++ Parameters
+
+ + name (string, required) - Name of the restaurant
+
+ + category (array, optional) - Food category IDs to add to this restaurant
+     + Default: []
+
+ + priceRate (number, optional) - Price rate for this restaurant from 1 to 5 range
+     + Default: null
+
+ + rating (number, optional) - Rating star for this restaurant from 1 to 5 range
+     + Default: null
+
+ + info (string, optional) - Address and other additional information relevant to this restaurant
+     + Default: null
+
+ + photo (string, optional) - Link to the photo of the restaurant
+     + Default: null
+
+ + lng (number, required) - Longitude coordinate of this restaurant in WGS84 format
+
+ + lat (number, required) - Latitude coordinate of this restaurant in WGS84 format
+
+ + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
+     + Default: false
+
++ Request (application/json)
+
+{
+ "name": "Restaurant name",
+ "category": [23412,12412],
+ "priceRate": 4,
+ "rating": 5,
+ "info": "Nordenskiöldsgatan 1, Malmö",
+ "photo":"http://photo.com/1234.jpg",
+ "temporary": false,
+ "longitude": 13.00073,
+ "latitude": 55.60587
+}
+
++ Response 201(application/json)
+
+{
+    "links": {
+        "self": "/restaurants/321321"
+    },
+    "data":{
+        "type": "restaurant",
+        "id": "321321",
+        "attributes": {
+            "name": "Restaurant name",
+            "info": "Nordenskiöldsgatan 1, Malmö",
+            "photo": "http://photo.com/1234.jpg",
+            "priceRate": 4,
+            "rating": 5,
+            "longitude": 13.00073,
+            "latitude": 55.60587,
+            "temporary": false,
+            "status": "unexamined"
+        },
+        "relationships": {
+            "category": {
+                "data": [
+                    {
+                        "type": "category",
+                        "id": "23412"
+                    },
+                    {
+                        "type": "category",
+                        "id": "12412"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "category",
+            "id": "23412",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "12412",
+            "attributes": {
+                "name": "vegan"
+            }
+        }
+    ]
 }
 
 # Group /auth

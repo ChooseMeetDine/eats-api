@@ -5,11 +5,53 @@ var _ = require('underscore');
 
 var pollValidator = {};
 
-//exported middleware that validates a post body
+// Exported middleware that validates a POST body to /polls
 pollValidator.post = function(req, res, next) {
+  //Use the schema to validate
+  isvalid(req.body, getPollPostSchema(), function(validationError, validData) {
+    if (validationError) {
+      next(validationError); //Handle errors in another middleware
+    } else {
+      req.validBody = validData;
+      next();
+    }
+  });
+};
 
-  //Schema that defines the accepted variations of a post body
-  var schema = {
+// Exported middleware that validates the ID-parameter for /polls/:id
+pollValidator.getID = function(req, res, next) {
+  //No schema needed to validate a single parameter
+  validatePollID(req.params.id)
+    .then(function(id) {
+      req.validParams = {
+        id: id
+      };
+      next();
+    })
+    .catch(function(error) {
+      next(error);
+    });
+};
+
+// Exported middleware that validates a POST body to /polls/:id/restaurants
+pollValidator.postRestaurant = function(req, res, next) {
+  // Use the schema for POST restaurant to validate
+  isvalid(
+    req.body,
+    getPollPostRestaurantSchema(req.validParams.id),
+    function(validationError, validData) {
+      if (validationError) {
+        next(validationError); //Handle errors in another middleware
+      } else {
+        req.validBody = validData;
+        next();
+      }
+    });
+};
+
+//Schema that defines the accepted variations of a post body
+var getPollPostSchema = function() {
+  return {
     type: Object,
     unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
     required: 'implicit', //Parent of required parameter becomes required.
@@ -89,16 +131,6 @@ pollValidator.post = function(req, res, next) {
       }
     }
   };
-
-  //Use the schema to validate
-  isvalid(req.body, schema, function(validationError, validData) {
-    if (validationError) {
-      next(validationError); //Handle errors in another middleware
-    } else {
-      req.validBody = validData;
-      next();
-    }
-  });
 };
 
 // Uses the array of restaurant ID's from parameter "data" and selects
@@ -169,8 +201,98 @@ var validateGroupID = function(data, schema, done) {
       return done(new Error(data + ' is not a valid group ID'));
     }).catch(function(err) {
       console.log(err);
-      done(new Error('Invalid group ID:' + data));
+      return done(new Error('Invalid group ID:' + data));
     });
 };
+
+// Check if the ID exists in database
+var validatePollID = function(id) {
+  return pg.schema //Returns rows-object as either: [{exists:true}] or [{exists:false}]
+    .raw('select exists(select 1 from "poll" where id=' + id + ') AS "exists"')
+    .catch(function() {
+      return Promise.reject(new Error(id + ' is not a valid poll ID'));
+    })
+    .then(function(res) {
+      if (res.rows[0].exists) {
+        return id;
+      }
+      return Promise.reject(new Error(id + ' is not a valid poll ID'));
+    });
+};
+
+// Schema to validate a POST for /polls/<id>/restaurants
+// Takes the poll-ID as parameter to be able to check with the DB if the restaurant
+// is not already added to the poll.
+var getPollPostRestaurantSchema = function(pollId) {
+  return {
+    type: Object,
+    unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
+    required: 'implicit', //Parent of required parameter becomes required.
+    options: {
+      pollId: pollId
+    },
+    custom: checkIfRestaurantsCanBeAddedToPoll,
+    schema: {
+      'restaurantId': {
+        type: String, //Has to be a string
+        required: true, //is required
+        options: {
+          pollId: pollId
+        },
+        custom: validateRestaurantId,
+        errors: {
+          type: 'restaurantId must be a String', //error if type: String throws error
+          required: 'restaurantId is required.' //error if restaurantId is not present
+        }
+      }
+    }
+  };
+};
+
+// Check if a restaurant ID is valid and has not been added to the poll before
+var validateRestaurantId = function(data, schema, done) {
+  if (!data || data.length === 0) {
+    return done(new Error('Restaurant ID cannot be empty'));
+  }
+  pg.select('id')
+    .from('restaurant')
+    .where('id', data)
+    .then(function(res) {
+      if (_.isEmpty(res)) { // if res is an empty array, the ID wasn't found in DB
+        return done(new Error(data + ' is not a valid restaurant ID'));
+      }
+
+      // Check if restaurant is already added to the poll
+      pg.select('*')
+        .from('restaurant_polls')
+        .where('poll_id', schema.options.pollId)
+        .andWhere('restaurant_id', data)
+        .then(function(res) {
+          if (_.isEmpty(res)) { // if res is empty the restaurant wasn't added before - good to go
+            return done(null, data);
+          }
+          return done(new Error('Restaurant ID ' + data + ' already exist in the poll'));
+        });
+    })
+    .catch(function(err) {
+      console.log(err);
+      return done(new Error('Invalid restaurant ID: ' + data));
+    });
+};
+
+// checks if poll allows new restaurants
+var checkIfRestaurantsCanBeAddedToPoll = function(data, schema, done) {
+  return pg.select('allow_new_restaurants as allowNewRestaurants')
+    .from('poll')
+    .where('id', schema.options.pollId)
+    .then(function(res) {
+      if (res[0] && res[0].allowNewRestaurants) {
+        return done(null, data);
+      }
+      return done(new Error('Poll ID ' + schema.options.pollId +
+        ' does not accept restaurants to be added'));
+    });
+};
+
 
 module.exports = pollValidator;

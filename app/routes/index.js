@@ -1,9 +1,9 @@
 var router = require('express').Router();
 var pollRouter = require('../routes/polls');
+var restaurantRouter = require('../routes/restaurants');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
-//var authTest = require('../routes/authTest'); Route for testing auth
 
 router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');
@@ -15,8 +15,8 @@ router.get('/testauth', auth.validate, function(req, res) {
 });
 
 router.use('/polls', pollRouter);
+router.use('/restaurants', restaurantRouter);
 router.use('/auth', authRouter);
-//router.use('/authtest', auth.validate, authTest); Route for testing auth
 
 //TODO: Fix routers for everything below this comment.
 
