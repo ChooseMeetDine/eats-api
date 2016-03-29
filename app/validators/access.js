@@ -1,5 +1,3 @@
-var knex = require('../shared/database/knex');
-
 var access = {};
 
 //If user is admin, grant access.
@@ -20,83 +18,45 @@ access.onlyAdminAllowed = function(req, res, next) {
 
 //Set user role
 access.setRoleForUser = function(req, res, next) {
-  try {
-    if (req.validUser.admin) {
-      req.validUser.role = 'admin';
-      next();
-    } else if (req.validUser.anon === false) {
-      req.validUser.role = 'user';
-      next();
-    } else {
-      req.validUser.role = 'anonymous';
-      next();
-    }
-  } catch (err) {
-    res.status(401).json({
-      'errors': [{
-        'status': '401',
-        'title': 'Unathourized',
-        'detail': 'ID does not exist.'
-          }]
-    });
-  }
-};
-
-//Set user role for GET/poll
-access.setRoleForGetPoll = function(req, res, next) {
   if (req.validUser.admin) {
-    next();
+    req.validUser.role = 'admin';
+  } else if (req.validUser.anon === false) {
+    req.validUser.role = 'user';
   } else {
-    knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
-      .then(function(result) {
-        if (req.validUser.id === result[0].creator_id) {
-          req.validUser.role = 'creator';
-        } else if (result[0] === []) {
-          req.validUser.role = 'user';
-        } else {
-          req.validUser.role = 'user';
-        }
-        next();
-      }).catch(function() {
-        res.status(400).json({
-          'errors': [{
-            'status': '401',
-            'title': 'Unathourized',
-            'detail': 'ID does not exist in poll.'
-          }]
-        });
-      });
+    req.validUser.role = 'anonymous';
   }
-
+  next();
 };
 
-//Set user role for GET/group
-access.setRoleForGetGroup = function(req, res, next) {
-  if (req.validUser.admin) {
-    next();
-  } else {
-    knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
-      .then(function(result) {
-        if (req.validUser.id === result[0].creator_id) {
-          req.validUser.role = 'creator';
-        } else if (result[0] === []) {
-          req.validUser.role = 'user';
-        } else {
-          req.validUser.role = 'user';
-        }
-        next();
-      }).catch(function() {
-        res.status(400).json({
-          'errors': [{
-            'status': '401',
-            'title': 'Unathourized',
-            'detail': 'ID does not exist in group.'
-          }]
-        });
-      });
-  }
 
-};
+//Set user role for GET/group/:id
+//NOTE Does not work, but might be of help when this needs to be implemented
+// access.setRoleForGetGroupId = function(req, res, next) {
+//   if (req.validUser.admin) {
+//     next();
+//   } else {
+//     knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
+//       .then(function(result) {
+//         if (req.validUser.id === result[0].creator_id) {
+//           req.validUser.role = 'creator';
+//         } else if (result[0] === []) {
+//           req.validUser.role = 'user';
+//         } else {
+//           req.validUser.role = 'user';
+//         }
+//         next();
+//       }).catch(function() {
+//         res.status(400).json({
+//           'errors': [{
+//             'status': '401',
+//             'title': 'Unathourized',
+//             'detail': 'ID does not exist in group.'
+//           }]
+//         });
+//       });
+//   }
+//
+// };
 
 //NOTE Koden under kan möjligtvis användas för USERS datahanterare
 
