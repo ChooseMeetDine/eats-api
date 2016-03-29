@@ -20,18 +20,26 @@ access.onlyAdminAllowed = function(req, res, next) {
 access.setRoleForUser = function(req, res, next) {
   if (req.validUser.admin) {
     req.validUser.role = 'admin';
+    next();
   } else if (req.validUser.anon === false) {
     req.validUser.role = 'user';
+    next();
   } else {
     req.validUser.role = 'anonymous';
+    next();
   }
-  next();
+  res.status(401).json({
+    'errors': [{
+      'status': '401',
+      'title': 'Unathourized',
+      'detail': 'ID does not exist.'
+    }]
+  });
 };
 
-
-//Set user role for GET/group/:id
-//NOTE Does not work, but might be of help when this needs to be implemented
-// access.setRoleForGetGroupId = function(req, res, next) {
+//NOTE: Does not work. Might still be of help when this is to be implemented
+//Set user role for GET/group
+// access.setRoleForGetGroup = function(req, res, next) {
 //   if (req.validUser.admin) {
 //     next();
 //   } else {
@@ -55,7 +63,6 @@ access.setRoleForUser = function(req, res, next) {
 //         });
 //       });
 //   }
-//
 // };
 
 //NOTE Koden under kan möjligtvis användas för USERS datahanterare
