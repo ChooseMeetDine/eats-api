@@ -17,9 +17,6 @@ access.toAdmin = function(req, res, next) {
       'errors': [
         {
           'status': '403',
-          'source': {
-            'pointer': '/jsonPointer/lookIntoThis'
-          },
           'title': 'Forbidden',
           'detail': 'ID is not administrator.'
         }
@@ -28,7 +25,7 @@ access.toAdmin = function(req, res, next) {
   }
 };
 
-access.setRoleForGetUserId = function(req, res, next) {
+access.setRoleForGetGroup = function(req, res, next) {
   knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
       if (req.validUser.admin) {
@@ -44,9 +41,6 @@ access.setRoleForGetUserId = function(req, res, next) {
         'errors': [
           {
             'status': '400',
-            'source': {
-              'pointer': '/jsonPointer/lookIntoThis'
-            },
             'title': 'Bad Request',
             'detail': 'Provided ID does not exist in group.'
           }
@@ -54,6 +48,31 @@ access.setRoleForGetUserId = function(req, res, next) {
       });
     });
 };
+
+access.setRoleForGetUserId = function(req, res, next) {
+  knex.select('*').from('user').where('id', '=', req.validUser.id)
+    .then(function(result) {
+      if (req.validUser.admin) {
+        next();
+      } else if (req.validUser.id === result[0].creator_id) {
+        req.validUser.role = 'creator';
+        next();
+      } else {
+        req.validUser.role = ' user';
+      }
+    }).catch(function() {
+      res.status(400).json({
+        'errors': [
+          {
+            'status': '400',
+            'title': 'Bad Request',
+            'detail': 'Provided ID does not exist in group.'
+          }
+        ]
+      });
+    });
+};
+
 
 access.setRoleForGetUserId;
 
