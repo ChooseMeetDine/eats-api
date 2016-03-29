@@ -73,8 +73,8 @@ describe('Testing Eats-API HTTP requests', function() {
         .expect(200)
         .end(done);
     });
-
-    it('Should return valid data for POST /auth', function(done) {
+    //TODO: Implement this when branch systemtest_with_tokens is merged with develop
+    it.skip('Should return valid data for POST /auth', function(done) {
       var port = process.env.PORT || 3001;
       request('http://localhost:' + port.toString())
         .post('/auth')

@@ -1,13 +1,8 @@
-var router = require('express').Router();
-var bodyParser = require('body-parser');
 var knex = require('../shared/database/knex');
-
-router.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 var access = {};
 
+//NOTE Kanske byta namn till onlyAdminAllowed eller liknande? Så blir det tydligare när man bara ser anropet till denna
 //If user is admin, grant access.
 access.toAdmin = function(req, res, next) {
   var admin = req.validUser.admin;
@@ -15,18 +10,21 @@ access.toAdmin = function(req, res, next) {
     next();
   } else {
     res.status(401).json({
-      'errors': [
-        {
-          'status': '401',
-          'title': 'Unathourized',
-          'detail': 'ID is not administrator.'
-        }
-      ]
+      'errors': [{
+        'status': '401',
+        'title': 'Unathourized',
+        'detail': 'ID is not administrator.'
+      }]
     });
   }
 };
 
-//Set user role.
+//NOTE  Du använder inte resultatet från databasen
+//      Det är lite otydligt vad denna funktionen gör. Sätter den role för användare till
+//      vilket anrop som helst eller är det specifikt för GET mot /users/:id ?
+//      Om det inte är för GET /users/:id så byt namn till något utan Get i, typ setRoleForUser
+
+//Set user role
 access.setRoleForGetUserId = function(req, res, next) {
   knex.select('*').from('user').where('id', '=', req.validUser.id)
     .then(function() {
@@ -40,15 +38,14 @@ access.setRoleForGetUserId = function(req, res, next) {
         req.validUser.role = 'anonymous';
         next();
       }
+      //NOTE Här kan next(); ligga istället (lite mindre kodrader då)
     }).catch(function() {
       res.status(401).json({
-        'errors': [
-          {
-            'status': '401',
-            'title': 'Unathourized',
-            'detail': 'ID does not exist.'
-          }
-        ]
+        'errors': [{
+          'status': '401',
+          'title': 'Unathourized',
+          'detail': 'ID does not exist.'
+        }]
       });
     });
 };
@@ -57,23 +54,23 @@ access.setRoleForGetUserId = function(req, res, next) {
 access.setRoleForGetPoll = function(req, res, next) {
   knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
-      if (req.validUser.admin) {
+      if (req.validUser.admin) { //NOTE Detta kan ligga utanför knex-satsen, så behöver inte databasen anropas
         next();
-      } else if (req.validUser.id === result[0].creator_id) {
-        req.validUser.role = 'creator';
+      } else if (req.validUser.id === result[0].creator_id) { //NOTE om result är en tom array så kommer detta leda till krasch.
+        req.validUser.role = 'creator'; //                     'Cannot read property "creator_id" of undefined'. Samma sak för "setRoleForGetGroup"
         next();
       } else {
         req.validUser.role = 'user';
+        //NOTE Saknas next här. Och next kan anropas efter if-satserna
       }
+      //NOTE Här kan next(); ligga istället (lite mindre kodrader då)
     }).catch(function() {
       res.status(400).json({
-        'errors': [
-          {
-            'status': '401',
-            'title': 'Unathourized',
-            'detail': 'ID does not exist in poll.'
-          }
-        ]
+        'errors': [{
+          'status': '401',
+          'title': 'Unathourized',
+          'detail': 'ID does not exist in poll.'
+        }]
       });
     });
 };
@@ -82,26 +79,27 @@ access.setRoleForGetPoll = function(req, res, next) {
 access.setRoleForGetGroup = function(req, res, next) {
   knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
-      if (req.validUser.admin) {
+      if (req.validUser.admin) { //NOTE Detta kan ligga utanför knex-satsen, så behöver inte databasen anropas
         next();
       } else if (req.validUser.id === result[0].creator_id) {
         req.validUser.role = 'creator';
         next();
       } else {
         req.validUser.role = 'user';
+        //NOTE Saknas next här. Och next kan anropas efter if-satserna
       }
     }).catch(function() {
       res.status(400).json({
-        'errors': [
-          {
-            'status': '401',
-            'title': 'Unathourized',
-            'detail': 'ID does not exist in group.'
-          }
-        ]
+        'errors': [{
+          'status': '401',
+          'title': 'Unathourized',
+          'detail': 'ID does not exist in group.'
+        }]
       });
     });
 };
+
+//NOTE om koden här under inte längre är aktuell, ta bort den
 
 /*
 access.toUserData = function(req, res, next) {

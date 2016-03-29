@@ -1,13 +1,6 @@
-var router = require('express').Router();
 var jwt = require('jsonwebtoken');
-var bodyParser = require('body-parser');
 var cert = process.env.JWTSECRET;
 var isvalid = require('isvalid');
-
-router.use(bodyParser.urlencoded({
-  extended: true
-}));
-
 var auth = {};
 
 auth.validate = function(req, res, next) {
