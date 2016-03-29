@@ -21,7 +21,6 @@
     "underscore": "~1.8.3"
   },
   "devDependencies": {
-    "aglio": "~2.2.0",
     "chai": "~3.5.0",
     "chai3-json-schema": "~1.2.0",
     "chai-as-promised": "^5.2.0",
