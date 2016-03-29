@@ -53,6 +53,7 @@ access.setRoleForGetUserId = function(req, res, next) {
     });
 };
 
+//Set user role for GET/poll
 access.setRoleForGetPoll = function(req, res, next) {
   knex.select('*').from('poll').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
@@ -62,7 +63,7 @@ access.setRoleForGetPoll = function(req, res, next) {
         req.validUser.role = 'creator';
         next();
       } else {
-        req.validUser.role = ' user';
+        req.validUser.role = 'user';
       }
     }).catch(function() {
       res.status(400).json({
@@ -77,6 +78,7 @@ access.setRoleForGetPoll = function(req, res, next) {
     });
 };
 
+//Set user role for GET/group
 access.setRoleForGetGroup = function(req, res, next) {
   knex.select('*').from('group').where('creator_id', '=', req.validUser.id)
     .then(function(result) {
@@ -86,7 +88,7 @@ access.setRoleForGetGroup = function(req, res, next) {
         req.validUser.role = 'creator';
         next();
       } else {
-        req.validUser.role = ' user';
+        req.validUser.role = 'user';
       }
     }).catch(function() {
       res.status(400).json({
