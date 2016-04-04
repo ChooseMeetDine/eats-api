@@ -39,4 +39,35 @@ usersQueries.selectUserAfterPost = function(userId) {
     });
 };
 
+// Get all users from database
+usersQueries.selectAllUsers = function(req) {
+  var columns;
+  if (req.validUser.role === 'admin') { //Admin gets more
+    columns = ['id', 'name', 'photo', 'phone', 'admin', 'anon'];
+  } else {
+    columns = ['id', 'name', 'photo'];
+  }
+
+  return knex.select(columns)
+    .from('user')
+    .then(function(res) {
+      var users = [];
+      for (var i = 0; i < res.length; i++) {
+        var user = {
+          data: res[i],
+          relation: 'users',
+          multiple: true,
+          type: 'user',
+          resource: 'users'
+        };
+        users.push(user);
+      }
+      return users;
+    })
+    .catch(function(err) {
+      console.log(err);
+      return Promise.reject(new Error('Could not retreive users from database.'));
+    });
+};
+
 module.exports = usersQueries;
