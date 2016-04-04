@@ -37,8 +37,12 @@ pollsSocket.init(io);
 app.use(pmx.expressErrorHandler());
 
 app.use(function(err, req, res, next) {
-  res.status(500).send({
-    httpStatus: 500,
+  if (!err.status) {
+    err.status = 500;
+  }
+
+  res.status(err.status).send({
+    httpStatus: err.status,
     error: err.message,
     stack: err.stack
   });

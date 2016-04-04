@@ -9,7 +9,7 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
   <span class="hljs-built_in">console</span>.log(data);
 });</code></pre>
 <p>The data sent through the socket is identical to the response from a GET-request for /polls/:id for the corresponding poll ID</p>
-</section><section id="polls" class="resource-group"><h2 class="group-heading">/polls <a href="#polls" class="permalink">&para;</a></h2><div id="polls-only-registered-users" class="resource"><h3 class="resource-heading">Only registered users <a href="#polls-only-registered-users" class="permalink">&nbsp;&para;</a></h3><div id="polls-only-registered-users-post" class="action post"><h4 class="action-heading"><div class="name">Create poll</div><a href="#polls-only-registered-users-post" class="method post">POST</a><code class="uri">/polls</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>name</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Name of the poll</p>
+</section><section id="polls" class="resource-group"><h2 class="group-heading">/polls <a href="#polls" class="permalink">&para;</a></h2><div id="polls-only-registered-users" class="resource"><h3 class="resource-heading">Only registered users <a href="#polls-only-registered-users" class="permalink">&nbsp;&para;</a></h3><div id="polls-only-registered-users-post" class="action post"><h4 class="action-heading"><div class="name">Create poll</div><a href="#polls-only-registered-users-post" class="method post">POST</a><code class="uri">/polls</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>name</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Name of the poll</p>
 </dd><dt>restaurants</dt><dd><code>array</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>[]</span></span>&nbsp;<p>Restaurant ID’s as strings to add to this poll</p>
 </dd><dt>users</dt><dd><code>array</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>[]</span></span>&nbsp;<p>User ID’s as strings to add to this poll</p>
 </dd><dt>expires</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>20 minutes after request is received</span></span>&nbsp;<p>Time of expiry, formatted as ISO 8601</p>
@@ -83,8 +83,8 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
     "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"234123"</span></span>,
     "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Din Restaurang"</span></span>,
-      "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-      "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
+      "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
+      "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
       "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
       "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"accepted"</span>
     </span>}</span>,
@@ -96,8 +96,8 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
     "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"12412332"</span></span>,
     "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Vår Restaurang"</span></span>,
-      "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-      "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
+      "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
+      "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
       "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
       "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"accepted"</span>
     </span>}</span>,
@@ -221,8 +221,8 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"RESTAURANT_ID_1"</span></span>,
       "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Din Restaurang"</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
@@ -234,8 +234,8 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"RESTAURANT_ID_2"</span></span>,
       "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Vår Restaurang"</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
@@ -383,7 +383,7 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
   ]
 </span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="polls-id-restaurants" class="resource-group"><h2 class="group-heading">/polls/:id/restaurants <a href="#polls-id-restaurants" class="permalink">&para;</a></h2><div id="polls-id-restaurants-only-members-of-the-poll" class="resource"><h3 class="resource-heading">Only members of the poll <a href="#polls-id-restaurants-only-members-of-the-poll" class="permalink">&nbsp;&para;</a></h3><div id="polls-id-restaurants-only-members-of-the-poll-post" class="action post"><h4 class="action-heading"><div class="name">Add restaurant to poll</div><a href="#polls-id-restaurants-only-members-of-the-poll-post" class="method post">POST</a><code class="uri">/polls/51515151/restaurants</code></h4><p>This request will add a restaurant ID to a specific poll, which let you or other users
 vote for that restaurant in that poll.</p>
-<h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls/51515151/restaurants</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>restaurantId</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>ID of the restaurant to add to</p>
+<h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls/51515151/restaurants</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>restaurantId</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>ID of the restaurant to add to</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">restaurantId</span>": <span class="hljs-value"><span class="hljs-string">"6767676767"</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
@@ -453,8 +453,8 @@ vote for that restaurant in that poll.</p>
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"RESTAURANT_ID_1"</span></span>,
       "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Din Restaurang"</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
@@ -466,8 +466,8 @@ vote for that restaurant in that poll.</p>
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"6767676767"</span></span>,
       "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Vår Restaurang"</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
@@ -556,7 +556,7 @@ Both lat and lng has to be used if one of them are used, or radius is used</p>
 <p>The variable “status” on restaurants have three values: “unexamined”, “accepted” and “removed”.
 Unexamined are new restaurants that have not been examined and validated by admins.
 Once an admin examines a restaurant, the status will be changed to either “accepted” or “removed”</p>
-<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname"></span>/restaurant?lat=123&lng=32&radius=15000</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>lng</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<p>Longitude coordinate in WGS84 format. Requires lat</p>
+<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname"></span>/restaurant?lat=123&lng=32&radius=15000</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>lng</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<p>Longitude coordinate in WGS84 format. Requires lat</p>
 </dd><dt>lat</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<p>Latitude coordinate in WGS84 format. Requires lng</p>
 </dd><dt>radius</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>1000</span></span>&nbsp;<p>Radius in meters from coordinates. Defines the area from which restaurants will be returned. Requires lat and lng</p>
 </dd></dl></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
@@ -573,12 +573,13 @@ Once an admin examines a restaurant, the status will be changed to either “acc
         "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
         "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
         "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">4</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+        "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"accepted"</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">category</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">categories</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
             {
               "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
@@ -604,12 +605,13 @@ Once an admin examines a restaurant, the status will be changed to either “acc
         "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/2345.jpg"</span></span>,
         "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
         "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00173</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">13.00173</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+        "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"accepted"</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">category</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">categories</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
             {
               "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
@@ -650,8 +652,8 @@ Once an admin examines a restaurant, the status will be changed to either “acc
       </span>}
     </span>}
   ]
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div><div id="restaurants-any-user-post" class="action post"><h4 class="action-heading"><div class="name">Add a restaurant</div><a href="#restaurants-any-user-post" class="method post">POST</a><code class="uri">/restaurant</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/restaurant</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>name</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Name of the restaurant</p>
-</dd><dt>category</dt><dd><code>array</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>[]</span></span>&nbsp;<p>Food category IDs to add to this restaurant</p>
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div><div id="restaurants-any-user-post" class="action post"><h4 class="action-heading"><div class="name">Add a restaurant</div><a href="#restaurants-any-user-post" class="method post">POST</a><code class="uri">/restaurant</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/restaurant</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>name</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Name of the restaurant</p>
+</dd><dt>categories</dt><dd><code>array</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>[]</span></span>&nbsp;<p>Food category IDs to add to this restaurant</p>
 </dd><dt>priceRate</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>null</span></span>&nbsp;<p>Price rate for this restaurant from 1 to 5 range</p>
 </dd><dt>rating</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>null</span></span>&nbsp;<p>Rating star for this restaurant from 1 to 5 range</p>
 </dd><dt>info</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>null</span></span>&nbsp;<p>Address and other additional information relevant to this restaurant</p>
@@ -661,7 +663,7 @@ Once an admin examines a restaurant, the status will be changed to either “acc
 </dd><dt>temporary</dt><dd><code>boolean</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>false</span></span>&nbsp;<p>Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Restaurant name"</span></span>,
-  "<span class="hljs-attribute">category</span>": <span class="hljs-value">[
+  "<span class="hljs-attribute">categories</span>": <span class="hljs-value">[
     <span class="hljs-number">23412</span>,
     <span class="hljs-number">12412</span>
   ]</span>,
@@ -670,8 +672,8 @@ Once an admin examines a restaurant, the status will be changed to either “acc
   "<span class="hljs-attribute">info</span>": <span class="hljs-value"><span class="hljs-string">"Nordenskiöldsgatan 1, Malmö"</span></span>,
   "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
   "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
-  "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
-  "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span>
+  "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
+  "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>201</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/restaurants/321321"</span>
@@ -685,13 +687,13 @@ Once an admin examines a restaurant, the status will be changed to either “acc
       "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
       "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">4</span></span>,
       "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">5</span></span>,
-      "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
-      "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+      "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
+      "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
       "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
       "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"unexamined"</span>
     </span>}</span>,
     "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">category</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">categories</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
           {
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
@@ -721,7 +723,7 @@ Once an admin examines a restaurant, the status will be changed to either “acc
       </span>}
     </span>}
   ]
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="auth" class="resource-group"><h2 class="group-heading">/auth <a href="#auth" class="permalink">&para;</a></h2><div id="auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints" class="resource"><h3 class="resource-heading">For authentication of registered user and authorization to restricted endpoints <a href="#auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints" class="permalink">&nbsp;&para;</a></h3><div id="auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints-post" class="action post"><h4 class="action-heading"><div class="name">Authenticate user</div><a href="#auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints-post" class="method post">POST</a><code class="uri">/auth</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/auth</span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>email</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>email of registered account</p>
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="auth" class="resource-group"><h2 class="group-heading">/auth <a href="#auth" class="permalink">&para;</a></h2><div id="auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints" class="resource"><h3 class="resource-heading">For authentication of registered user and authorization to restricted endpoints <a href="#auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints" class="permalink">&nbsp;&para;</a></h3><div id="auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints-post" class="action post"><h4 class="action-heading"><div class="name">Authenticate user</div><a href="#auth-for-authentication-of-registered-user-and-authorization-to-restricted-endpoints-post" class="method post">POST</a><code class="uri">/auth</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/auth</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>email</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>email of registered account</p>
 </dd><dt>password</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>password of registered account</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"user_email@mail.com"</span></span>,
