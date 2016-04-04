@@ -157,71 +157,64 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 + Request (application/json)
 
 {
- "name": "Restaurant name",
- "categories": [23412,12412],
- "priceRate": 4,
- "rating": 5,
- "info": "Nordenskiöldsgatan 1, Malmö",
- "photo":"http://photo.com/1234.jpg",
- "temporary": false,
- "lng": 13.00073,
- "lat": 55.60587
+  "name": "Testaurant",
+  "categories": ["13"],
+  "priceRate": 1,
+  "rating": 2,
+  "info": "Not needed",
+  "photo": "www.not-a-real-photo.com",
+  "temporary": false,
+  "lng": 123.1,
+  "lat": 123.1
 }
 
 
 + Response 201(application/json)
 
 {
-    "links": {
-        "self": "/restaurants/321321"
+  "data": {
+    "type": "restaurant",
+    "id": "869967774580104",
+    "attributes": {
+      "name": "Testaurant",
+      "lat": "123.1000000",
+      "created": "2016-04-04T07:14:38.777Z",
+      "info": "Not needed",
+      "photo": "www.not-a-real-photo.com",
+      "temporary": false,
+      "lng": "123.1000000",
+      "priceRate": 1,
+      "status": "unexamined",
+      "rating": 2,
+      "numberOfPolls": 0,
+      "numberOfPollsWon": "0"
     },
-    "data":{
-        "type": "restaurant",
-        "id": "321321",
-        "attributes": {
-            "name": "Restaurant name",
-            "info": "Nordenskiöldsgatan 1, Malmö",
-            "photo": "http://photo.com/1234.jpg",
-            "priceRate": 4,
-            "rating": 5,
-            "numberOfPolls": 0,
-            "numberOfPollsWon": 0,
-            "lng": 13.00073,
-            "lat": 55.60587,
-            "temporary": false,
-            "status": "unexamined"
-        },
-        "relationships": {
-            "categories": {
-                "data": [
-                    {
-                        "type": "category",
-                        "id": "23412"
-                    },
-                    {
-                        "type": "category",
-                        "id": "12412"
-                    }
-                ]
-            }
-        }
-    },
-    "included": [
-        {
+    "relationships": {
+      "categories": {
+        "data": [
+          {
             "type": "category",
-            "id": "23412",
-            "attributes": {
-                "name": "fish"
-            }
-        },
-        {
-            "type": "category",
-            "id": "12412",
-            "attributes": {
-                "name": "vegan"
-            }
-        }
-    ]
+            "id": "13"
+          }
+        ]
+      }
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/restaurants/869967774580104"
+  },
+  "included": [
+    {
+      "type": "category",
+      "id": "13",
+      "attributes": {
+        "name": "burgare"
+      },
+      "links": {
+        "self": "http://localhost:5000/categories/13"
+      }
+    }
+  ]
 }
 
 ## Only registered users & admin [/restaurants]
