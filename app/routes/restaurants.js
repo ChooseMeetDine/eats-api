@@ -6,7 +6,7 @@ router.post('/', restaurantValidator.post, function(req, res) {
   return restaurantHandler
     .post(req)
     .then(function(response) {
-      console.log('Sending data through HTTP... ' + JSON.stringify(response));
+      // console.log('Sending data through HTTP... ' + JSON.stringify(response));
       res.send(response);
     })
     .catch(function(err) {
@@ -22,7 +22,7 @@ router.get('/', restaurantValidator.get, function(req, res) {
   return restaurantHandler
     .get(req)
     .then(function(response) {
-      console.log('Sending data through HTTP... ' + JSON.stringify(response));
+      // console.log('Sending data through HTTP... ' + JSON.stringify(response));
       res.send(response);
     })
     .catch(function(err) {

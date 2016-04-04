@@ -10,7 +10,7 @@ auth.validate = function(req, res, next) {
   if (token) {
     jwt.verify(token, cert, function(err, decoded) {
       if (err) {
-        return res.json({
+        return res.status(403).json({
           message: 'Failed to authenticate token, please log in again'
         });
       } else {
@@ -59,6 +59,7 @@ auth.checkData = function(req, res, next) {
 
   isvalid(request, authSchema, function(validationError, validData) {
     if (validationError) {
+      validationError.status = 400;
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;

@@ -10,6 +10,7 @@ pollValidator.post = function(req, res, next) {
   //Use the schema to validate
   isvalid(req.body, getPollPostSchema(), function(validationError, validData) {
     if (validationError) {
+      validationError.status = 400;
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;
@@ -29,6 +30,7 @@ pollValidator.getID = function(req, res, next) {
       next();
     })
     .catch(function(error) {
+      error.status = 400;
       next(error);
     });
 };

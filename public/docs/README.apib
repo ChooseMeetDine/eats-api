@@ -117,8 +117,8 @@ The data sent through the socket is identical to the response from a GET-request
     "id": "234123",
     "attributes": {
       "name": "Din Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
+      "lat": 56.1234,
+      "lng": 14.1234,
       "temporary": false,
       "status": "accepted"
     },
@@ -130,8 +130,8 @@ The data sent through the socket is identical to the response from a GET-request
     "id": "12412332",
     "attributes": {
       "name": "Vår Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
+      "lat": 56.1234,
+      "lng": 14.1234,
       "temporary": false,
       "status": "accepted"
     },
@@ -265,8 +265,8 @@ The data sent through the socket is identical to the response from a GET-request
             "id": "RESTAURANT_ID_1",
             "attributes": {
                 "name": "Din Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -278,8 +278,8 @@ The data sent through the socket is identical to the response from a GET-request
             "id": "RESTAURANT_ID_2",
             "attributes": {
                 "name": "Vår Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -516,8 +516,8 @@ vote for that restaurant in that poll.
             "id": "RESTAURANT_ID_1",
             "attributes": {
                 "name": "Din Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -529,8 +529,8 @@ vote for that restaurant in that poll.
             "id": "6767676767",
             "attributes": {
                 "name": "Vår Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -657,12 +657,13 @@ Once an admin examines a restaurant, the status will be changed to either "accep
                 "photo": "http://photo.com/1234.jpg",
                 "priceRate": 3,
                 "rating": 4,
-                "longitude": 13.00073,
-                "latitude": 55.60587,
+                "lng": 13.00073,
+                "lat": 55.60587,
+                "status" : "accepted",
                 "temporary": false
             },
             "relationships": {
-                "category": {
+                "categories": {
                     "data": [
                         {
                             "type": "category",
@@ -688,12 +689,13 @@ Once an admin examines a restaurant, the status will be changed to either "accep
                 "photo": "http://photo.com/2345.jpg",
                 "priceRate": 3,
                 "rating": 3,
-                "longitude": 13.00173,
-                "latitude": 55.60587,
+                "lng": 13.00173,
+                "lat": 55.60587,
+                "status" : "accepted",
                 "temporary": false
             },
             "relationships": {
-                "category": {
+                "categories": {
                     "data": [
                         {
                             "type": "category",
@@ -742,7 +744,7 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 
  + name (string, required) - Name of the restaurant
 
- + category (array, optional) - Food category IDs to add to this restaurant
+ + categories (array, optional) - Food category IDs to add to this restaurant
      + Default: []
 
  + priceRate (number, optional) - Price rate for this restaurant from 1 to 5 range
@@ -768,14 +770,14 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 
 {
  "name": "Restaurant name",
- "category": [23412,12412],
+ "categories": [23412,12412],
  "priceRate": 4,
  "rating": 5,
  "info": "Nordenskiöldsgatan 1, Malmö",
  "photo":"http://photo.com/1234.jpg",
  "temporary": false,
- "longitude": 13.00073,
- "latitude": 55.60587
+ "lng": 13.00073,
+ "lat": 55.60587
 }
 
 + Response 201(application/json)
@@ -793,13 +795,13 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "photo": "http://photo.com/1234.jpg",
             "priceRate": 4,
             "rating": 5,
-            "longitude": 13.00073,
-            "latitude": 55.60587,
+            "lng": 13.00073,
+            "lat": 55.60587,
             "temporary": false,
             "status": "unexamined"
         },
         "relationships": {
-            "category": {
+            "categories": {
                 "data": [
                     {
                         "type": "category",
@@ -856,5 +858,20 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 {
   "authentication": true,
   "message": "Welcome user_name",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
+}
+
+# Group /auth/anonymous
+
+## For signing anonymous users with json web token [/auth/anonymous]
+
+### Sign anonymous users [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+{
+  "message": "Welcome anonymous frequent-cracker",
   "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
 }
