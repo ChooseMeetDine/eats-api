@@ -3,6 +3,7 @@ var request = require('supertest');
 var app = require('../../app');
 var chai = require('chai');
 chai.use(require('chai3-json-schema'));
+chai.tv4.banUnknown = true;
 var testPollsEndpoint = require('./polls');
 var testDocsEndpoint = require('./docs');
 var testRestaurantsEndpoint = require('./restaurants');
@@ -16,13 +17,13 @@ tokens.admin = jwt.sign({
   email: 'kenny@mail.se',
   password: 'password123'
 }, cert, {
-  expiresIn: '2m' // expires in 1 minute
+  expiresIn: '1m' // expires in 1 minute
 });
 tokens.user = jwt.sign({
   email: 'konny@mail.se',
   password: 'password123'
 }, cert, {
-  expiresIn: '2m' // expires in 1 minute
+  expiresIn: '1m' // expires in 1 minute
 });
 
 

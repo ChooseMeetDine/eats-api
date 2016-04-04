@@ -2,6 +2,7 @@ var request = require('supertest');
 var expect = require('chai').expect;
 var chai = require('chai');
 chai.use(require('chai3-json-schema'));
+chai.tv4.banUnknown = true;
 
 module.exports = function(app, tokens) {
   describe('Testing restaurants endpoint', function() {
@@ -15,12 +16,12 @@ module.exports = function(app, tokens) {
           .expect('Content-Type', /json/)
           .end(function(err, res) {
             var response = res.body;
-            expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
+            expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet());
             done();
           });
       });
 
-      it('should return valid JSON for GET /restaurants with user-token', function(done) {
+      it('should return valid JSON for GET /restaurants with admin-token', function(done) {
         request(app)
           .get('/restaurants')
           .set('x-access-token', tokens.admin)
@@ -28,7 +29,7 @@ module.exports = function(app, tokens) {
           .expect('Content-Type', /json/)
           .end(function(err, res) {
             var response = res.body;
-            expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet);
+            expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet());
             done();
           });
       });
@@ -155,17 +156,17 @@ var jsonSchemaRestaurantGet = function() {
                   'type': 'string'
                 },
                 'info': {
-                  'type': 'string'
+                  'type': ['string', 'null']
                 },
                 'photo': {
                   'id': 'photo',
-                  'type': 'string'
+                  'type': ['string', 'null']
                 },
                 'priceRate': {
-                  'type': 'integer'
+                  'type': ['integer', 'null']
                 },
                 'rating': {
-                  'type': 'integer'
+                  'type': ['integer', 'null']
                 },
                 'numberVotes': {
                   'type': 'integer'
@@ -173,25 +174,28 @@ var jsonSchemaRestaurantGet = function() {
                 'numberWonVotes': {
                   'type': 'integer'
                 },
-                'longitude': {
-                  'type': 'number'
+                'lng': {
+                  'type': ['number', 'null']
                 },
-                'latitude': {
-                  'type': 'number'
+                'lat': {
+                  'type': ['number', 'null']
                 },
                 'temporary': {
                   'type': 'boolean'
+                },
+                'status': {
+                  'type': 'string'
                 }
               },
-              'required': ['name', 'info', 'longitude', 'latitude', 'numberVotes', 'numberWonVotes',
+              'required': ['name', 'info', 'lng', 'lat',
                 'rating', 'priceRate', 'photo'
               ]
             },
             'relationships': {
               'type': 'object',
               'properties': {
-                'category': {
-                  'type': 'object',
+                'categories': {
+                  'type': 'array',
                   'properties': {
                     'data': {
                       'type': 'array',
@@ -242,9 +246,17 @@ var jsonSchemaRestaurantGet = function() {
                 }
               },
               'required': ['name']
+            },
+            'links': {
+              'type': 'object',
+              'properties': {
+                'self': {
+                  'type': 'string'
+                }
+              }
             }
           },
-          'required': ['type', 'id', 'attributes']
+          'required': ['type', 'id', 'attributes', 'links']
         }
       }
     },

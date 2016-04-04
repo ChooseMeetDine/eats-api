@@ -2,6 +2,7 @@ var request = require('supertest');
 var app;
 var chai = require('chai');
 chai.use(require('chai3-json-schema'));
+chai.tv4.banUnknown = true;
 
 module.exports = function(appInstance) {
   app = appInstance;

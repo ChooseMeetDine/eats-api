@@ -2,6 +2,7 @@ var request = require('supertest');
 var chai = require('chai');
 var expect = chai.expect;
 chai.use(require('chai3-json-schema'));
+chai.tv4.banUnknown = true;
 
 module.exports = function(app, tokens) {
   describe('Testing auth endpoint', function() {

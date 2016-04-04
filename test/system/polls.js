@@ -2,6 +2,7 @@ var request = require('supertest');
 var expect = require('chai').expect;
 var chai = require('chai');
 chai.use(require('chai3-json-schema'));
+chai.tv4.banUnknown = true;
 
 module.exports = function(app, tokens) {
   describe.skip('Testing polls endpoint', function() {
