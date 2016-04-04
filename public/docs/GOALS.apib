@@ -42,12 +42,12 @@ Once an admin examines a restaurant, the status will be changed to either "accep
                 "photo": "http://photo.com/1234.jpg",
                 "priceRate": 3,
                 "rating": 4,
-                "longitude": 13.00073,
-                "latitude": 55.60587,
+                "lng": 13.00073,
+                "lat": 55.60587,
                 "temporary": false
             },
             "relationships": {
-                "category": {
+                "categories": {
                     "data": [
                         {
                             "type": "category",
@@ -63,37 +63,6 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "links": {
                 "self": "/restaurants/RESTAURANT_ID_1"
             }
-        },
-        {
-            "type": "restaurant",
-            "id": "RESTAURANT_ID_2",
-            "attributes": {
-                "name": "Krua Thai",
-                "info": "Helt vanligt thai restaurant",
-                "photo": "http://photo.com/2345.jpg",
-                "priceRate": 3,
-                "rating": 3,
-                "longitude": 13.00173,
-                "latitude": 55.60587,
-                "temporary": false
-            },
-            "relationships": {
-                "category": {
-                    "data": [
-                        {
-                            "type": "category",
-                            "id": "CATEGORY_ID_2"
-                        },
-                        {
-                            "type": "category",
-                            "id": "CATEGORY_ID_3"
-                        }
-                    ]
-                }
-            },
-            "links": {
-                "self": "/restaurants/RESTAURANT_ID_2"
-            }
         }
     ],
     "included": [
@@ -102,13 +71,6 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "id": "CATEGORY_ID_1",
             "attributes": {
                 "name": "fish"
-            }
-        },
-        {
-            "type": "category",
-            "id": "CATEGORY_ID_2",
-            "attributes": {
-                "name": "vegan"
             }
         },
         {
@@ -155,71 +117,64 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 + Request (application/json)
 
 {
- "name": "Restaurant name",
- "category": [23412,12412],
- "priceRate": 4,
- "rating": 5,
- "info": "Nordenskiöldsgatan 1, Malmö",
- "photo":"http://photo.com/1234.jpg",
- "temporary": false,
- "longitude": 13.00073,
- "latitude": 55.60587
+  "name": "Testaurant",
+  "categories": ["13"],
+  "priceRate": 1,
+  "rating": 2,
+  "info": "Not needed",
+  "photo": "www.not-a-real-photo.com",
+  "temporary": false,
+  "lng": 123.1,
+  "lat": 123.1
 }
 
 
 + Response 201(application/json)
 
 {
-    "links": {
-        "self": "/restaurants/321321"
+  "data": {
+    "type": "restaurant",
+    "id": "869967774580104",
+    "attributes": {
+      "name": "Testaurant",
+      "lat": "123.1000000",
+      "created": "2016-04-04T07:14:38.777Z",
+      "info": "Not needed",
+      "photo": "www.not-a-real-photo.com",
+      "temporary": false,
+      "lng": "123.1000000",
+      "priceRate": 1,
+      "status": "unexamined",
+      "rating": 2,
+      "numberOfPolls": 0,
+      "numberOfPollsWon": "0"
     },
-    "data":{
-        "type": "restaurant",
-        "id": "321321",
-        "attributes": {
-            "name": "Restaurant name",
-            "info": "Nordenskiöldsgatan 1, Malmö",
-            "photo": "http://photo.com/1234.jpg",
-            "priceRate": 4,
-            "rating": 5,
-            "numberOfPolls": 0,
-            "numberOfPollsWon": 0,
-            "longitude": 13.00073,
-            "latitude": 55.60587,
-            "temporary": false,
-            "status": "unexamined"
-        },
-        "relationships": {
-            "category": {
-                "data": [
-                    {
-                        "type": "category",
-                        "id": "23412"
-                    },
-                    {
-                        "type": "category",
-                        "id": "12412"
-                    }
-                ]
-            }
-        }
-    },
-    "included": [
-        {
+    "relationships": {
+      "categories": {
+        "data": [
+          {
             "type": "category",
-            "id": "23412",
-            "attributes": {
-                "name": "fish"
-            }
-        },
-        {
-            "type": "category",
-            "id": "12412",
-            "attributes": {
-                "name": "vegan"
-            }
-        }
-    ]
+            "id": "13"
+          }
+        ]
+      }
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/restaurants/869967774580104"
+  },
+  "included": [
+    {
+      "type": "category",
+      "id": "13",
+      "attributes": {
+        "name": "burgare"
+      },
+      "links": {
+        "self": "http://localhost:5000/categories/13"
+      }
+    }
+  ]
 }
 
 ## Only registered users & admin [/restaurants]

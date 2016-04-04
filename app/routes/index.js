@@ -4,7 +4,6 @@ var restaurantRouter = require('../routes/restaurants');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
-var access = require('../validators/access');
 
 router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');

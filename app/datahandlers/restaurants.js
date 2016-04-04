@@ -64,7 +64,6 @@ var createRestaurantPostResponse = function(restaurantID) {
     restaurant.data.numberOfPolls = pollCount;
     restaurant.data.numberOfPollsWon = wonCount;
     var response = new responseModule(restaurant); // creates a new JSON-API-restaurant object
-    response.addRelation(creator);
     for (i = 0; i < categories.length; i++) {
       response.addRelation(categories[i]);
     }

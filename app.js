@@ -1,3 +1,4 @@
+require('dotenv').config();
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -5,15 +6,14 @@ var routes = require('./app/routes/index');
 var bodyParser = require('body-parser');
 var pollsSocket = require('./app/socketio/polls_socket');
 
-// redirects to HTTPS on Heroku (http://jaketrent.com/post/https-redirect-node-heroku/)
 var env = process.env.NODE_ENV || 'development';
-if (env === 'production') {
+
+// Enables CORS for development (to allow sites not hosted on same server to reach the API)
+if (env === 'development') {
   app.use(function(req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
-      return res.redirect(301, 'https://' + (req.header('host')) + req.url);
-    } else {
-      return next();
-    }
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
   });
 }
 
