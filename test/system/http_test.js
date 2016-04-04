@@ -21,13 +21,21 @@ var cert = process.env.JWTSECRET;
 var tokens = {};
 tokens.admin = jwt.sign({
   email: 'kenny@mail.se',
-  password: 'password123'
+  password: 'password123',
+  id: 1140
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
 });
 tokens.user = jwt.sign({
   email: 'konny@mail.se',
-  password: 'password123'
+  password: 'password123',
+  id: 1110
+}, cert, {
+  expiresIn: '1m' // expires in 1 minute
+});
+tokens.user = jwt.sign({
+  name: 'anon',
+  id: 1160
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
 });
