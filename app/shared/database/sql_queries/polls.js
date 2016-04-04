@@ -70,6 +70,32 @@ pollsQueries.selectPollData = function(pollId) {
     });
 };
 
+// Returns all polls
+pollsQueries.selectAllPolls = function(req) {
+  var userQuery = '(select id as t1id from poll join poll_users on poll.id = poll_users.poll_id ' +
+    'where poll_users.user_id = ' + req.validUser + ' ) as t1';
+
+  return knex.select('id as id', 'name', 'expires', 'created',
+      'allow_new_restaurants as allowNewRestaurants')
+    .from('poll')
+    .join(knex.raw(userQuery), 'id', 't1.t1id')
+    .then(function(res) {
+      var polls = [];
+      for (var i = 0; i < res.length; i++) {
+        var poll = {
+          data: res[i],
+          relation: 'polls',
+          multiple: true,
+          type: 'poll',
+          resource: 'polls'
+        };
+        polls.push(poll);
+      }
+      return polls;
+    });
+};
+
+
 // Returns CREATOR data as JSON-API object
 pollsQueries.selectCreatorData = function(pollId) {
   return knex.select('user.id', 'user.name', 'photo', 'anon')

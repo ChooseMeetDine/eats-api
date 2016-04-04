@@ -99,7 +99,7 @@ var createRestaurantGetResponse = function(req) {
     }).catch(function(err) {
       console.log(err.stack);
       return Promise
-        .reject(new Error('Could insert but not retrieve restaurant data from database'));
+        .reject(new Error('Could not retrieve restaurant data from database'));
     });
 };
 
