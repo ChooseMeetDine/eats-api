@@ -1,5 +1,6 @@
 // Enables HTTP traffic monitoring for PM2 and Keymetrics.io
-require('pmx').init({
+var pmx = require('pmx');
+pmx.init({
   http: true
 });
 
