@@ -88,15 +88,15 @@ module.exports = function(app, tokens) {
         request(app)
           .post('/restaurants')
           .send({
-            name: 'Testaurant',
-            temporary: false,
-            info: 'Not needed',
-            lng: 123.1,
-            lat: 123.1,
-            photo: 'www.not-a-real-photo.com',
-            priceRate: 1,
-            rating: 2,
-            categories: ['13']
+            'name': 'Testaurant',
+            'categories': ['13'],
+            'priceRate': 1,
+            'rating': 2,
+            'info': 'Not needed',
+            'photo': 'www.not-a-real-photo.com',
+            'temporary': false,
+            'lng': 123.1,
+            'lat': 123.1
           })
           .set('Content-Type', 'application/json')
           .expect(403)
@@ -106,9 +106,32 @@ module.exports = function(app, tokens) {
             done(err);
           });
       });
-
       //TODO: Test that restaurants get the status 'accepted' if admins add them
-
+      it('should return valid JSON for POST /restaurants with admin-token', function(done) {
+        request(app)
+          .post('/restaurants')
+          .send({
+            'name': 'Testaurant',
+            'categories': ['13'],
+            'priceRate': 1,
+            'rating': 2,
+            'info': 'Not needed',
+            'photo': 'www.not-a-real-photo.com',
+            'temporary': false,
+            'lng': 123.1,
+            'lat': 123.1
+          })
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.admin)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaRestaurantPost());
+            expect(response.data.attributes.status).to.equal('accepted');
+            done(err);
+          });
+      });
       //TODO: Test that restaurants can be added by anonymous users
 
     });
@@ -270,67 +293,51 @@ var jsonSchemaRestaurantGet = function() {
 var jsonSchemaRestaurantPost = function() {
   return {
     '$schema': 'http://json-schema.org/draft-04/schema#',
-    'id': 'http://jsonschema.net',
     'type': 'object',
     'properties': {
       'data': {
-        'id': 'http://jsonschema.net/data',
         'type': 'object',
         'properties': {
           'type': {
-            'id': 'http://jsonschema.net/data/type',
             'type': 'string'
           },
           'id': {
-            'id': 'http://jsonschema.net/data/id',
             'type': 'string'
           },
           'attributes': {
-            'id': 'http://jsonschema.net/data/attributes',
             'type': 'object',
             'properties': {
               'name': {
-                'id': 'http://jsonschema.net/data/attributes/name',
                 'type': 'string'
               },
               'lat': {
-                'id': 'http://jsonschema.net/data/attributes/lat',
                 'type': 'number'
               },
               'info': {
-                'id': 'http://jsonschema.net/data/attributes/info',
                 'type': 'string'
               },
               'photo': {
-                'id': 'http://jsonschema.net/data/attributes/photo',
                 'type': 'string'
               },
               'temporary': {
-                'id': 'http://jsonschema.net/data/attributes/temporary',
                 'type': 'boolean'
               },
               'lng': {
-                'id': 'http://jsonschema.net/data/attributes/lng',
                 'type': 'number'
               },
               'priceRate': {
-                'id': 'http://jsonschema.net/data/attributes/priceRate',
                 'type': 'integer'
               },
               'status': {
-                'id': 'http://jsonschema.net/data/attributes/status',
                 'type': 'string'
               },
               'rating': {
-                'id': 'http://jsonschema.net/data/attributes/rating',
                 'type': 'integer'
               },
               'numberOfPolls': {
-                'id': 'http://jsonschema.net/data/attributes/numberOfPolls',
                 'type': 'integer'
               },
               'numberOfPollsWon': {
-                'id': 'http://jsonschema.net/data/attributes/numberOfPollsWon',
                 'type': 'string'
               }
             },
@@ -339,26 +346,20 @@ var jsonSchemaRestaurantPost = function() {
             ]
           },
           'relationships': {
-            'id': 'http://jsonschema.net/data/relationships',
             'type': 'object',
             'properties': {
               'categories': {
-                'id': 'http://jsonschema.net/data/relationships/categories',
                 'type': 'object',
                 'properties': {
                   'data': {
-                    'id': 'http://jsonschema.net/data/relationships/categories/data',
                     'type': 'array',
                     'items': {
-                      'id': 'http://jsonschema.net/data/relationships/categories/data/0',
                       'type': 'object',
                       'properties': {
                         'type': {
-                          'id': 'http://jsonschema.net/data/relationships/categories/data/0/type',
                           'type': 'string'
                         },
                         'id': {
-                          'id': 'http://jsonschema.net/data/relationships/categories/data/0/id',
                           'type': 'string'
                         }
                       }
