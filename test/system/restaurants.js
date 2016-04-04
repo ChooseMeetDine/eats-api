@@ -111,10 +111,10 @@ module.exports = function(app, tokens) {
         request(app)
           .post('/restaurants')
           .send({
-            'name': 'Testaurant',
+            'name': 'New Testaurant',
             'categories': ['13'],
-            'priceRate': 1,
-            'rating': 2,
+            'priceRate': 3,
+            'rating': 5,
             'info': 'Not needed',
             'photo': 'www.not-a-real-photo.com',
             'temporary': false,
@@ -133,7 +133,30 @@ module.exports = function(app, tokens) {
           });
       });
       //TODO: Test that restaurants can be added by anonymous users
-
+      it('should return valid JSON for POST /restaurants with anonymous-token', function(done) {
+        request(app)
+          .post('/restaurants')
+          .send({
+            'name': 'Testaurant two',
+            'categories': ['13'],
+            'priceRate': 3,
+            'rating': 5,
+            'info': 'Not needed',
+            'photo': 'www.not-a-real-photo.com',
+            'temporary': false,
+            'lng': 123.3,
+            'lat': 123.3
+          })
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.anon)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaRestaurantPost());
+            done(err);
+          });
+      });
     });
 
 
