@@ -21,12 +21,12 @@ Once an admin examines a restaurant, the status will be changed to either “acc
         "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
         "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
         "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">4</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
+        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
         "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
       </span>}</span>,
       "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">category</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">categories</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
             {
               "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
@@ -42,37 +42,6 @@ Once an admin examines a restaurant, the status will be changed to either “acc
       "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/restaurants/RESTAURANT_ID_1"</span>
       </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"RESTAURANT_ID_2"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Krua Thai"</span></span>,
-        "<span class="hljs-attribute">info</span>": <span class="hljs-value"><span class="hljs-string">"Helt vanligt thai restaurant"</span></span>,
-        "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/2345.jpg"</span></span>,
-        "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
-        "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
-        "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00173</span></span>,
-        "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
-        "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">category</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
-            {
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-              "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"CATEGORY_ID_2"</span>
-            </span>},
-            {
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-              "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"CATEGORY_ID_3"</span>
-            </span>}
-          ]
-        </span>}
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/restaurants/RESTAURANT_ID_2"</span>
-      </span>}
     </span>}
   ]</span>,
   "<span class="hljs-attribute">included</span>": <span class="hljs-value">[
@@ -81,13 +50,6 @@ Once an admin examines a restaurant, the status will be changed to either “acc
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"CATEGORY_ID_1"</span></span>,
       "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"fish"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"CATEGORY_ID_2"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"vegan"</span>
       </span>}
     </span>},
     {
@@ -108,66 +70,58 @@ Once an admin examines a restaurant, the status will be changed to either “acc
 </dd><dt>lat</dt><dd><code>number</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Latitude coordinate of this restaurant in WGS84 format</p>
 </dd><dt>temporary</dt><dd><code>boolean</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>false</span></span>&nbsp;<p>Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Restaurant name"</span></span>,
-  "<span class="hljs-attribute">category</span>": <span class="hljs-value">[
-    <span class="hljs-number">23412</span>,
-    <span class="hljs-number">12412</span>
+  "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Testaurant"</span></span>,
+  "<span class="hljs-attribute">categories</span>": <span class="hljs-value">[
+    <span class="hljs-string">"13"</span>
   ]</span>,
-  "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">4</span></span>,
-  "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">5</span></span>,
-  "<span class="hljs-attribute">info</span>": <span class="hljs-value"><span class="hljs-string">"Nordenskiöldsgatan 1, Malmö"</span></span>,
-  "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
+  "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+  "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">2</span></span>,
+  "<span class="hljs-attribute">info</span>": <span class="hljs-value"><span class="hljs-string">"Not needed"</span></span>,
+  "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"www.not-a-real-photo.com"</span></span>,
   "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
-  "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
-  "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span>
+  "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">123.1</span></span>,
+  "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">123.1</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>201</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-  "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/restaurants/321321"</span>
-  </span>}</span>,
   "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"321321"</span></span>,
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"869967774580104"</span></span>,
     "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Restaurant name"</span></span>,
-      "<span class="hljs-attribute">info</span>": <span class="hljs-value"><span class="hljs-string">"Nordenskiöldsgatan 1, Malmö"</span></span>,
-      "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
-      "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">4</span></span>,
-      "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">5</span></span>,
-      "<span class="hljs-attribute">numberOfPolls</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
-      "<span class="hljs-attribute">numberOfPollsWon</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
-      "<span class="hljs-attribute">longitude</span>": <span class="hljs-value"><span class="hljs-number">13.00073</span></span>,
-      "<span class="hljs-attribute">latitude</span>": <span class="hljs-value"><span class="hljs-number">55.60587</span></span>,
+      "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Testaurant"</span></span>,
+      "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-string">"123.1000000"</span></span>,
+      "<span class="hljs-attribute">created</span>": <span class="hljs-value"><span class="hljs-string">"2016-04-04T07:14:38.777Z"</span></span>,
+      "<span class="hljs-attribute">info</span>": <span class="hljs-value"><span class="hljs-string">"Not needed"</span></span>,
+      "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"www.not-a-real-photo.com"</span></span>,
       "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
-      "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"unexamined"</span>
+      "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-string">"123.1000000"</span></span>,
+      "<span class="hljs-attribute">priceRate</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"unexamined"</span></span>,
+      "<span class="hljs-attribute">rating</span>": <span class="hljs-value"><span class="hljs-number">2</span></span>,
+      "<span class="hljs-attribute">numberOfPolls</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">numberOfPollsWon</span>": <span class="hljs-value"><span class="hljs-string">"0"</span>
     </span>}</span>,
     "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">category</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">categories</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
           {
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"23412"</span>
-          </span>},
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"12412"</span>
+            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"13"</span>
           </span>}
         ]
       </span>}
     </span>}
   </span>}</span>,
+  "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"http://localhost:5000/restaurants/869967774580104"</span>
+  </span>}</span>,
   "<span class="hljs-attribute">included</span>": <span class="hljs-value">[
     {
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"23412"</span></span>,
+      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"13"</span></span>,
       "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"fish"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"category"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"12412"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"vegan"</span>
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"burgare"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"http://localhost:5000/categories/13"</span>
       </span>}
     </span>}
   ]
@@ -979,7 +933,7 @@ vote for that restaurant in that poll.</p>
   "<span class="hljs-attribute">authentication</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Welcome user_name"</span></span>,
   "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 29 Mar 2016</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 04 Apr 2016</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 
