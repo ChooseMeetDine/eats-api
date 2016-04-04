@@ -22,6 +22,8 @@ var tokens = {};
 tokens.admin = jwt.sign({
   email: 'kenny@mail.se',
   password: 'password123',
+  name: 'kenny',
+  admin: true,
   id: 1140
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
@@ -33,7 +35,7 @@ tokens.user = jwt.sign({
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
 });
-tokens.user = jwt.sign({
+tokens.anon = jwt.sign({
   name: 'anon',
   id: 1160
 }, cert, {
