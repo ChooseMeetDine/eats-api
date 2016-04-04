@@ -16,7 +16,9 @@
     "jsonwebtoken": "~5.7.0",
     "knex": "~0.9.0",
     "moment": "~2.12.0",
+    "moniker": "~0.1.2",
     "pg": "~4.4.0",
+    "pmx": "~0.6.1",
     "socket.io": "~1.4.5",
     "underscore": "~1.8.3"
   },
@@ -40,8 +42,7 @@
     "testw": "node ./testenv/setup.js & set NODE_ENV=testing && mocha --recursive test --timeout 5000 & node ./testenv/cleanup.js",
     "docs": "aglio --theme-template ./public/aglio-theme-olio/templates/index.jade -i ./public/docs/README.apib -o ./public/docs/documentation.html && aglio --theme-template ./public/aglio-theme-olio/templates/index.jade -i ./public/docs/GOALS.apib -o ./public/docs/goaldocs.html ",
     "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --recursive test",
-    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "docs": "aglio -i public/docs/GOALS.apib -o public/docs/goaldocs.html && aglio -i public/docs/README.apib -o public/docs/documentation.html"
+    "coveralls": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec --recursive test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "repository": {
     "type": "git",

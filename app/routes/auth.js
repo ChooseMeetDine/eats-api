@@ -4,6 +4,7 @@ var knex = require('../shared/database/knex');
 var bodyParser = require('body-parser');
 var cert = process.env.JWTSECRET;
 var authRequest = require('../validators/auth');
+var moniker = require('moniker');
 
 router.use(bodyParser.urlencoded({
   extended: true
@@ -33,11 +34,11 @@ router.post('/', authRequest.checkData, function(req, res) {
 
         if (user.admin === true) {
           token = jwt.sign(user, cert, {
-            expiresIn: '168h' // expires in one week (168 hours)
+            expiresIn: '168h' //NOTE expires in one week (168 hours)
           });
         } else {
           token = jwt.sign(user, cert, {
-            expiresIn: '5m' // expires in 1 minute
+            expiresIn: '5m' //NOTE expires in 5 minutes
           });
         }
 
@@ -58,6 +59,48 @@ router.post('/', authRequest.checkData, function(req, res) {
         authentication: false,
         message: 'You need to POST email and password',
         token: false
+      });
+    });
+});
+
+router.get('/anonymous', function(req, res) {
+
+  var anonymousId;
+  var randomName = 'anonymous ' + moniker.choose();
+
+  knex.insert({
+      name: randomName,
+      last_login: knex.raw('now()'),
+      registration_date: knex.raw('now()'),
+      anon: true
+    })
+    .into('user')
+    .returning('id')
+    .then(function(result) {
+      anonymousId = result[0];
+
+      var anonymousUser = {
+        id: anonymousId,
+        anon: true,
+        name: randomName,
+        role: 'anonymous'
+      };
+
+      var token = jwt.sign(anonymousUser, cert, {
+        expiresIn: '24h' //NOTE expires in 24h
+      });
+
+      res.json({
+        message: 'Welcome ' + randomName,
+        token: token
+      });
+    }).catch(function() {
+      res.status(500).send({
+        'errors': [{
+          'status': '500',
+          'title': 'Creation of JWT',
+          'detail': 'Could not create token for anonymous user'
+        }]
       });
     });
 });

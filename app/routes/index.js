@@ -35,6 +35,7 @@ if (env === 'development') {
 
 router.use('/auth', authRouter);
 
+
 //TODO: Fix routers for everything below this comment.
 
 //Fake endpoint

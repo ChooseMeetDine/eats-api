@@ -1,3 +1,9 @@
+// Enables HTTP traffic monitoring for PM2 and Keymetrics.io
+var pmx = require('pmx');
+pmx.init({
+  http: true
+});
+
 require('dotenv').config();
 var app = require('express')();
 var http = require('http').Server(app);
@@ -26,6 +32,9 @@ app.use('/', routes);
 
 // Initializes the socketIO-module for /polls
 pollsSocket.init(io);
+
+// Enables express-errors to be handled by pmx (and PM2/Keymetrics)
+app.use(pmx.expressErrorHandler());
 
 app.use(function(err, req, res, next) {
   if (!err.status) {
