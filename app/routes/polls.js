@@ -19,7 +19,7 @@ router.post('/', pollValidator.post, function(req, res) {
     });
 });
 
-router.get('/:id', pollValidator.getID, function(req, res) {
+router.get('/:id', pollValidator.checkPollId, function(req, res) {
   return pollHandler
     .getID(req)
     .then(function(response) {
@@ -38,7 +38,7 @@ router.get('/:id', pollValidator.getID, function(req, res) {
 // Router that handles POSTs to add restaurants to a poll
 // Sends the updated poll-data via socketio when successful
 router.post('/:id/restaurants',
-  pollValidator.getID, // validate poll ID parameter
+  pollValidator.checkPollId, // validate poll ID parameter
   pollValidator.postRestaurant, // validate POST body for restaurant
   function(req, res) {
     return pollHandler
@@ -58,10 +58,20 @@ router.post('/:id/restaurants',
       });
   });
 
+// HÄR ÄR JAG!
+// - SKRIV KOMMENTARER FÖR POLL VALIDATORERNA (participant/hasntvoted)
+// - SKRIV TESTER FÖR VALIDATORERNA (systemtester bara?)
+// - SKRIV DOKUMENTATION
+
+// Ska participantvalidatorn returnera true/false för att bli återanvändbar?
+// Nu returnerar den bara true, annars error..
+
 // Router that handles POSTs to add a vote to a poll
 // Sends the updated poll-data via socketio when succesful
 router.post('/:id/votes',
-  pollValidator.getID, // validate poll ID parameter
+  pollValidator.checkPollId, // validate poll ID parameter
+  pollValidator.checkIfParticipant,
+  pollvalidator.checkThatUserHasntVoted,
   pollValidator.postVote, // validate POST body for restaurant
   function(req, res) {
     return pollHandler

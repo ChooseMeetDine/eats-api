@@ -20,7 +20,7 @@ pollValidator.post = function(req, res, next) {
 };
 
 // Exported middleware that validates the ID-parameter for /polls/:id
-pollValidator.getID = function(req, res, next) {
+pollValidator.checkPollId = function(req, res, next) {
   //No schema needed to validate a single parameter
   validatePollID(req.params.id)
     .then(function(id) {
@@ -64,6 +64,32 @@ pollValidator.postVote = function(req, res, next) {
         req.validBody = validData;
         next();
       }
+    });
+};
+
+// Exported middleware that validates if a user has voted in the poll before,
+// for POSTs to /polls/:id/votes
+pollValidator.checkThatUserHasntVoted = function(req, res, next) {
+  //No schema needed to validate a single parameter
+  validateThatUserHasntVoted(req.params.id, req.validUser.id)
+    .then(function() {
+      next();
+    })
+    .catch(function(error) {
+      error.status = 400;
+      next(error);
+    });
+};
+
+pollValidator.checkIfParticipant = function(req, res, next) {
+  validateIfUserIsParticipant(req.params.id, req.validUser.id)
+    .then(function(result) {
+      req.validUser.isParticipant = result;
+      next();
+    })
+    .catch(function(error) {
+      error.status = 400;
+      next(error);
     });
 };
 
@@ -369,6 +395,40 @@ var validateRestaurantId = function(data, schema, done) {
     .catch(function(err) {
       console.log(err);
       return done(new Error('Invalid restaurant ID: ' + data));
+    });
+};
+
+var validateIfUserIsParticipant = function(pollId, userId) {
+  return pg.schema //Returns either: [{isParticipant:true}] or [{isParticipant:false}]
+    .raw('SELECT EXISTS(SELECT 1 FROM "poll_users" WHERE poll_id=' +
+      pollId + ' AND user_id=' + userId + ' ) AS "isParticipant"')
+    .catch(function() {
+      return Promise.reject(new Error('User ID ' + userId + ' is not a participant of poll ID ' +
+        pollId));
+    })
+    .then(function(res) {
+      if (res.rows[0].isParticipant) {
+        return true;
+      }
+      return Promise.reject(new Error('User ID ' + userId + ' is not a participant of poll ID ' +
+        pollId));
+    });
+};
+
+var validateThatUserHasntVoted = function(pollId, userId) {
+  return pg.schema //Returns rows-object as either: [{canVote:true}] or [{canVote:false}]
+    .raw('SELECT NOT EXISTS(SELECT 1 FROM "vote" WHERE poll_id=' +
+      pollId + ' AND user_id=' + userId + ' ) AS "canVote"')
+    .catch(function() {
+      return Promise.reject(new Error('User ID ' + userId + ' has already voted in poll ID ' +
+        pollId));
+    })
+    .then(function(result) {
+      if (result.rows[0].canVote) {
+        return true;
+      }
+      return Promise.reject(new Error('User ID ' + userId + ' has already voted in poll ID ' +
+        pollId));
     });
 };
 
