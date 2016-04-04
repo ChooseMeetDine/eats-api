@@ -44,6 +44,7 @@ Once an admin examines a restaurant, the status will be changed to either "accep
                 "rating": 4,
                 "lng": 13.00073,
                 "lat": 55.60587,
+                "status": "accepted",
                 "temporary": false
             },
             "relationships": {
@@ -62,6 +63,38 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             },
             "links": {
                 "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Krua Thai",
+                "info": "Helt vanligt thai restaurant",
+                "photo": "http://photo.com/2345.jpg",
+                "priceRate": 3,
+                "rating": 3,
+                "lng": 13.00173,
+                "lat": 55.60587,
+                "status": "accepted",
+                "temporary": false
+            },
+            "relationships": {
+                "categories": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_2"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
             }
         }
     ],
@@ -90,7 +123,7 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 
  + name (string, required) - Name of the restaurant
 
- + category (array, optional) - Food category IDs to add to this restaurant
+ + categories (array, optional) - Food category IDs to add to this restaurant
      + Default: []
 
  + priceRate (number, optional) - Price rate for this restaurant from 1 to 5 range
@@ -219,12 +252,13 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "rating": 4,
             "numberOfPolls": 27,
             "numberOfPollsWon": 3,
-            "longitude": 13.00073,
-            "latitude": 55.60587,
+            "lng": 13.00073,
+            "lat": 55.60587,
+            "status" : "accepted",
             "temporary": false
         },
         "relationships": {
-            "category": {
+            "categories": {
                 "data": [
                     {
                         "type": "category",
@@ -682,8 +716,8 @@ The data sent through the socket is identical to the response from a GET-request
     "id": "234123",
     "attributes": {
       "name": "Din Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
+      "lat": 56.1234,
+      "lng": 14.1234,
       "temporary": false
     },
     "links": {
@@ -694,8 +728,8 @@ The data sent through the socket is identical to the response from a GET-request
     "id": "12412332",
     "attributes": {
       "name": "Vår Restaurang",
-      "latitude": 56.1234,
-      "longitude": 14.1234,
+      "lat": 56.1234,
+      "lng": 14.1234,
       "temporary": false
     },
     "links": {
@@ -848,8 +882,8 @@ The data sent through the socket is identical to the response from a GET-request
             "id": "RESTAURANT_ID_1",
             "attributes": {
                 "name": "Din Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -861,8 +895,8 @@ The data sent through the socket is identical to the response from a GET-request
             "id": "RESTAURANT_ID_2",
             "attributes": {
                 "name": "Vår Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -1098,8 +1132,8 @@ vote for that restaurant in that poll.
             "id": "RESTAURANT_ID_1",
             "attributes": {
                 "name": "Din Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {
@@ -1111,8 +1145,8 @@ vote for that restaurant in that poll.
             "id": "6767676767",
             "attributes": {
                 "name": "Vår Restaurang",
-                "latitude": 56.1234,
-                "longitude": 14.1234,
+                "lat": 56.1234,
+                "lng": 14.1234,
                 "temporary": false
             },
             "links": {

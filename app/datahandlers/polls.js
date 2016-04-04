@@ -12,8 +12,6 @@ var pollsQueries = require('../shared/database/sql_queries/polls');
 // Error handling is handled in the two promises separately, to be able to distinguish what error
 // was thrown and to be able to return a useful message to the user.
 pollsDatahandler.post = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return executeInsertionTransaction(req)
     .then(createPollResponse);
 };
@@ -24,8 +22,6 @@ pollsDatahandler.getID = function(req) {
 
 // Handles requests for POSTing a new restaurant to a poll ID
 pollsDatahandler.postRestaurant = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return executeInsertRestaurantToPoll(req)
     .then(createPollResponse);
 };
