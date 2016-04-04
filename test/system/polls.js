@@ -1,3 +1,7 @@
+/**
+ * Tests are run from http_test.js
+ */
+
 var request = require('supertest');
 var expect = require('chai').expect;
 var chai = require('chai');
@@ -14,7 +18,7 @@ module.exports = function(app, tokens) {
         .end(function(err, res) {
           var response = JSON.parse(res.text);
           expect(response).to.be.jsonSchema(jsonSchemaPollGet());
-          done();
+          done(err);
         });
     });
   });

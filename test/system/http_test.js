@@ -1,3 +1,9 @@
+/**
+ * This is the file run by mocha for systemtests.
+ * This file starts by creating tokens and the app-object,
+ * these are then passed into the other test-files.
+ */
+
 require('dotenv').config();
 var request = require('supertest');
 var app = require('../../app');

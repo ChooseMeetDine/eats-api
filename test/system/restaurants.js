@@ -1,3 +1,7 @@
+/**
+ * Tests are run from http_test.js
+ */
+
 var request = require('supertest');
 var expect = require('chai').expect;
 var chai = require('chai');
@@ -17,7 +21,7 @@ module.exports = function(app, tokens) {
           .end(function(err, res) {
             var response = res.body;
             expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet());
-            done();
+            done(err);
           });
       });
 
@@ -30,7 +34,7 @@ module.exports = function(app, tokens) {
           .end(function(err, res) {
             var response = res.body;
             expect(response).to.be.jsonSchema(jsonSchemaRestaurantGet());
-            done();
+            done(err);
           });
       });
 
@@ -41,7 +45,7 @@ module.exports = function(app, tokens) {
           .expect('Content-Type', /json/)
           .end(function(err, res) {
             expect(res.body.message).to.equal('No token provided.');
-            done();
+            done(err);
           });
       });
 
@@ -49,12 +53,8 @@ module.exports = function(app, tokens) {
         request(app)
           .get('/restaurants')
           .set('x-access-token', 'k1m23,m12.,3m1.2,3m1.,2m31,2m3.1,m23')
-          .expect(403)
           .expect('Content-Type', /json/)
-          .end(function(err, res) {
-            expect(res.body.message).to.equal('Failed to authenticate token, please log in again');
-            done();
-          });
+          .expect(403, done);
       });
     });
 
@@ -81,7 +81,7 @@ module.exports = function(app, tokens) {
             var response = res.body;
             //TODO: Make a real schema for this one
             expect(true).to.equal('implementera testet tack');
-            done();
+            done(err);
           });
       });
 
@@ -100,11 +100,11 @@ module.exports = function(app, tokens) {
             categories: ['13']
           })
           .set('Content-Type', 'application/json')
-          .expect(200)
+          .expect(403)
           .expect('Content-Type', /json/)
           .end(function(err, res) {
             expect(res.body.message).to.equal('No token provided.');
-            done();
+            done(err);
           });
       });
 

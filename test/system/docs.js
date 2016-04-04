@@ -1,3 +1,7 @@
+/**
+ * Tests are run from http_test.js
+ */
+
 var request = require('supertest');
 var app;
 var chai = require('chai');
