@@ -8,7 +8,7 @@ var chai = require('chai');
 chai.use(require('chai3-json-schema'));
 chai.tv4.banUnknown = true;
 
-module.exports = function(app) {
+module.exports = function(app, tokens) {
   describe('Testing Users endpoint', function() {
     describe('with POST /users', function() {
 
@@ -50,6 +50,51 @@ module.exports = function(app) {
               done(err);
             });
         });
+    });
+    describe('with Get /users', function() {
+
+      it('should return valid JSON for FET /users with user token', function(done) {
+        request(app)
+          .get('/users')
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.user)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaGetUsersAsUser());
+            done(err);
+          });
+      });
+
+      it('should return valid JSON for FET /users with user token', function(done) {
+        request(app)
+          .get('/users')
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.anon)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaGetUsersAsUser());
+            done(err);
+          });
+      });
+
+      it('should return valid JSON for GET /users with admin token', function(done) {
+        request(app)
+          .get('/users')
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.admin)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            var response = res.body;
+            expect(response).to.be.jsonSchema(jsonSchemaGetUsersAsAdmin());
+            done(err);
+          });
+      });
+
     });
   });
 };
@@ -108,6 +153,140 @@ var jsonSchemaPostUser = function() {
           'id',
           'attributes'
         ]
+      },
+      'links': {
+        'id': 'links',
+        'type': 'object',
+        'properties': {
+          'self': {
+            'id': 'self',
+            'type': 'string'
+          }
+        }
+      }
+    },
+    'required': [
+      'data',
+      'links'
+    ]
+  };
+};
+
+// schema is built according to standard Schema Draft4 by using http://jsonschema.net/#/
+var jsonSchemaGetUsersAsAdmin = function() {
+  return {
+    'type': 'object',
+    'properties': {
+      'data': {
+        'type': 'array',
+        'items': {
+          'type': 'object',
+          'properties': {
+            'type': {
+              'type': 'string'
+            },
+            'id': {
+              'type': 'string'
+            },
+            'attributes': {
+              'type': 'object',
+              'properties': {
+                'name': {
+                  'type': 'string'
+                },
+                'photo': {
+                  'type': ['null', 'string']
+                },
+                'email': {
+                  'type': ['null', 'string']
+                },
+                'phone': {
+                  'type': ['null', 'string']
+                },
+                'admin': {
+                  'type': 'boolean'
+                },
+                'anon': {
+                  'type': 'boolean'
+                }
+              }
+            },
+            'links': {
+              'type': 'object',
+              'properties': {
+                'self': {
+                  'type': 'string'
+                }
+              }
+            }
+          },
+          'required': [
+            'type',
+            'attributes',
+            'links'
+          ]
+        }
+      },
+      'links': {
+        'id': 'links',
+        'type': 'object',
+        'properties': {
+          'self': {
+            'id': 'self',
+            'type': 'string'
+          }
+        }
+      }
+    },
+    'required': [
+      'data',
+      'links'
+    ]
+  };
+};
+
+// schema is built according to standard Schema Draft4 by using http://jsonschema.net/#/
+var jsonSchemaGetUsersAsUser = function() {
+  return {
+    'type': 'object',
+    'properties': {
+      'data': {
+        'type': 'array',
+        'items': {
+          'type': 'object',
+          'properties': {
+            'type': {
+              'type': 'string'
+            },
+            'id': {
+              'type': 'string'
+            },
+            'attributes': {
+              'type': 'object',
+              'properties': {
+                'name': {
+                  'type': 'string'
+                },
+                'photo': {
+                  'type': ['null', 'string']
+                }
+              }
+            },
+            'links': {
+              'type': 'object',
+              'properties': {
+                'self': {
+                  'type': 'string'
+                }
+              }
+            }
+          },
+          'required': [
+            'type',
+            'attributes',
+            'links'
+          ]
+        }
       },
       'links': {
         'id': 'links',

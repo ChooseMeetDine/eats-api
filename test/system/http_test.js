@@ -34,7 +34,7 @@ tokens.user = jwt.sign({
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
 });
-tokens.user = jwt.sign({
+tokens.anon = jwt.sign({
   name: 'anon',
   id: 1160
 }, cert, {
@@ -46,7 +46,7 @@ tokens.user = jwt.sign({
 testDocsEndpoint(app);
 testAuthEndpoint(app, tokens);
 testPollsEndpoint(app, tokens);
-testUsersEndpoint(app);
+testUsersEndpoint(app, tokens);
 testRestaurantsEndpoint(app, tokens);
 
 //Didn't think this needed it's own file

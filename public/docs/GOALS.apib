@@ -357,7 +357,10 @@ Once an admin examines a restaurant, the status will be changed to either "accep
                 "self": "/user/user_ID_2"
             }
         }
-    ]
+    ],
+    "links": {
+      "self": "/users"
+    }
 }
 
 ## Only admin [/users]
@@ -374,7 +377,10 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "attributes": {
                 "name": "Lars",
                 "photo": "http://photo.com/9876.jpg",
-                "email": "qaz@eats-api.se"
+                "email": "qaz@eats-api.se",
+                "phone": "03-23142312",
+                "admin": false,
+                "anon": false
             },
             "links": {
                 "self": "/user/user_ID_1"
@@ -386,13 +392,19 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "attributes": {
                 "name": "Anders",
                 "photo": "http://photo.com/8765.jpg",
-                "email": "wsx@eats-api.se"
+                "email": "wsx@eats-api.se",
+                "phone": "03-23142312",
+                "admin": true,
+                "anon": false
             },
             "links": {
                 "self": "/user/user_ID_2"
             }
         }
-    ]
+    ],
+    "links": {
+      "self": "/users"
+    }
 }
 
 

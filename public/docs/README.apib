@@ -620,6 +620,86 @@ vote for that restaurant in that poll.
 
 # Group /users
 
+## Only registered users [/users]
+
+### Retrieve users with basic info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ],
+    "links": {
+      "self": "/users"
+    }
+}
+
+## Only admin [/users]
+
+### Retrieve users with full info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg",
+                "email": "qaz@eats-api.se",
+                "phone": "03-23142312",
+                "admin": false,
+                "anon": false
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg",
+                "email": "wsx@eats-api.se",
+                "phone": "03-23142312",
+                "admin": true,
+                "anon": false
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ],
+    "links": {
+      "self": "/users"
+    }
+}
+
 ## Unregistered user [/users]
 
 ### Register for user account [POST]
