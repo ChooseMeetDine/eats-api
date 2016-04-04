@@ -32,6 +32,9 @@ app.use('/', routes);
 // Initializes the socketIO-module for /polls
 pollsSocket.init(io);
 
+// Enables express-errors to be handled by pmx (and PM2/Keymetrics)
+app.use(pmx.expressErrorHandler());
+
 app.use(function(err, req, res, next) {
   res.status(500).send({
     httpStatus: 500,
