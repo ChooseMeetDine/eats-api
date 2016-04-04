@@ -54,7 +54,7 @@ io.on('connection', function() {
 
 
 var port;
-if (process.env.testing) {
+if (process.env.NODE_ENV === 'testing') {
   // Use strange port when running system tests (which start its own instance off the API)
   port = 9999;
 } else {
