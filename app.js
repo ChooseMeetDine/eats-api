@@ -1,3 +1,8 @@
+// Enables HTTP traffic monitoring for PM2 and Keymetrics.io
+require('pmx').init({
+  http: true
+});
+
 require('dotenv').config();
 var app = require('express')();
 var http = require('http').Server(app);
