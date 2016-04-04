@@ -10,13 +10,14 @@ router.get('/', function(req, res) {
 });
 
 router.get('/testauth', auth.validate, function(req, res) {
-  res.send('Welcome ' + req.decoded.name +
-    ' your token has been validated and your email is ' + req.decoded.email);
+  res.json('Welcome ' + req.validUser.name +
+    ' your token has been validated and your email is ' + req.validUser.email);
 });
 
 router.use('/polls', pollRouter);
 router.use('/restaurants', restaurantRouter);
 router.use('/auth', authRouter);
+
 
 //TODO: Fix routers for everything below this comment.
 

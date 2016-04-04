@@ -28,13 +28,6 @@ access.setRoleForUser = function(req, res, next) {
     req.validUser.role = 'anonymous';
     next();
   }
-  res.status(401).json({
-    'errors': [{
-      'status': '401',
-      'title': 'Unathourized',
-      'detail': 'ID does not exist.'
-    }]
-  });
 };
 
 //NOTE: Does not work. Might still be of help when this is to be implemented
