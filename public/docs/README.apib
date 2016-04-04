@@ -618,6 +618,57 @@ vote for that restaurant in that poll.
 
 
 
+# Group /users
+
+## Unregistered user [/users]
+
+### Register for user account [POST]
+
++ Parameters
+
+  + name (string, required) - Name of the user
+
+  + password (string, required) - user's password
+
+  + email (string, required) - email-address of the user
+
+  + phone (string, optional) - telephone number of the user
+      + Default: null
+
+  + photo (string, optional) - link to the photo of the user
+  	  + Default: null
+
++ Request (application/json)
+
+{
+  "name": "User's name",
+  "password": "Qwerty1",
+  "email": "lalala@eats.se",
+  "phone": 076123123,
+  "photo":"http://photo.com/1234.jpg"
+}
+
++ Response 201 (application/json)
+
+{
+  "data": {
+    "type": "user",
+    "id": "1125207747229322",
+    "attributes": {
+      "name": "User's name",
+      "email": "lalala@eats.se",
+      "phone": "076123123",
+      "photo": "http://photo.com/1234.jpg",
+      "admin": false,
+      "anon": false
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/users/1125207747229322"
+  }
+}
+
+
 # Group /restaurants
 
 ## Any user [/restaurant]

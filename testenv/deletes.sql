@@ -53,5 +53,6 @@ DELETE FROM "restaurant_categories"
 DELETE FROM "category" WHERE type = 'testcategory';
 DELETE FROM "restaurant" WHERE lat = 123.1;
 DELETE FROM "user" WHERE phone = 'testdata';
+DELETE FROM "user" WHERE name = 'askmdlakmsdklamslkdmlaksm klamsdlaksmdlka msm  - TESTUSER';
 COMMIT;
 -- End of file.
