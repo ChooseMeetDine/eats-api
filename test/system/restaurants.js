@@ -106,7 +106,7 @@ module.exports = function(app, tokens) {
             done(err);
           });
       });
-      //TODO: Test that restaurants get the status 'accepted' if admins add them
+
       it('should return valid JSON for POST /restaurants with admin-token', function(done) {
         request(app)
           .post('/restaurants')
@@ -132,7 +132,7 @@ module.exports = function(app, tokens) {
             done(err);
           });
       });
-      //TODO: Test that restaurants can be added by anonymous users
+
       it('should return valid JSON for POST /restaurants with anonymous-token', function(done) {
         request(app)
           .post('/restaurants')
