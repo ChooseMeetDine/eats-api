@@ -35,6 +35,20 @@ tokens.user = jwt.sign({
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
 });
+tokens.user2 = jwt.sign({
+  email: 'peter@mail.se',
+  password: 'password123',
+  id: 1170
+}, cert, {
+  expiresIn: '1m' // expires in 1 minute
+});
+tokens.user3 = jwt.sign({
+  email: 'mia@mail.se',
+  password: 'password123',
+  id: 1180
+}, cert, {
+  expiresIn: '1m' // expires in 1 minute
+});
 tokens.anon = jwt.sign({
   name: 'anon',
   id: 1160

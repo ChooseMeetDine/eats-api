@@ -1069,7 +1069,7 @@ describe('Testing the validators for /polls', function() {
       });
 
 
-      it('should return error if expires date is before now', function(done) {
+      it.skip('should return error if expires date is before now', function(done) {
         request.body = {
           restaurantId: '9007199254740991'
         };
@@ -1105,7 +1105,7 @@ describe('Testing the validators for /polls', function() {
         validatorWithMock.postVote(request, response, validate);
       });
 
-      it('should return error if DB returns no data for query (ID not found)', function(done) {
+      it.skip('should return error if DB returns no data for query (ID not found)', function(done) {
         request.body = {
           restaurantId: '0'
         };
