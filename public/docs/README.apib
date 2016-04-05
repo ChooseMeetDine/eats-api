@@ -620,7 +620,7 @@ vote for that restaurant in that poll.
 
 # Group /users
 
-## Only registered users [/users]
+## All users [/users]
 
 ### Retrieve users with basic info [GET]
 
@@ -700,6 +700,7 @@ vote for that restaurant in that poll.
     }
 }
 
+
 ## Unregistered user [/users]
 
 ### Register for user account [POST]
@@ -716,7 +717,7 @@ vote for that restaurant in that poll.
       + Default: null
 
   + photo (string, optional) - link to the photo of the user
-  	  + Default: null
+		  + Default: null
 
 + Request (application/json)
 
@@ -724,7 +725,7 @@ vote for that restaurant in that poll.
   "name": "User's name",
   "password": "Qwerty1",
   "email": "lalala@eats.se",
-  "phone": 076123123,
+  "phone": "076123123",
   "photo":"http://photo.com/1234.jpg"
 }
 
@@ -746,6 +747,149 @@ vote for that restaurant in that poll.
   "links": {
     "self": "http://localhost:5000/users/1125207747229322"
   }
+}
+
+
+# Group /users/:id
+
+## Any user [/users/:id]
+
+### Retrieve own user info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
+
+### Retrieve other users info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Klasse",
+            "photo": "http://photo.com/9876.jpg",
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    }
+}
+
+## Only admin [/users/:id]
+
+### Retrieve full info from any user[GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
 }
 
 

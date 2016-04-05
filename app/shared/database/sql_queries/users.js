@@ -22,8 +22,16 @@ usersQueries.insertUser = function(req) {
 };
 
 // Get a user from db after POST-data is inserted
-usersQueries.selectUserAfterPost = function(userId) {
-  return knex.select('id', 'name', 'email', 'phone', 'photo', 'admin', 'anon')
+usersQueries.selectUserById = function(req, userId) {
+  var columns;
+  if (req.validUser.role === 'admin' || req.validUser.isRequestingSelf) {
+    columns = ['id', 'name', 'photo', 'phone', 'admin',
+      'anon', 'registration_date as registrationDate'
+    ];
+  } else {
+    columns = ['id', 'name', 'photo'];
+  }
+  return knex.select(columns)
     .from('user')
     .where('id', userId.toString())
     .then(function(res) {
@@ -35,8 +43,38 @@ usersQueries.selectUserAfterPost = function(userId) {
     })
     .catch(function(err) {
       console.log(err);
-      return Promise.reject(new Error('Could not insert user into database.'));
+      return Promise.reject(new Error('Could not retreive user from database.'));
     });
+};
+
+// Get a user from db after POST-data is inserted
+usersQueries.selectUsersGroups = function(req, userId) {
+  if (req.validUser.role === 'admin' || req.validUser.isRequestingSelf) {
+    return knex.select('id', 'name')
+      .from('group')
+      .join('group_users', 'group_id', 'id')
+      .where('user_id', userId.toString())
+      .then(function(res) {
+        var groups = [];
+        for (var i = 0; i < res.length; i++) {
+          var group = {
+            relation: 'groups',
+            multiple: true,
+            type: 'group',
+            resource: 'groups',
+            data: res[i]
+          };
+          groups.push(group);
+        }
+        return groups;
+      })
+      .catch(function(err) {
+        console.log(err);
+        return Promise.reject(new Error('Could not retreive groups from database.'));
+      });
+  } else {
+    return null;
+  }
 };
 
 // Get all users from database

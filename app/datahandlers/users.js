@@ -12,7 +12,13 @@ var usersQueries = require('../shared/database/sql_queries/users');
 // was thrown and to be able to return a useful message to the user.
 usersDatahandler.post = function(req) {
   return usersQueries.insertUser(req)
-    .then(createUserResponse);
+    .then(function(userId) {
+      if (!req.validUser) {
+        req.validUser = {};
+      }
+      req.validUser.isRequestingSelf = true;
+      return createUserIdResponse(req, userId);
+    });
 };
 
 //Creates response for GET /users
@@ -20,11 +26,24 @@ usersDatahandler.get = function(req) {
   return createAllUsersResponse(req);
 };
 
+//Creates response for GET /users/:id
+usersDatahandler.getId = function(req) {
+  return createUserIdResponse(req, req.validParams.id);
+};
+
 // Get the data from usersQueries and use it to create a JSON-API-user object
-var createUserResponse = function(userId) {
-  return usersQueries.selectUserAfterPost(userId)
-    .then(function(user) {
-      return new responseModule(user); // creates a new JSON-API-user object
+var createUserIdResponse = function(req, userId) {
+  return Promise.join(
+      usersQueries.selectUserById(req, userId),
+      usersQueries.selectUsersGroups(req, userId))
+    .spread(function(user, groups) {
+      var userModel = new responseModule(user); // creates a new JSON-API-user object
+      if (groups) {
+        for (var i = 0; i < groups.length; i++) {
+          userModel.addRelation(groups[i]);
+        }
+      }
+      return userModel;
     });
 };
 
@@ -40,9 +59,6 @@ var createAllUsersResponse = function(req) {
         response.addObject(users[i]);
       }
       return response;
-    }).catch(function(err) {
-      console.log(err.stack);
-      return Promise.reject(new Error('Could not retrieve user data from database'));
     });
 };
 

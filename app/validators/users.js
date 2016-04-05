@@ -16,6 +16,49 @@ userValidator.post = function(req, res, next) {
   });
 };
 
+// Exported middleware that validates a user ID from /users/:id
+userValidator.getId = function(req, res, next) {
+  //No schema needed to validate a single parameter
+  validateUserID(req.params.id)
+    .then(function(id) {
+      req.validParams = {
+        id: id
+      };
+      next();
+    })
+    .catch(function(error) {
+      error.status = 404;
+      next(error);
+    });
+};
+
+// Exported middleware that checks if the requesting user is requesting data from him/her self
+userValidator.checkIfRequestingSelf = function(req, res, next) {
+  if (req.validParams.id.toString() === req.validUser.id.toString()) {
+    req.validUser.isRequestingSelf = true;
+  } else {
+    req.validUser.isRequestingSelf = false;
+  }
+  next();
+};
+
+
+// Check if the ID exists in database
+var validateUserID = function(userId) {
+  return pg.schema
+    .raw('select exists(select 1 from "user" where id=' + userId + ') AS "exists"')
+    .then(function(res) {
+      if (res.rows[0].exists) {
+        return userId;
+      }
+      return Promise.reject();
+    }).catch(function(err) {
+      console.log(err);
+      return Promise.reject(new Error(userId + ' does not exist as a user ID'));
+    });
+};
+
+
 //Schema that defines the accepted variations of a post body
 var getUserPostSchema = function() {
   return {

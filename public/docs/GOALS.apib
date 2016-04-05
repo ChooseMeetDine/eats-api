@@ -327,7 +327,7 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 
 # Group /users
 
-## Only registered users [/users]
+## All users [/users]
 
 ### Retrieve users with basic info [GET]
 
@@ -445,7 +445,7 @@ Once an admin examines a restaurant, the status will be changed to either "accep
     "attributes": {
       "name": "User's name",
       "email": "lalala@eats.se",
-      "phone": 076123123,
+      "phone": "076123123",
       "photo": "http://photo.com/1234.jpg",
       "admin": false,
       "anon": false
@@ -494,17 +494,14 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 + Response 201
 
 
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
 # Group /users/:id
 
-## Only registered users & admin [/users/:id]
+## Any user [/users/:id]
 
 ### Retrieve own user info [GET]
 
 + Response 200 (application/json)
-    Get all information about user self
+
 {
     "data": {
         "type": "user",
@@ -515,6 +512,7 @@ Once an admin examines a restaurant, the status will be changed to either "accep
             "photo": "http://photo.com/9876.jpg",
             "phone": "0761234567",
             "admin": false,
+            "anon": false,
             "registrationDate": "2016-02-23T22:49:05Z"
         },
         "relationships": {
@@ -559,66 +557,84 @@ Once an admin examines a restaurant, the status will be changed to either "accep
     ]
 }
 
+### Retrieve other users info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Klasse",
+            "photo": "http://photo.com/9876.jpg",
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    }
+}
+
 ## Only admin [/users/:id]
 
 ### Retrieve full info from any user[GET]
 
 + Response 200 (application/json)
 
-        Get all information about a specific user.
-        {
-            "data": {
-                "type": "user",
-                "id": "USER_ID_1",
-                "attributes": {
-                    "name": "Lars",
-                    "email": "lars@eats.se",
-                    "photo": "http://photo.com/9876.jpg",
-                    "phone": "0761234567",
-                    "admin": false,
-                    "registrationDate": "2016-02-23T22:49:05Z"
-                },
-                "relationships": {
-                    "groups": {
-                        "data": [
-                            {
-                                "type": "group",
-                                "id": "GROUP_ID_1"
-                            },
-                            {
-                                "type": "group",
-                                "id": "GROUP_ID_3"
-                            }
-                        ]
-                    }
-                },
-                "links": {
-                    "self": "/user/user_ID_1"
-                }
-            },
-            "included": [
-                {
-                    "type": "group",
-                    "id": "GROUP_ID_1",
-                    "attributes": {
-                        "name": "Vi som älskar burgare på Odd Hill"
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
                     },
-                    "links": {
-                        "self": "/groups/GROUP_ID_1"
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
                     }
-                },
-                {
-                    "type": "group",
-                    "id": "GROUP_ID_3",
-                    "attributes": {
-                        "name": "EATS-API project-team på MAH"
-                    },
-                    "links": {
-                        "self": "/groups/GROUP_ID_3"
-                    }
-                }
-            ]
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
         }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
 
 
 [comment]: <> (-------------------------break between endpoint--------------------------)

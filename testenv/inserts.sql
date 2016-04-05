@@ -39,7 +39,7 @@ INSERT INTO public.group_users (group_id, user_id)
 VALUES(1114, 1110),
       (1114, 1120),
       (1124, 1120),
-      (1124, 1130),
+      (1124, 1110),
       (1124, 1140);
 
 INSERT INTO public.poll (id, creator_id, name, created, expires, group_id, allow_new_restaurants)
