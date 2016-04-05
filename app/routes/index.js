@@ -29,8 +29,8 @@ if (env === 'development') {
       ' your token has been validated and your email is ' + req.decoded.email);
   });
 } else {
-  router.use('/polls', auth.validate, pollRouter);
-  router.use('/restaurants', auth.validate, restaurantRouter);
+  router.use('/polls', auth.validate, access.setRoleForUser, pollRouter);
+  router.use('/restaurants', auth.validate, access.setRoleForUser, restaurantRouter);
 }
 
 router.use('/auth', authRouter);

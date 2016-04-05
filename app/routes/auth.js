@@ -38,13 +38,15 @@ router.post('/', authRequest.checkData, function(req, res) {
           });
         } else {
           token = jwt.sign(user, cert, {
-            expiresIn: '5m' //NOTE expires in 5 minutes
+            expiresIn: '20m' //NOTE expires in 20m
           });
         }
 
         res.json({
-          authentication: true,
-          message: 'Welcome ' + user.name,
+          id: user.id,
+          name: user.name,
+          admin: user.admin,
+          anon: user.anon,
           token: token
         });
       } else {
@@ -68,6 +70,13 @@ router.get('/anonymous', function(req, res) {
   var anonymousId;
   var randomName = 'anonymous ' + moniker.choose();
 
+  var anonymousUser = {
+    id: undefined,
+    anon: undefined,
+    name: undefined,
+    role: undefined
+  };
+
   knex.insert({
       name: randomName,
       last_login: knex.raw('now()'),
@@ -79,10 +88,10 @@ router.get('/anonymous', function(req, res) {
     .then(function(result) {
       anonymousId = result[0];
 
-      var anonymousUser = {
+      anonymousUser = {
         id: anonymousId,
-        anon: true,
         name: randomName,
+        anon: true,
         role: 'anonymous'
       };
 
@@ -91,7 +100,9 @@ router.get('/anonymous', function(req, res) {
       });
 
       res.json({
-        message: 'Welcome ' + randomName,
+        id: anonymousUser.id,
+        name: anonymousUser.name,
+        anon: anonymousUser.anon,
         token: token
       });
     }).catch(function() {
