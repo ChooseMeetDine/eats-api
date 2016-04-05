@@ -10,9 +10,10 @@ chai.tv4.banUnknown = true;
 
 module.exports = function(app, tokens) {
   describe('Testing Users endpoint', function() {
+
     describe('with POST /users', function() {
 
-      it('should return valid JSON for POST /users without any token', function(done) {
+      it('should return valid JSON for POST /users without token and all params', function(done) {
         request(app)
           .post('/users')
           .send({
@@ -54,7 +55,7 @@ module.exports = function(app, tokens) {
 
     describe('with Get /users', function() {
 
-      it('should return valid JSON for FET /users with user token', function(done) {
+      it('should return valid JSON for GET /users with user token', function(done) {
         request(app)
           .get('/users')
           .set('Content-Type', 'application/json')
@@ -68,7 +69,7 @@ module.exports = function(app, tokens) {
           });
       });
 
-      it('should return valid JSON for FET /users with user token', function(done) {
+      it('should return valid JSON for GET /users with anon token', function(done) {
         request(app)
           .get('/users')
           .set('Content-Type', 'application/json')
