@@ -64,7 +64,7 @@ module.exports = function(app, tokens) {
           .post('/restaurants')
           .send({
             'name': 'Testaurant',
-            'categories': ['13'],
+            'categories': ['1113'],
             'priceRate': 1,
             'rating': 2,
             'info': 'Not needed',
@@ -89,7 +89,7 @@ module.exports = function(app, tokens) {
           .post('/restaurants')
           .send({
             'name': 'Testaurant',
-            'categories': ['13'],
+            'categories': ['1113'],
             'priceRate': 1,
             'rating': 2,
             'info': 'Not needed',
@@ -112,7 +112,7 @@ module.exports = function(app, tokens) {
           .post('/restaurants')
           .send({
             'name': 'New Testaurant',
-            'categories': ['13'],
+            'categories': ['1113'],
             'priceRate': 3,
             'rating': 5,
             'info': 'Not needed',
@@ -138,7 +138,7 @@ module.exports = function(app, tokens) {
           .post('/restaurants')
           .send({
             'name': 'Testaurant two',
-            'categories': ['13'],
+            'categories': ['1113'],
             'priceRate': 3,
             'rating': 5,
             'info': 'Not needed',
