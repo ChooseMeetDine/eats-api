@@ -23,12 +23,10 @@ pollsDatahandler.getID = function(req) {
 };
 
 pollsDatahandler.get = function(req) {
-  //req.validUser = 10; //TODO: Remove once auth works
+  req.validUser = 10; //TODO: Remove once auth works
   if (req.validUser.role === 'admin') {
-    console.log('admin response');
     return createPollResponseAll(req);
   } else {
-    console.log('standard or anonymous response');
     return createPollResponseMultiple(req);
   }
 
@@ -131,6 +129,7 @@ var createPollResponseMultiple = function(req) {
     });
 };
 
+//Create a response for /GET Polls where all polls are returned for admin
 var createPollResponseAll = function(req) {
   return pollsQueries.selectAllPollsAdmin(req)
     .then(function(polls) {

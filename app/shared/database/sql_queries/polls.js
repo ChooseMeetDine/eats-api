@@ -70,7 +70,7 @@ pollsQueries.selectPollData = function(pollId) {
     });
 };
 
-// Returns all polls
+// Returns all polls from a specific id
 pollsQueries.selectAllPolls = function(req) {
   var userQuery = '(select id as t1id from poll join poll_users on poll.id = poll_users.poll_id ' +
     'where poll_users.user_id = ' + req.validUser.id + ' ) as t1';
@@ -95,15 +95,11 @@ pollsQueries.selectAllPolls = function(req) {
     });
 };
 
-// Returns all polls
+// Returns all polls for admin
 pollsQueries.selectAllPollsAdmin = function(req) {
-  var userQuery = '(select * as t1id from poll join poll_users on poll.id = poll_users.poll_id ' +
-    'where poll_users.user_id = ' + req.validUser.id + ' ) as t1';
-
   return knex.select('id as id', 'name', 'expires', 'created',
       'allow_new_restaurants as allowNewRestaurants')
     .from('poll')
-    .join(knex.raw(userQuery), 'id', 't1.t1id')
     .then(function(res) {
       var polls = [];
       for (var i = 0; i < res.length; i++) {

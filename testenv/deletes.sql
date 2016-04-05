@@ -20,7 +20,8 @@ DELETE FROM "restaurant_polls"
 
 DELETE FROM "rating"
   WHERE id = 1116
-  OR id = 1126;
+  OR id = 1126
+  OR rater_id = 1160;
 
 DELETE FROM "poll_users"
   WHERE user_id = 1110
@@ -52,6 +53,7 @@ DELETE FROM "restaurant_categories"
 
 DELETE FROM "category" WHERE type = 'testcategory';
 DELETE FROM "restaurant" WHERE lat = 123.1;
+DELETE FROM "restaurant" WHERE lat = 123.3;
 DELETE FROM "user" WHERE phone = 'testdata';
 COMMIT;
 -- End of file.

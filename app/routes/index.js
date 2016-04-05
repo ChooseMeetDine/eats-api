@@ -30,7 +30,7 @@ if (env === 'development') {
   });
 } else {
   router.use('/polls', auth.validate, access.setRoleForUser, pollRouter);
-  router.use('/restaurants', auth.validate, restaurantRouter);
+  router.use('/restaurants', auth.validate, access.setRoleForUser, restaurantRouter);
 }
 
 router.use('/auth', authRouter);
