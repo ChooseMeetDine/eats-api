@@ -59,12 +59,8 @@ router.post('/:id/restaurants',
   });
 
 // HÄR ÄR JAG!
-// - SKRIV KOMMENTARER FÖR POLL VALIDATORERNA (participant/hasntvoted)
 // - SKRIV TESTER FÖR VALIDATORERNA (systemtester bara?)
 // - SKRIV DOKUMENTATION
-
-// Ska participantvalidatorn returnera true/false för att bli återanvändbar?
-// Nu returnerar den bara true, annars error..
 
 // Router that handles POSTs to add a vote to a poll
 // Sends the updated poll-data via socketio when succesful

@@ -67,13 +67,18 @@ pollValidator.postVote = function(req, res, next) {
     });
 };
 
-// Exported middleware that validates if a user has voted in the poll before,
+// Exported middleware that validates if a user is a participant in the poll or not
 // for POSTs to /polls/:id/votes
-pollValidator.checkThatUserHasntVoted = function(req, res, next) {
-  //No schema needed to validate a single parameter
-  validateThatUserHasntVoted(req.params.id, req.validUser.id)
-    .then(function() {
-      next();
+pollValidator.checkIfParticipant = function(req, res, next) {
+  validateIfUserIsParticipant(req.params.id, req.validUser.id)
+    .then(function(isParticipant) {
+      if (isParticipant === true) {
+        req.validUser.isParticipant = true;
+        next();
+      } else  {
+        return Promise.reject(new Error('User ID ' + userId + ' is not a participant of poll ID ' +
+          pollId));
+      }
     })
     .catch(function(error) {
       error.status = 400;
@@ -81,10 +86,12 @@ pollValidator.checkThatUserHasntVoted = function(req, res, next) {
     });
 };
 
-pollValidator.checkIfParticipant = function(req, res, next) {
-  validateIfUserIsParticipant(req.params.id, req.validUser.id)
-    .then(function(result) {
-      req.validUser.isParticipant = result;
+// Exported middleware that validates if a user has voted in the poll before,
+// for POSTs to /polls/:id/votes
+pollValidator.checkThatUserHasntVoted = function(req, res, next) {
+  //No schema needed to validate a single parameter
+  validateThatUserHasntVoted(req.params.id, req.validUser.id)
+    .then(function() {
       next();
     })
     .catch(function(error) {
@@ -398,23 +405,27 @@ var validateRestaurantId = function(data, schema, done) {
     });
 };
 
+// Check if user ID is participant in a specific poll
+// Returns true or false
 var validateIfUserIsParticipant = function(pollId, userId) {
   return pg.schema //Returns either: [{isParticipant:true}] or [{isParticipant:false}]
     .raw('SELECT EXISTS(SELECT 1 FROM "poll_users" WHERE poll_id=' +
       pollId + ' AND user_id=' + userId + ' ) AS "isParticipant"')
     .catch(function() {
-      return Promise.reject(new Error('User ID ' + userId + ' is not a participant of poll ID ' +
-        pollId));
+      return Promise.reject(new Error('Something went wrong with the database when trying to ' +
+        'check if user ID ' + userId + ' is a participant of poll ID ' + pollId));
     })
     .then(function(res) {
-      if (res.rows[0].isParticipant) {
+      if (res.rows[0] && res.rows[0].isParticipant) {
         return true;
+      } else {
+        return false;
       }
-      return Promise.reject(new Error('User ID ' + userId + ' is not a participant of poll ID ' +
-        pollId));
     });
 };
 
+// Checks if user hasn't voted in the poll before
+// Returns true if not voted before, otherwise throws error
 var validateThatUserHasntVoted = function(pollId, userId) {
   return pg.schema //Returns rows-object as either: [{canVote:true}] or [{canVote:false}]
     .raw('SELECT NOT EXISTS(SELECT 1 FROM "vote" WHERE poll_id=' +
@@ -423,8 +434,8 @@ var validateThatUserHasntVoted = function(pollId, userId) {
       return Promise.reject(new Error('User ID ' + userId + ' has already voted in poll ID ' +
         pollId));
     })
-    .then(function(result) {
-      if (result.rows[0].canVote) {
+    .then(function(res) {
+      if (res.rows[0] && res.rows[0].canVote) {
         return true;
       }
       return Promise.reject(new Error('User ID ' + userId + ' has already voted in poll ID ' +
