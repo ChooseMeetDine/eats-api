@@ -52,7 +52,15 @@ io.on('connection', function() {
   console.log('Someone connected to the API via socketIO!');
 });
 
-var port = process.env.PORT || 3000;
+
+var port;
+if (process.env.NODE_ENV === 'testing') {
+  // Use strange port when running system tests (which start its own instance off the API)
+  port = 9999;
+} else {
+  // .. otherwise set according to env
+  port = process.env.PORT || 3000;
+}
 
 http.listen(port, function() {
   console.log('Eats API-server listening on port ' + port);
