@@ -15,7 +15,7 @@ router.get('/testauth', auth.validate, function(req, res) {
     ' your token has been validated and your email is ' + req.validUser.email);
 });
 
-router.use('/polls', pollRouter);
+router.use('/polls', auth.validate, access.setRoleForUser, pollRouter);
 router.use('/restaurants', restaurantRouter);
 router.use('/auth', authRouter);
 

@@ -26,7 +26,13 @@ pollsDatahandler.getID = function(req) {
 
 pollsDatahandler.get = function(req) {
   req.validUser = 10; //TODO: Remove once auth works
-  return createPollResponseMultiple(req);
+  //return createPollResponseMultiple(req);
+  if (req.validUser.role === 'admin') {
+    return createPollResponseMultiple(req);
+  } else {
+    return createPollResponseLimited(req);
+  }
+
 };
 
 // Handles requests for POSTing a new restaurant to a poll ID
@@ -126,6 +132,13 @@ var createPollResponseMultiple = function(req) {
       console.log(err.stack);
       return Promise.reject(new Error('Could not retrieve poll data from database'));
     });
+};
+
+var createPollResponseLimited = function(req) {
+  var data = {
+    message: 'working'
+  };
+  return data;
 };
 
 // Executes an INSERT query to add restaurant ID and poll ID to the
