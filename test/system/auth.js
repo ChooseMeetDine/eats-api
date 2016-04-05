@@ -31,11 +31,17 @@ module.exports = function(app) {
             'title': 'auth valid schema',
             'type': 'object',
             'properties': {
-              'authentication': {
+              'id': {
+                'type': 'string'
+              },
+              'name': {
+                'type': 'string'
+              },
+              'admin': {
                 'type': 'boolean'
               },
-              'message': {
-                'type': 'string'
+              'anon': {
+                'type': 'boolean'
               },
               'token': {
                 'type': 'string'
