@@ -9,6 +9,7 @@ restaurantValidator.post = function(req, res, next) {
   //Use the schema to validate
   isvalid(req.body, getRestaurantPostSchema(), function(validationError, validData) {
     if (validationError) {
+      validationError.status = 400;
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;
@@ -22,6 +23,7 @@ restaurantValidator.get = function(req, res, next) {
   //Use the schema to validate
   isvalid(req.query, getRestaurantGetSchema(), function(validationError, validData) {
     if (validationError) {
+      validationError.status = 400;
       next(validationError); //Handle errors in another middleware
     } else {
       req.validQuery = validData;

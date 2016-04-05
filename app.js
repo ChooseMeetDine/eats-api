@@ -1,3 +1,9 @@
+// Enables HTTP traffic monitoring for PM2 and Keymetrics.io
+var pmx = require('pmx');
+pmx.init({
+  http: true
+});
+
 require('dotenv').config();
 var app = require('express')();
 var http = require('http').Server(app);
@@ -27,9 +33,16 @@ app.use('/', routes);
 // Initializes the socketIO-module for /polls
 pollsSocket.init(io);
 
+// Enables express-errors to be handled by pmx (and PM2/Keymetrics)
+app.use(pmx.expressErrorHandler());
+
 app.use(function(err, req, res, next) {
-  res.status(500).send({
-    httpStatus: 500,
+  if (!err.status) {
+    err.status = 500;
+  }
+
+  res.status(err.status).send({
+    httpStatus: err.status,
     error: err.message,
     stack: err.stack
   });
@@ -39,7 +52,15 @@ io.on('connection', function() {
   console.log('Someone connected to the API via socketIO!');
 });
 
-var port = process.env.PORT || 3000;
+
+var port;
+if (process.env.NODE_ENV === 'testing') {
+  // Use strange port when running system tests (which start its own instance off the API)
+  port = 9999;
+} else {
+  // .. otherwise set according to env
+  port = process.env.PORT || 3000;
+}
 
 http.listen(port, function() {
   console.log('Eats API-server listening on port ' + port);

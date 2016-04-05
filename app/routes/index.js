@@ -4,19 +4,37 @@ var restaurantRouter = require('../routes/restaurants');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
+var env = process.env.NODE_ENV || 'development';
+var access = require('../validators/access');
 
 router.get('/', function(req, res) {
   res.send('Welcome to Eats-API. Visit /docs for our documentation');
 });
 
-router.get('/testauth', auth.validate, function(req, res) {
-  res.send('Welcome ' + req.decoded.name +
-    ' your token has been validated and your email is ' + req.decoded.email);
-});
+if (env === 'development') {
 
-router.use('/polls', pollRouter);
-router.use('/restaurants', restaurantRouter);
+  //Set fake user so that tokens are not needed when in dev-mode
+  router.use(function(req, res, next) {
+    req.validUser = {
+      id: 10,
+      role: 'admin'
+    };
+    next();
+  });
+
+  router.use('/restaurants', restaurantRouter);
+  router.use('/polls', pollRouter);
+  router.get('/testauth', auth.validate, function(req, res) {
+    res.send('Welcome ' + req.decoded.name +
+      ' your token has been validated and your email is ' + req.decoded.email);
+  });
+} else {
+  router.use('/polls', auth.validate, access.setRoleForUser, pollRouter);
+  router.use('/restaurants', auth.validate, access.setRoleForUser, restaurantRouter);
+}
+
 router.use('/auth', authRouter);
+
 
 //TODO: Fix routers for everything below this comment.
 
@@ -26,12 +44,6 @@ router.get('/users', function(req, res) {
     name: 'Musse',
     age: 30
   });
-});
-
-//----------------------------------------
-router.get('/', function(req, res) {
-  res.send('<p>Du gick till rooten i API:et och här är env-variabeln MONGO_DB_USER i .env: ' +
-    process.env.MONGO_DB_USER + '</p>');
 });
 
 router.get('/docs', function(req, res) {

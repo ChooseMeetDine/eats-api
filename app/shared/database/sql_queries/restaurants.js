@@ -4,19 +4,34 @@ var restaurantsQueries = {};
 
 // Takes an object for an ongoing transaction and runs an INSERT query "on" that object
 restaurantsQueries.insertRestaurant = function(trx, req) {
-  return trx('restaurant')
-    .insert({
-      creator_id: req.validUser,
-      name: req.validBody.name,
-      info: req.validBody.info,
-      lat: req.validBody.lat,
-      lng: req.validBody.lng,
-      price_rate: req.validBody.priceRate,
-      photo: req.validBody.photo,
-      temporary: req.validBody.temporary,
-      created: knex.raw('now()')
-    })
-    .returning('id');
+  if (req.validUser.role === 'admin') {
+    return trx('restaurant').insert({
+        creator_id: req.validUser.id,
+        name: req.validBody.name,
+        info: req.validBody.info,
+        lat: req.validBody.lat,
+        lng: req.validBody.lng,
+        price_rate: req.validBody.priceRate,
+        photo: req.validBody.photo,
+        temporary: req.validBody.temporary,
+        status: 'accepted',
+        created: knex.raw('now()')
+      })
+      .returning('id');
+  } else {
+    return trx('restaurant').insert({
+        creator_id: req.validUser.id,
+        name: req.validBody.name,
+        info: req.validBody.info,
+        lat: req.validBody.lat,
+        lng: req.validBody.lng,
+        price_rate: req.validBody.priceRate,
+        photo: req.validBody.photo,
+        temporary: req.validBody.temporary,
+        created: knex.raw('now()')
+      })
+      .returning('id');
+  }
 };
 
 restaurantsQueries.insertCategories = function(trx, req, restaurantID) {
@@ -33,7 +48,7 @@ restaurantsQueries.insertRating = function(trx, req, restaurantID) {
     return Promise.resolve();
   }
   return trx.insert({
-    rater_id: req.validUser,
+    rater_id: req.validUser.id,
     rating: req.validBody.rating,
     restaurant_id: restaurantID.toString(),
     created: knex.raw('now()')
@@ -57,7 +72,7 @@ restaurantsQueries.selectRatingData = function(restaurantID) {
 
 restaurantsQueries.selectRestaurantData = function(restaurantID) {
 
-  return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
+  return knex.select('id', 'name', 'lat', 'info', 'photo', 'temporary',
       'lng', 'price_rate as priceRate', 'status')
     .from('restaurant')
     .where('id', restaurantID.toString())
@@ -67,6 +82,8 @@ restaurantsQueries.selectRestaurantData = function(restaurantID) {
       } else {
         res[0].rating = null;
       }
+      res[0].lat = parseFloat(res[0].lat);
+      res[0].lng = parseFloat(res[0].lng);
       return {
         type: 'restaurant',
         resource: 'restaurants',
@@ -86,7 +103,7 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
   var ratingQuery = '(select restaurant_id, avg(rating) as' +
     ' rating from rating group by restaurant_id) as t1';
 
-  return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
+  return knex.select('id', 'name', 'lat', 'info', 'photo', 'temporary',
       'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
     .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
@@ -94,6 +111,8 @@ restaurantsQueries.selectMultipleRestaurantsByLocation = function(req) {
     .then(function(res) {
       var restaurants = [];
       for (var i = 0; i < res.length; i++) {
+        res[i].lat = parseFloat(res[i].lat);
+        res[i].lng = parseFloat(res[i].lng);
         res[i].rating = parseFloat(parseFloat(res[i].rating).toFixed(1));
         var restaurant = {
           data: res[i],
@@ -113,7 +132,7 @@ restaurantsQueries.selectAllRestaurants = function() {
   var ratingQuery = '(select restaurant_id, avg(rating) as' +
     ' rating from rating group by restaurant_id) as t1';
 
-  return knex.select('id', 'name', 'lat', 'created', 'info', 'photo', 'temporary',
+  return knex.select('id', 'name', 'lat', 'info', 'photo', 'temporary',
       'lng', 'price_rate as priceRate', 'status', 'rating')
     .from('restaurant')
     .join(knex.raw(ratingQuery), 'restaurant_id', 'id')
@@ -121,6 +140,8 @@ restaurantsQueries.selectAllRestaurants = function() {
       var restaurants = [];
       for (var i = 0; i < res.length; i++) {
         res[i].rating = parseFloat(parseFloat(res[i].rating).toFixed(1));
+        res[i].lat = parseFloat(res[i].lat);
+        res[i].lng = parseFloat(res[i].lng);
         var restaurant = {
           data: res[i],
           relation: 'restaurants',
