@@ -12,15 +12,11 @@ var queries = require('../shared/database/sql_queries/restaurants');
 // Error handling is handled in the two promises separately, to be able to distinguish what error
 // was thrown and to be able to return a useful message to the user.
 restaurantDatahandler.post = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return executeInsertionTransaction(req)
     .then(createRestaurantPostResponse);
 };
 
 restaurantDatahandler.get = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return createRestaurantGetResponse(req);
 };
 
@@ -53,18 +49,16 @@ var executeInsertionTransaction = function(req) {
 var createRestaurantPostResponse = function(restaurantID) {
   return Promise.join( // run all SELECTs
     queries.selectRestaurantData(restaurantID), // returns a knex-select-promise
-    queries.selectCreatorData(restaurantID),
     queries.selectCategoryData(restaurantID),
     queries.selectRatingData(restaurantID),
     queries.selectNumberOfPollsData(restaurantID),
     queries.selectNumberOfPollsWon(restaurantID)
-  ).spread(function(restaurant, creator, categories, rating, pollCount, wonCount) {
+  ).spread(function(restaurant, categories, rating, pollCount, wonCount) {
     var i;
     restaurant.data.rating = rating;
     restaurant.data.numberOfPolls = pollCount;
     restaurant.data.numberOfPollsWon = wonCount;
     var response = new responseModule(restaurant); // creates a new JSON-API-restaurant object
-    response.addRelation(creator);
     for (i = 0; i < categories.length; i++) {
       response.addRelation(categories[i]);
     }
