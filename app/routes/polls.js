@@ -58,22 +58,19 @@ router.post('/:id/restaurants',
       });
   });
 
-// HÄR ÄR JAG!
-// - SKRIV TESTER FÖR VALIDATORERNA (systemtester bara?)
-// - SKRIV DOKUMENTATION
-
 // Router that handles POSTs to add a vote to a poll
 // Sends the updated poll-data via socketio when succesful
 router.post('/:id/votes',
-  pollValidator.checkPollId, // validate poll ID parameter
+  pollValidator.checkPollId,
+  pollValidator.checkPollHasntExpired,
   pollValidator.checkIfParticipant,
-  pollvalidator.checkThatUserHasntVoted,
-  pollValidator.postVote, // validate POST body for restaurant
+  pollValidator.checkUserHasntVotedAlready,
+  pollValidator.postVote, // validate POST body for vote
   function(req, res) {
     return pollHandler
       .postVote(req)
       .then(function(response) {
-        console.log('Sending data through HTTP... ' + JSON.stringify(response));
+        // console.log('Sending data through HTTP... ' + JSON.stringify(response));
         socketio.fetchAndSendNewPollData(req.validParams.id); // send new poll data via socketio
 
         res.send(response);

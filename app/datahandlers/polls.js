@@ -31,7 +31,7 @@ pollsDatahandler.postVote = function(req) {
   req.validUser = 10; //TODO: Remove once auth works
 
   return executeInsertVoteToPoll(req)
-    .then(createPollResponse);
+    .then(createVoteResponse);
 };
 
 // Executes several INSERT to the database as a transaction,
@@ -130,15 +130,27 @@ var executeInsertVoteToPoll = function(req) {
   var pollId = req.validParams.id;
 
   return pollsQueries.insertVote(req, pollId)
-    .then(function() {
-      return Promise.resolve(pollId); // send pollId to next function
-    })
     .catch(function(error) {
       console.log(error.stack);
       return Promise.reject(new Error('Could not insert vote for restaurant ' +
         req.validBody.restaurantId + ' and user ' + req.validUser + ' to poll with ID ' +
         pollId + ' into the database'));
     });
+};
+
+// Creates a JSON-API vote object (whithout any relations)
+// Takes a vote array object from the database, all columns from a vote in table "vote"
+var createVoteResponse = function(vote) {
+  var response = new responseModule({
+    type: 'vote',
+    resource: 'votes',
+    data: {
+      id: vote[0].id.toString(),
+      created: vote[0].created,
+      updated: vote[0].updated
+    }
+  });
+  return response;
 };
 
 module.exports = pollsDatahandler;

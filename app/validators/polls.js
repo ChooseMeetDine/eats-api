@@ -30,7 +30,7 @@ pollValidator.checkPollId = function(req, res, next) {
       next();
     })
     .catch(function(error) {
-      error.status = 400;
+      error.status = 404;
       next(error);
     });
 };
@@ -67,18 +67,13 @@ pollValidator.postVote = function(req, res, next) {
     });
 };
 
-// Exported middleware that validates if a user is a participant in the poll or not
+// Exported middleware that validates if a user has voted in the poll before,
 // for POSTs to /polls/:id/votes
-pollValidator.checkIfParticipant = function(req, res, next) {
-  validateIfUserIsParticipant(req.params.id, req.validUser.id)
-    .then(function(isParticipant) {
-      if (isParticipant === true) {
-        req.validUser.isParticipant = true;
-        next();
-      } else  {
-        return Promise.reject(new Error('User ID ' + userId + ' is not a participant of poll ID ' +
-          pollId));
-      }
+pollValidator.checkPollHasntExpired = function(req, res, next) {
+  //No schema needed to validate a single parameter
+  validatePollHasntExpired(req.params.id)
+    .then(function() {
+      next();
     })
     .catch(function(error) {
       error.status = 400;
@@ -86,16 +81,35 @@ pollValidator.checkIfParticipant = function(req, res, next) {
     });
 };
 
+// Exported middleware that validates if a user is a participant in the poll or not
+// for POSTs to /polls/:id/votes
+pollValidator.checkIfParticipant = function(req, res, next) {
+  validateIfUserIsParticipant(req.params.id, req.validUser.id) // returns true or false
+    .then(function(isParticipant) {
+      if (isParticipant === true) {
+        req.validUser.isParticipant = true;
+        next();
+      } else  {
+        return Promise.reject(new Error('User ID ' + req.validUser.id +
+          ' is not a participant of poll ID ' + req.params.id));
+      }
+    })
+    .catch(function(error) {
+      error.status = 403;
+      next(error);
+    });
+};
+
 // Exported middleware that validates if a user has voted in the poll before,
 // for POSTs to /polls/:id/votes
-pollValidator.checkThatUserHasntVoted = function(req, res, next) {
+pollValidator.checkUserHasntVotedAlready = function(req, res, next) {
   //No schema needed to validate a single parameter
   validateThatUserHasntVoted(req.params.id, req.validUser.id)
     .then(function() {
       next();
     })
     .catch(function(error) {
-      error.status = 400;
+      error.status = 403;
       next(error);
     });
 };
@@ -346,20 +360,16 @@ var validateRestaurantIdAndIfUniqueToPoll = function(data, schema, done) {
 };
 
 // Schema to validate a POST for /polls/<id>/votes
-var getPollPostVoteSchema = function(pollId) {
+var getPollPostVoteSchema = function() {
   return {
     type: Object,
     unknownKeys: 'deny', //Send error for parameters that does not exist in this schema
     required: 'implicit', //Parent of required parameter becomes required.
-    options: {
-      pollId: pollId
-    },
-    custom: checkIfVoteCanBeAddedToPoll,
     schema: {
       'restaurantId': {
         type: String, //Has to be a string
         required: true, //is required
-        custom: validateRestaurantId,
+        custom: validateRestaurantIdIsAddedToPoll,
         errors: {
           type: 'restaurantId must be a String', //error if type: String throws error
           required: 'restaurantId is required.' //error if restaurantId is not present
@@ -424,7 +434,7 @@ var validateIfUserIsParticipant = function(pollId, userId) {
     });
 };
 
-// Checks if user hasn't voted in the poll before
+// Check if user hasn't voted in the poll before
 // Returns true if not voted before, otherwise throws error
 var validateThatUserHasntVoted = function(pollId, userId) {
   return pg.schema //Returns rows-object as either: [{canVote:true}] or [{canVote:false}]
