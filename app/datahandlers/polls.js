@@ -23,12 +23,13 @@ pollsDatahandler.getID = function(req) {
 };
 
 pollsDatahandler.get = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-  //return createPollResponseMultiple(req);
+  //req.validUser = 10; //TODO: Remove once auth works
   if (req.validUser.role === 'admin') {
-    return createPollResponseMultiple(req);
+    console.log('admin response');
+    return createPollResponseAll(req);
   } else {
-    return createPollResponseLimited(req);
+    console.log('standard or anonymous response');
+    return createPollResponseMultiple(req);
   }
 
 };
@@ -130,11 +131,21 @@ var createPollResponseMultiple = function(req) {
     });
 };
 
-var createPollResponseLimited = function(req) {
-  var data = {
-    message: 'working'
-  };
-  return data;
+var createPollResponseAll = function(req) {
+  return pollsQueries.selectAllPollsAdmin(req)
+    .then(function(polls) {
+      var i;
+      var response = new responseCollectionModule({
+        resource: 'polls'
+      });
+      for (i = 0; i < polls.length; i++) {
+        response.addObject(polls[i]);
+      }
+      return response;
+    }).catch(function(err) {
+      console.log(err.stack);
+      return Promise.reject(new Error('Could not retrieve poll data from database'));
+    });
 };
 
 // Executes an INSERT query to add restaurant ID and poll ID to the

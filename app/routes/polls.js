@@ -23,7 +23,7 @@ router.get('/', function(req, res) {
   return pollHandler
     .get(req)
     .then(function(response) {
-      console.log('Sending data through HTTP... ' + JSON.stringify(response));
+      // console.log('Sending data through HTTP... ' + JSON.stringify(response));
       res.send(response);
     })
     .catch(function(err) {
