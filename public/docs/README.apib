@@ -616,7 +616,42 @@ vote for that restaurant in that poll.
     ]
 }
 
+# Group /polls/:id/votes
 
+## Only members of the poll [/polls/:id]
+
+### Add vote to poll [POST /polls/51515151/votes]
+
+This request will create a vote on a restaurant for a specific poll.
+
+Note that the restaurant has to be added to the poll before anyone can vote for it.
+
++ Parameters
+
+ + restaurantId (string) - ID of the restaurant to vote for. The restaurant needs to be a part of
+ the poll before a user can vote for it.
+
++ Request (application/json)
+
+  {
+    "restaurantId": "6767676767"
+  }
+
++ Response 200(application/json)
+
+  {
+    "data": {
+      "type": "vote",
+      "id": "232323232323",
+      "attributes": {
+        "created": "2016-02-23T22:49:05Z",
+        "updated": "2016-02-23T22:49:05Z"
+      }
+    },
+    "links": {
+      "self": "/votes/232323232323"
+    }
+  }
 
 # Group /restaurants
 
