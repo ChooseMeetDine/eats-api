@@ -789,171 +789,25 @@ vote for that restaurant in that poll.</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">restaurantId</span>": <span class="hljs-value"><span class="hljs-string">"6767676767"</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
-  "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"poll"</span></span>,
-    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"51515151"</span></span>,
-    "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Odd Hill, team 2"</span></span>,
-      "<span class="hljs-attribute">expires</span>": <span class="hljs-value"><span class="hljs-string">"2016-02-23T22:49:05Z"</span></span>,
-      "<span class="hljs-attribute">created</span>": <span class="hljs-value"><span class="hljs-string">"2016-02-01T15:20:05Z"</span></span>,
-      "<span class="hljs-attribute">allowNewRestaurants</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
-    </span>}</span>,
-    "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">creator</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-          "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"999999999"</span>
-        </span>}
-      </span>}</span>,
-      "<span class="hljs-attribute">restaurants</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"123123123123"</span>
-          </span>},
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"6767676767"</span>
-          </span>}
-        ]
-      </span>}</span>,
-      "<span class="hljs-attribute">users</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_1"</span>
-          </span>},
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_2"</span>
-          </span>},
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_3"</span>
-          </span>}
-        ]
-      </span>}</span>,
-      "<span class="hljs-attribute">group</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"group"</span></span>,
-          "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"GROUP_ID_1"</span>
-        </span>}
-      </span>}</span>,
-      "<span class="hljs-attribute">votes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
-          {
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"vote"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"VOTE_ID_1"</span>
-          </span>}
-        ]
-      </span>}
-    </span>}
-  </span>}</span>,
-  "<span class="hljs-attribute">included</span>": <span class="hljs-value">[
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"RESTAURANT_ID_1"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Din Restaurang"</span></span>,
-        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
-        "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/restaurants/RESTAURANT_ID_1"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"6767676767"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Vår Restaurang"</span></span>,
-        "<span class="hljs-attribute">lat</span>": <span class="hljs-value"><span class="hljs-number">56.1234</span></span>,
-        "<span class="hljs-attribute">lng</span>": <span class="hljs-value"><span class="hljs-number">14.1234</span></span>,
-        "<span class="hljs-attribute">temporary</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/restaurants/6767676767"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_1"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Per Persson"</span></span>,
-        "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"https://imgur.com/erqwfdsco92.jpg"</span></span>,
-        "<span class="hljs-attribute">anonymous</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/users/USER_ID_1"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_2"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Lukas Lukasson"</span></span>,
-        "<span class="hljs-attribute">photo</span>": <span class="hljs-value"><span class="hljs-string">"http://photo.com/1234.jpg"</span></span>,
-        "<span class="hljs-attribute">anonymous</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/users/0USER_ID_2"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_3"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Mats Mattsson"</span></span>,
-        "<span class="hljs-attribute">anonymous</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/users/USER_ID_3"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"group"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"GROUP_ID_1"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Vi som älskar burgare på Odd Hill"</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/groups/GROUP_ID_1"</span>
-      </span>}
-    </span>},
-    {
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"vote"</span></span>,
-      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"VOTE_ID_1"</span></span>,
-      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">created</span>": <span class="hljs-value"><span class="hljs-string">"2016-02-23T22:49:05Z"</span></span>,
-        "<span class="hljs-attribute">updated</span>": <span class="hljs-value"><span class="hljs-string">"2016-02-23T22:49:05Z"</span>
-      </span>}</span>,
-      "<span class="hljs-attribute">relationships</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">user</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"user"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"USER_ID_1"</span>
-          </span>}
-        </span>}</span>,
-        "<span class="hljs-attribute">restaurant</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"restaurant"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"RESTAURANT_ID_1"</span>
-          </span>}
-        </span>}</span>,
-        "<span class="hljs-attribute">poll</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"poll"</span></span>,
-            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"POLL_ID_1"</span>
-          </span>}
-        </span>}
-      </span>}</span>,
-      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/votes/VOTE_ID_1"</span>
-      </span>}
-    </span>}
-  ]
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="polls-id-votes" class="resource-group"><h2 class="group-heading">/polls/:id/votes <a href="#polls-id-votes" class="permalink">&para;</a></h2><div id="polls-id-votes-only-members-of-the-poll" class="resource"><h3 class="resource-heading">Only members of the poll <a href="#polls-id-votes-only-members-of-the-poll" class="permalink">&nbsp;&para;</a></h3><div id="polls-id-votes-only-members-of-the-poll-post" class="action post"><h4 class="action-heading"><div class="name">Add vote to poll</div><a href="#polls-id-votes-only-members-of-the-poll-post" class="method post">POST</a><code class="uri">/polls/51515151/votes</code></h4><p>This request will create a vote on a restaurant for a specific poll.</p>
+  <span class="hljs-string">'data'</span>: {
+    <span class="hljs-string">'type'</span>: <span class="hljs-string">'restaurant'</span>,
+    <span class="hljs-string">'id'</span>: <span class="hljs-string">'6767676767'</span>,
+    <span class="hljs-string">'attributes'</span>: {
+      <span class="hljs-string">'name'</span>: <span class="hljs-string">'Bamboo City'</span>,
+      <span class="hljs-string">'info'</span>: <span class="hljs-string">' Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.'</span>,
+      <span class="hljs-string">'photo'</span>: <span class="hljs-string">'http://photo.com/1234.jpg'</span>,
+      <span class="hljs-string">'priceRate'</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-string">'rating'</span>: <span class="hljs-number">4</span>,
+      <span class="hljs-string">'lng'</span>: <span class="hljs-number">13.00073</span>,
+      <span class="hljs-string">'lat'</span>: <span class="hljs-number">55.60587</span>,
+      <span class="hljs-string">'status'</span>: <span class="hljs-string">'accepted'</span>,
+      <span class="hljs-string">'temporary'</span>: <span class="hljs-literal">false</span>
+    }
+  },
+  <span class="hljs-string">'links'</span>: {
+    <span class="hljs-string">'self'</span>: <span class="hljs-string">'/restaurants/6767676767'</span>
+  }
+}</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="polls-id-votes" class="resource-group"><h2 class="group-heading">/polls/:id/votes <a href="#polls-id-votes" class="permalink">&para;</a></h2><div id="polls-id-votes-only-members-of-the-poll" class="resource"><h3 class="resource-heading">Only members of the poll <a href="#polls-id-votes-only-members-of-the-poll" class="permalink">&nbsp;&para;</a></h3><div id="polls-id-votes-only-members-of-the-poll-post" class="action post"><h4 class="action-heading"><div class="name">Add vote to poll</div><a href="#polls-id-votes-only-members-of-the-poll-post" class="method post">POST</a><code class="uri">/polls/51515151/votes</code></h4><p>This request will create a vote on a restaurant for a specific poll.</p>
 <p>Note that the restaurant has to be added to the poll before anyone can vote for it.</p>
 <h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls/51515151/votes</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>restaurantId</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>ID of the restaurant to vote for. The restaurant needs to be a part of
 the poll before a user can vote for it.</p>
@@ -983,7 +837,7 @@ the poll before a user can vote for it.</p>
 </span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="auth-anonymous" class="resource-group"><h2 class="group-heading">/auth/anonymous <a href="#auth-anonymous" class="permalink">&para;</a></h2><div id="auth-anonymous-for-signing-anonymous-users-with-json-web-token" class="resource"><h3 class="resource-heading">For signing anonymous users with json web token <a href="#auth-anonymous-for-signing-anonymous-users-with-json-web-token" class="permalink">&nbsp;&para;</a></h3><div id="auth-anonymous-for-signing-anonymous-users-with-json-web-token-get" class="action get"><h4 class="action-heading"><div class="name">Sign anonymous users</div><a href="#auth-anonymous-for-signing-anonymous-users-with-json-web-token-get" class="method get">GET</a><code class="uri">/auth/anonymous</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname"></span>/auth/anonymous</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Welcome anonymous frequent-cracker"</span></span>,
   "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 05 Apr 2016</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 07 Apr 2016</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

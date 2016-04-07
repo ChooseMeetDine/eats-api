@@ -427,7 +427,6 @@ The data sent through the socket is identical to the response from a GET-request
     ]
 }
 
-
 # Group /polls/:id/restaurants
 
 ## Only members of the poll [/polls/:id]
@@ -450,170 +449,24 @@ vote for that restaurant in that poll.
 + Response 200(application/json)
 
 {
-    "data": {
-        "type": "poll",
-        "id": "51515151",
-        "attributes": {
-            "name": "Odd Hill, team 2",
-            "expires": "2016-02-23T22:49:05Z",
-            "created": "2016-02-01T15:20:05Z",
-            "allowNewRestaurants": true
-        },
-        "relationships": {
-            "creator": {
-                "data": {
-                    "type": "user",
-                    "id": "999999999"
-                }
-            },
-            "restaurants": {
-                "data": [
-                    {
-                        "type": "restaurant",
-                        "id": "123123123123"
-                    },
-                    {
-                        "type": "restaurant",
-                        "id": "6767676767"
-                    }
-                ]
-            },
-            "users": {
-                "data": [
-                    {
-                        "type": "user",
-                        "id": "USER_ID_1"
-                    },
-                    {
-                        "type": "user",
-                        "id": "USER_ID_2"
-                    },
-                    {
-                        "type": "user",
-                        "id": "USER_ID_3"
-                    }
-                ]
-            },
-            "group": {
-                "data": {
-                    "type": "group",
-                    "id": "GROUP_ID_1"
-                }
-            },
-            "votes": {
-                "data": [
-                    {
-                        "type": "vote",
-                        "id": "VOTE_ID_1"
-                    }
-                ]
-            }
-        }
-    },
-    "included": [
-        {
-            "type": "restaurant",
-            "id": "RESTAURANT_ID_1",
-            "attributes": {
-                "name": "Din Restaurang",
-                "lat": 56.1234,
-                "lng": 14.1234,
-                "temporary": false
-            },
-            "links": {
-                "self": "/restaurants/RESTAURANT_ID_1"
-            }
-        },
-        {
-            "type": "restaurant",
-            "id": "6767676767",
-            "attributes": {
-                "name": "Vår Restaurang",
-                "lat": 56.1234,
-                "lng": 14.1234,
-                "temporary": false
-            },
-            "links": {
-                "self": "/restaurants/6767676767"
-            }
-        },
-        {
-            "type": "user",
-            "id": "USER_ID_1",
-            "attributes": {
-                "name": "Per Persson",
-                "photo": "https://imgur.com/erqwfdsco92.jpg",
-                "anonymous": false
-            },
-            "links": {
-                "self": "/users/USER_ID_1"
-            }
-        },
-        {
-            "type": "user",
-            "id": "USER_ID_2",
-            "attributes": {
-                "name": "Lukas Lukasson",
-                "photo": "http://photo.com/1234.jpg",
-                "anonymous": false
-            },
-            "links": {
-                "self": "/users/0USER_ID_2"
-            }
-        },
-        {
-            "type": "user",
-            "id": "USER_ID_3",
-            "attributes": {
-                "name": "Mats Mattsson",
-                "anonymous": true
-            },
-            "links": {
-                "self": "/users/USER_ID_3"
-            }
-        },
-        {
-            "type": "group",
-            "id": "GROUP_ID_1",
-            "attributes": {
-                "name": "Vi som älskar burgare på Odd Hill"
-            },
-            "links": {
-                "self": "/groups/GROUP_ID_1"
-            }
-        },
-        {
-            "type": "vote",
-            "id": "VOTE_ID_1",
-            "attributes": {
-              "created": "2016-02-23T22:49:05Z",
-              "updated": "2016-02-23T22:49:05Z"
-            },
-            "relationships": {
-                "user": {
-                    "data": {
-                        "type": "user",
-                        "id": "USER_ID_1"
-                    }
-                },
-                "restaurant": {
-                    "data": {
-                        "type": "restaurant",
-                        "id": "RESTAURANT_ID_1"
-                    }
-                },
-                "poll": {
-                    "data": {
-                        "type": "poll",
-                        "id": "POLL_ID_1"
-                    }
-                }
-            },
-            "links": {
-                "self": "/votes/VOTE_ID_1"
-            }
-        }
-    ]
+  'data': {
+    'type': 'restaurant',
+    'id': '6767676767',
+    'attributes': {
+      'name': 'Bamboo City',
+      'info': ' Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.',
+      'photo': 'http://photo.com/1234.jpg',
+      'priceRate': 3,
+      'rating': 4,
+      'lng': 13.00073,
+      'lat': 55.60587,
+      'status': 'accepted',
+      'temporary': false
+    }
+  },
+  'links': {
+    'self': '/restaurants/6767676767'
+  }
 }
 
 # Group /polls/:id/votes
