@@ -4,19 +4,34 @@ var restaurantsQueries = {};
 
 // Takes an object for an ongoing transaction and runs an INSERT query "on" that object
 restaurantsQueries.insertRestaurant = function(trx, req) {
-  return trx('restaurant')
-    .insert({
-      creator_id: req.validUser.id,
-      name: req.validBody.name,
-      info: req.validBody.info,
-      lat: req.validBody.lat,
-      lng: req.validBody.lng,
-      price_rate: req.validBody.priceRate,
-      photo: req.validBody.photo,
-      temporary: req.validBody.temporary,
-      created: knex.raw('now()')
-    })
-    .returning('id');
+  if (req.validUser.role === 'admin') {
+    return trx('restaurant').insert({
+        creator_id: req.validUser.id,
+        name: req.validBody.name,
+        info: req.validBody.info,
+        lat: req.validBody.lat,
+        lng: req.validBody.lng,
+        price_rate: req.validBody.priceRate,
+        photo: req.validBody.photo,
+        temporary: req.validBody.temporary,
+        status: 'accepted',
+        created: knex.raw('now()')
+      })
+      .returning('id');
+  } else {
+    return trx('restaurant').insert({
+        creator_id: req.validUser.id,
+        name: req.validBody.name,
+        info: req.validBody.info,
+        lat: req.validBody.lat,
+        lng: req.validBody.lng,
+        price_rate: req.validBody.priceRate,
+        photo: req.validBody.photo,
+        temporary: req.validBody.temporary,
+        created: knex.raw('now()')
+      })
+      .returning('id');
+  }
 };
 
 

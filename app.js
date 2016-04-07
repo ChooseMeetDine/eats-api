@@ -18,7 +18,7 @@ var env = process.env.NODE_ENV || 'development';
 if (env === 'development') {
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token');
     next();
   });
 }
@@ -52,7 +52,15 @@ io.on('connection', function() {
   console.log('Someone connected to the API via socketIO!');
 });
 
-var port = process.env.PORT || 3000;
+
+var port;
+if (process.env.NODE_ENV === 'testing') {
+  // Use strange port when running system tests (which start its own instance off the API)
+  port = 9999;
+} else {
+  // .. otherwise set according to env
+  port = process.env.PORT || 3000;
+}
 
 http.listen(port, function() {
   console.log('Eats API-server listening on port ' + port);

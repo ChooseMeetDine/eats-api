@@ -23,14 +23,16 @@ var tokens = {};
 tokens.admin = jwt.sign({
   email: 'kenny@mail.se',
   password: 'password123',
-  admin: true,
   anon: false,
+  name: 'kenny',
+  admin: true,
   id: 1140
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
 });
 tokens.user = jwt.sign({
   email: 'konny@mail.se',
+  name: 'konny',
   admin: false,
   anon: false,
   password: 'password123',
