@@ -48,7 +48,7 @@ VALUES(1114, 1110),
 INSERT INTO testschema.poll (id, creator_id, name, created, expires, group_id, allow_new_restaurants)
 VALUES(1115, 1110, 'thetestpoll1', now(), now(), null, false),
       (1125, 1130, 'thetestpoll2', now(), now(), 1124, false),
-      (1135, 1130, 'thetestpoll3', now(), '2099-01-01', 1124, false);
+      (1135, 1130, 'thetestpoll3', now(), '2099-01-01', 1124, true);
 
 
 INSERT INTO testschema.poll_users (user_id, poll_id, joined)

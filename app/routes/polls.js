@@ -39,6 +39,9 @@ router.get('/:id', pollValidator.checkPollId, function(req, res) {
 // Sends the updated poll-data via socketio when successful
 router.post('/:id/restaurants',
   pollValidator.checkPollId, // validate poll ID parameter
+  pollValidator.checkPollHasntExpired,
+  pollValidator.checkIfParticipant,
+  pollValidator.checkPollAllowsNewRestaurants,
   pollValidator.postRestaurant, // validate POST body for restaurant
   function(req, res) {
     return pollHandler
