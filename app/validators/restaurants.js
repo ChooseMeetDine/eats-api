@@ -1,7 +1,7 @@
 var isvalid = require('isvalid');
 var pg = require('../shared/database/knex');
 var _ = require('underscore');
-
+var errorUtils = require('../shared/error_utils');
 var restaurantValidator = {};
 
 //exported middleware that validates a post body
@@ -10,6 +10,7 @@ restaurantValidator.post = function(req, res, next) {
   isvalid(req.body, getRestaurantPostSchema(), function(validationError, validData) {
     if (validationError) {
       validationError.status = 400;
+      errorUtils.checkForUnkownKeyError(validationError);
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;
@@ -24,6 +25,7 @@ restaurantValidator.get = function(req, res, next) {
   isvalid(req.query, getRestaurantGetSchema(), function(validationError, validData) {
     if (validationError) {
       validationError.status = 400;
+      errorUtils.checkForUnkownKeyError(validationError);
       next(validationError); //Handle errors in another middleware
     } else {
       req.validQuery = validData;

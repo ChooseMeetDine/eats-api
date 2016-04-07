@@ -1,6 +1,7 @@
 var isvalid = require('isvalid');
 var pg = require('../shared/database/knex');
 var userValidator = {};
+var errorUtils = require('../shared/error_utils');
 
 // Exported middleware that validates a POST body to /users
 userValidator.post = function(req, res, next) {
@@ -8,6 +9,7 @@ userValidator.post = function(req, res, next) {
   isvalid(req.body, getUserPostSchema(), function(validationError, validData) {
     if (validationError) {
       validationError.status = 400;
+      errorUtils.checkForUnkownKeyError(validationError);
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;
@@ -27,6 +29,7 @@ userValidator.getId = function(req, res, next) {
       next();
     })
     .catch(function(error) {
+      error.message = 'User ID: ' + req.params.id + ' does not exist.';
       error.status = 404;
       next(error);
     });
