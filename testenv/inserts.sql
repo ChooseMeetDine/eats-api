@@ -3,7 +3,7 @@ BEGIN;
 select clone_schema('public', 'testschema');
 INSERT INTO testschema."user" (id, name, email, password, last_login, registration_date, admin, phone, anon)
 VALUES(1110, 'konny', 'konny@mail.se', 'password123', now(), now(), false, 'testdata', false),
-      (1120, 'jenny', 'jenny@mail.se', 'password123', now(), now(), true, 'testdata', false),
+      (1120, 'jenny', 'jenny@mail.se', '$2a$10$GRjSXoR8ubDI6Ups8yvDP.Z4nrYfU02fNwQ1to9ixi/SJIY4mqbri', now(), now(), true, 'testdata', false),
       (1130, 'benny', 'benny@mail.se', 'password123', now(), now(), false, 'testdata', false),
       (1140, 'kenny', 'kenny@mail.se', 'password123', now(), now(), true, 'testdata', false),
       (1150, 'admin', 'admin@admin.se', 'password123', now(), now(), true, 'testdata', false),
