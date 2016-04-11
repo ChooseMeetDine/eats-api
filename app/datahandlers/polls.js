@@ -31,8 +31,6 @@ pollsDatahandler.postRestaurant = function(req) {
 
 // Handles requests for POSTing a new vote to a poll ID
 pollsDatahandler.postVote = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
-
   return executeInsertVoteToPoll(req) // returns JSON-API-vote-object
     .then(function(vote) {
       return new responseModule(vote); // creates JSON-API-response
@@ -135,7 +133,7 @@ var executeInsertVoteToPoll = function(req) {
     .catch(function(error) {
       console.log(error.stack);
       return Promise.reject(new Error('Could not insert vote for restaurant ' +
-        req.validBody.restaurantId + ' and user ' + req.validUser + ' to poll with ID ' +
+        req.validBody.restaurantId + ' and user ' + req.validUser.id + ' to poll with ID ' +
         pollId + ' into the database'));
     });
 };

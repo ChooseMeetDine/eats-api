@@ -64,7 +64,7 @@ pollsQueries.insertSingleRestaurant = function(req, pollid) {
 // and returns vote data as JSON-API object
 pollsQueries.insertVote = function(req, pollid) {
   return knex.insert({
-      user_id: req.validUser,
+      user_id: req.validUser.id,
       restaurant_id: req.validBody.restaurantId,
       poll_id: pollid.toString(),
       created: knex.raw('now()'),
