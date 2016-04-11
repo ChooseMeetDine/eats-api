@@ -481,7 +481,8 @@ var validateThatUserHasntVoted = function(pollId, userId) {
     .raw('SELECT NOT EXISTS(SELECT 1 FROM "vote" WHERE poll_id=' +
       pollId + ' AND user_id=' + userId + ' ) AS "canVote"')
     .catch(function() {
-      return Promise.reject(new Error('User ID ' + userId + ' has already voted in poll ID ' +
+      return Promise.reject(new Error('Something went wrong with the database when trying to  ' +
+        'validate if user ' + userId + ' had already voted in poll ID ' +
         pollId));
     })
     .then(function(res) {
