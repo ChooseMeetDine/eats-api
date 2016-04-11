@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var pollRouter = require('../routes/polls');
 var restaurantRouter = require('../routes/restaurants');
+var userRouter = require('../routes/users');
 var authRouter = require('../routes/auth');
 var path = require('path');
 var auth = require('../validators/auth');
@@ -33,6 +34,7 @@ if (env === 'development') {
   router.use('/restaurants', auth.validate, access.setRoleForUser, restaurantRouter);
 }
 
+router.use('/users', userRouter);
 router.use('/auth', authRouter);
 
 

@@ -14,6 +14,7 @@ var testPollsEndpoint = require('./polls');
 var testDocsEndpoint = require('./docs');
 var testRestaurantsEndpoint = require('./restaurants');
 var testAuthEndpoint = require('./auth');
+var testUsersEndpoint = require('./users');
 
 //Create tokens needed for the system tests
 var jwt = require('jsonwebtoken');
@@ -22,6 +23,7 @@ var tokens = {};
 tokens.admin = jwt.sign({
   email: 'kenny@mail.se',
   password: 'password123',
+  anon: false,
   name: 'kenny',
   admin: true,
   id: 1140
@@ -30,6 +32,9 @@ tokens.admin = jwt.sign({
 });
 tokens.user = jwt.sign({
   email: 'konny@mail.se',
+  name: 'konny',
+  admin: false,
+  anon: false,
   password: 'password123',
   id: 1110
 }, cert, {
@@ -51,6 +56,7 @@ tokens.user3 = jwt.sign({
 });
 tokens.anon = jwt.sign({
   name: 'anon',
+  admin: false,
   id: 1160
 }, cert, {
   expiresIn: '1m' // expires in 1 minute
@@ -61,6 +67,7 @@ tokens.anon = jwt.sign({
 testDocsEndpoint(app);
 testAuthEndpoint(app, tokens);
 testPollsEndpoint(app, tokens);
+testUsersEndpoint(app, tokens);
 testRestaurantsEndpoint(app, tokens);
 
 //Didn't think this needed it's own file

@@ -2,6 +2,7 @@ var jwt = require('jsonwebtoken');
 var cert = process.env.JWTSECRET;
 var isvalid = require('isvalid');
 var auth = {};
+var errorUtils = require('../shared/error_utils');
 
 auth.validate = function(req, res, next) {
 
@@ -60,6 +61,7 @@ auth.checkData = function(req, res, next) {
   isvalid(request, authSchema, function(validationError, validData) {
     if (validationError) {
       validationError.status = 400;
+      errorUtils.checkForUnkownKeyError(validationError);
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;

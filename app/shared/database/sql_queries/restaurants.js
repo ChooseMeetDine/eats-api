@@ -34,6 +34,7 @@ restaurantsQueries.insertRestaurant = function(trx, req) {
   }
 };
 
+
 restaurantsQueries.insertCategories = function(trx, req, restaurantID) {
   return Promise.map(req.validBody.categories, function(categoryID) {
     return trx.insert({

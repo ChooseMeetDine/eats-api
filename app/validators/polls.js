@@ -2,6 +2,7 @@ var isvalid = require('isvalid');
 var pg = require('../shared/database/knex');
 var moment = require('moment');
 var _ = require('underscore');
+var errorUtils = require('../shared/error_utils');
 
 var pollValidator = {};
 
@@ -11,6 +12,7 @@ pollValidator.post = function(req, res, next) {
   isvalid(req.body, getPollPostSchema(), function(validationError, validData) {
     if (validationError) {
       validationError.status = 400;
+      errorUtils.checkForUnkownKeyError(validationError);
       next(validationError); //Handle errors in another middleware
     } else {
       req.validBody = validData;
@@ -30,6 +32,7 @@ pollValidator.checkPollId = function(req, res, next) {
       next();
     })
     .catch(function(error) {
+      error.message = 'Poll ID: ' + req.params.id + ' does not exist.';
       error.status = 404;
       next(error);
     });
@@ -44,6 +47,7 @@ pollValidator.postRestaurant = function(req, res, next) {
     function(validationError, validData) {
       if (validationError) {
         validationError.status = 400;
+        errorUtils.checkForUnkownKeyError(validationError);
         next(validationError); //Handle errors in another middleware
       } else {
         req.validBody = validData;
@@ -79,6 +83,7 @@ pollValidator.postVote = function(req, res, next) {
     getPollPostVoteSchema(),
     function(validationError, validData) {
       if (validationError) {
+        errorUtils.checkForUnkownKeyError(validationError);
         validationError.status = 400;
         next(validationError); //Handle errors in another middleware
       } else {
@@ -295,9 +300,6 @@ var validateGroupID = function(data, schema, done) {
 var validatePollID = function(id) {
   return pg.schema //Returns rows-object as either: [{exists:true}] or [{exists:false}]
     .raw('select exists(select 1 from "poll" where id=' + id + ') AS "exists"')
-    .catch(function() {
-      return Promise.reject(new Error(id + ' is not a valid poll ID'));
-    })
     .then(function(res) {
       if (res.rows[0].exists) {
         return id;
