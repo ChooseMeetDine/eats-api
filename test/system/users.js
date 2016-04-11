@@ -51,6 +51,18 @@ module.exports = function(app, tokens) {
               done(err);
             });
         });
+
+      it('should return 400 for POST /users with invalid parameters',
+        function(done) {
+          request(app)
+            .post('/users')
+            .send({
+              'dame': 'askmdlakmsdklamslkdmlaksm klamsdlaksmdlka msm  - TESTUSER',
+              'password': 'Qwerty1',
+              'email': 'ballebskrutt2@eats.se'
+            })
+            .expect(400, done);
+        });
     });
 
     describe('with Get /users', function() {
@@ -95,6 +107,14 @@ module.exports = function(app, tokens) {
             expect(response).to.be.jsonSchema(jsonSchemaGetUsersAsAdmin());
             done(err);
           });
+      });
+
+      it('should return 403 for GET /users without token', function(done) {
+        request(app)
+          .get('/users')
+          .set('Content-Type', 'application/json')
+          .set('x-access-token', tokens.admin)
+          .expect(200, done);
       });
 
     });

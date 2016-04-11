@@ -13,8 +13,8 @@ var usersQueries = require('../shared/database/sql_queries/users');
 usersDatahandler.post = function(req) {
   return usersQueries.insertUser(req)
     .then(function(userId) {
-      if (!req.validUser) {
-        req.validUser = {};
+      if (!req.validUser) { //After POST, user requests data about him/her self.
+        req.validUser = {}; //To resuse createUserIdResponse, set: isRequestingSelf = true;
       }
       req.validUser.isRequestingSelf = true;
       return createUserIdResponse(req, userId);
