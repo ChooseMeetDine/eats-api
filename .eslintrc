@@ -12,7 +12,7 @@
       2,
       "1tbs"
     ],
-    "camelcase": 1,
+    "camelcase": 0,
     "computed-property-spacing": [
       2,
       "never"
@@ -33,7 +33,7 @@
     ],
     "max-statements": [
       1,
-      15
+      20
     ],
     "new-cap": 0,
     "no-extend-native": 2,
@@ -41,7 +41,7 @@
     "no-trailing-spaces": 2,
     "no-unused-vars": 1,
     "no-use-before-define": [
-      2,
+      0,
       "nofunc"
     ],
     "object-curly-spacing": [

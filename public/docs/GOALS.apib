@@ -5,21 +5,210 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 # Group /restaurants
 
-## Any user [/restaurants]
+## Any user [/restaurant]
 
-### Retrieve restaurants [GET]
+### Retrieve restaurants [GET /restaurant?lat=123&lng=32&radius=15000]
+
+Query parameters
+Both lat and lng has to be used if one of them are used, or radius is used
+
+The variable "status" on restaurants have three values: "unexamined", "accepted" and "removed".
+Unexamined are new restaurants that have not been examined and validated by admins.
+Once an admin examines a restaurant, the status will be changed to either "accepted" or "removed"
+
+
++ Parameters
+
+ + lng (number, optional) - Longitude coordinate in WGS84 format. Requires lat
+
+ + lat (number, optional) - Latitude coordinate in WGS84 format. Requires lng
+
+ + radius (number, optional) - Radius in meters from coordinates. Defines the area from which restaurants will be returned. Requires lat and lng
+     + Default: 1000
 
 + Response 200 (application/json)
 
-        Get all restaurants.
+{
+    "links": {
+        "self": "/restaurants"
+    },
+    "data": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Bamboo City",
+                "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.",
+                "photo": "http://photo.com/1234.jpg",
+                "priceRate": 3,
+                "rating": 4,
+                "lng": 13.00073,
+                "lat": 55.60587,
+                "status": "accepted",
+                "temporary": false
+            },
+            "relationships": {
+                "categories": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_1"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Krua Thai",
+                "info": "Helt vanligt thai restaurant",
+                "photo": "http://photo.com/2345.jpg",
+                "priceRate": 3,
+                "rating": 3,
+                "lng": 13.00173,
+                "lat": 55.60587,
+                "status": "accepted",
+                "temporary": false
+            },
+            "relationships": {
+                "categories": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_2"
+                        },
+                        {
+                            "type": "category",
+                            "id": "CATEGORY_ID_3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_1",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_3",
+            "attributes": {
+                "name": "thai"
+            }
+        }
+    ]
+}
 
 ### Add a restaurant [POST]
 
+
++ Parameters
+
+ + name (string, required) - Name of the restaurant
+
+ + categories (array, optional) - Food category IDs to add to this restaurant
+     + Default: []
+
+ + priceRate (number, optional) - Price rate for this restaurant from 1 to 5 range
+     + Default: null
+
+ + rating (number, optional) - Rating star for this restaurant from 1 to 5 range
+     + Default: null
+
+ + info (string, optional) - Address and other additional information relevant to this restaurant
+     + Default: null
+
+ + photo (string, optional) - Link to the photo of the restaurant
+     + Default: null
+
+ + lng (number, required) - Longitude coordinate of this restaurant in WGS84 format
+
+ + lat (number, required) - Latitude coordinate of this restaurant in WGS84 format
+
+ + temporary (boolean, optional) - Temporary restaurants are only used in one poll Coordinates are not required for temporary restaurants
+     + Default: false
+
+
+
 + Request (application/json)
 
-        Add restaurant.
+{
+  "name": "Testaurant",
+  "categories": ["13"],
+  "priceRate": 1,
+  "rating": 2,
+  "info": "Not needed",
+  "photo": "www.not-a-real-photo.com",
+  "temporary": false,
+  "lng": 123.1,
+  "lat": 123.1
+}
 
-+ Response 201
+
++ Response 201(application/json)
+
+{
+  "data": {
+    "type": "restaurant",
+    "id": "869967774580104",
+    "attributes": {
+      "name": "Testaurant",
+      "lat": "123.1000000",
+      "created": "2016-04-04T07:14:38.777Z",
+      "info": "Not needed",
+      "photo": "www.not-a-real-photo.com",
+      "temporary": false,
+      "lng": "123.1000000",
+      "priceRate": 1,
+      "status": "unexamined",
+      "rating": 2,
+      "numberOfPolls": 0,
+      "numberOfPollsWon": "0"
+    },
+    "relationships": {
+      "categories": {
+        "data": [
+          {
+            "type": "category",
+            "id": "13"
+          }
+        ]
+      }
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/restaurants/869967774580104"
+  },
+  "included": [
+    {
+      "type": "category",
+      "id": "13",
+      "attributes": {
+        "name": "burgare"
+      },
+      "links": {
+        "self": "http://localhost:5000/categories/13"
+      }
+    }
+  ]
+}
 
 ## Only registered users & admin [/restaurants]
 
@@ -51,6 +240,58 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 + Response 200 (application/json)
 
+{
+    "data": {
+        "type": "restaurant",
+        "id": "RESTAURANT_ID_1",
+        "attributes": {
+            "name": "Bamboo City",
+            "info": " Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque. Vi erbjuder en mycket hög kvalitet i våra bufféer i härliga lokaler. Vi serverar både lunch och a la carte.",
+            "photo": "http://photo.com/1234.jpg",
+            "priceRate": 3,
+            "rating": 4,
+            "numberOfPolls": 27,
+            "numberOfPollsWon": 3,
+            "lng": 13.00073,
+            "lat": 55.60587,
+            "status" : "accepted",
+            "temporary": false
+        },
+        "relationships": {
+            "categories": {
+                "data": [
+                    {
+                        "type": "category",
+                        "id": "CATEGORY_ID_1"
+                    },
+                    {
+                        "type": "category",
+                        "id": "CATEGORY_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/restaurants/RESTAURANT_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_1",
+            "attributes": {
+                "name": "fish"
+            }
+        },
+        {
+            "type": "category",
+            "id": "CATEGORY_ID_3",
+            "attributes": {
+                "name": "thai"
+            }
+        }
+    ]
+}
         Get specific restaurant.
 
 [comment]: <> (-------------------------break between endpoint--------------------------)
@@ -86,13 +327,41 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 # Group /users
 
-## Only registered users [/users]
+## All users [/users]
 
 ### Retrieve users with basic info [GET]
 
 + Response 200 (application/json)
 
-        Get all users but only name, photo and id.
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg"
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ],
+    "links": {
+      "self": "/users"
+    }
+}
 
 ## Only admin [/users]
 
@@ -100,17 +369,92 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 + Response 200 (application/json)
 
-        Get all users with full information.
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg",
+                "email": "qaz@eats-api.se",
+                "phone": "03-23142312",
+                "admin": false,
+                "anon": false
+            },
+            "links": {
+                "self": "/user/user_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg",
+                "email": "wsx@eats-api.se",
+                "phone": "03-23142312",
+                "admin": true,
+                "anon": false
+            },
+            "links": {
+                "self": "/user/user_ID_2"
+            }
+        }
+    ],
+    "links": {
+      "self": "/users"
+    }
+}
+
 
 ## Unregistered user [/users]
 
 ### Register for user account [POST]
 
++ Parameters
+
+  + name (string, required) - Name of the user
+
+  + password (string, required) - user's password
+
+  + email (string, required) - email-address of the user
+
+  + phone (string, optional) - telephone number of the user
+      + Default: null
+
+  + photo (string, optional) - link to the photo of the user
+		  + Default: null
+
 + Request (application/json)
 
-        Register user.
+{
+  "name": "User's name",
+  "password": "Qwerty1",
+  "email": "lalala@eats.se",
+  "phone": "076123123",
+  "photo":"http://photo.com/1234.jpg"
+}
 
-+ Response 201
++ Response 201 (application/json)
+
+{
+  "data": {
+    "type": "user",
+    "id": "1125207747229322",
+    "attributes": {
+      "name": "User's name",
+      "email": "lalala@eats.se",
+      "phone": "076123123",
+      "photo": "http://photo.com/1234.jpg",
+      "admin": false,
+      "anon": false
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/users/1125207747229322"
+  }
+}
 
 ## Only registered user [/users]
 
@@ -150,18 +494,86 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Response 201
 
 
-
-[comment]: <> (-------------------------break between endpoint--------------------------)
-
 # Group /users/:id
 
-## Only registered users & admin [/users/:id]
+## Any user [/users/:id]
 
 ### Retrieve own user info [GET]
 
 + Response 200 (application/json)
 
-        Get all your own user information.
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
+
+### Retrieve other users info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Klasse",
+            "photo": "http://photo.com/9876.jpg",
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    }
+}
 
 ## Only admin [/users/:id]
 
@@ -169,10 +581,83 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 + Response 200 (application/json)
 
-        Get all information about a specific user.
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
 
 
 [comment]: <> (-------------------------break between endpoint--------------------------)
+
+# Group Realtime updates for polls
+
+### Realtime updates
+
+Every time a poll is updated, for example a new vote is added or a user leaves the poll,
+realtime updates are sent through web sockets.
+
+To get these updates with socket.io, use the poll ID as event identifier as illustrated below
+
+```javascript
+var socket = io('http://path-to.server');
+
+socket.on(pollID, function(data){
+  console.log(data);
+});
+```
+
+The data sent through the socket is identical to the response from a GET-request for /polls/:id for the corresponding poll ID
+
 
 # Group /polls
 
@@ -186,11 +671,155 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 ### Create poll [POST]
 
++ Parameters
+
+  + name (string, required) - Name of the poll
+
+  + restaurants (array, optional) - Restaurant ID's as strings to add to this poll
+      + Default: []
+
+  + users (array, optional) - User ID's as strings to add to this poll
+      + Default: []
+
+  + expires (string, optional) - Time of expiry, formatted as ISO 8601
+      + Default: 20 minutes after request is received
+
+  + allowNewRestaurants (boolean, optional) - Allow new restaurants to be added to poll after it has begun
+      + Default: true
+
+  + group (number, optional) - Group ID as string that this poll belongs to. Null for no group connection.
+      + Default: null
+
+
 + Request (application/json)
 
-        Create poll.
+{
+  "name": "Name of the poll",
+  "expires": "2017-08-07T10:46:40+00:00",
+  "restaurants": ["234123","12412332"],
+  "users": ["7545345", "6663523", "45656855"],
+  "group": "989098098",
+  "allowNewRestaurants": true
+}
 
-+ Response 201
++ Response 201 (application/json)
+
+{
+  "data": {
+    "type": "poll",
+    "id": "123123123",
+    "attributes": {
+      "name": "Name of the poll",
+      "expires": "2017-08-07T10:46:40Z",
+      "created": "2016-02-01T15:20:05Z",
+      "allowNewRestaurants": true
+    },
+  "relationships": {
+    "creator": {
+      "data": {
+        "type": "user",
+        "id": "7545345"
+      }
+    },
+    "restaurants": {
+      "data": [{
+        "type": "restaurant",
+        "id": "234123"
+      }, {
+        "type": "restaurant",
+        "id": "12412332"
+      }]
+    },
+    "users": {
+      "data": [{
+        "type": "user",
+        "id": "7545345"
+      }, {
+        "type": "user",
+        "id": "6663523"
+      }, {
+        "type": "user",
+        "id": "45656855"
+      }]
+    },
+    "group": {
+      "data": {
+        "type": "group",
+        "id": "45656855"
+      }
+    }
+  },
+  "links": {
+    "self": "www.path.to.api/polls/123123123"
+  }
+  },
+  "included": [{
+    "type": "restaurant",
+    "id": "234123",
+    "attributes": {
+      "name": "Din Restaurang",
+      "lat": 56.1234,
+      "lng": 14.1234,
+      "temporary": false
+    },
+    "links": {
+      "self": "/restaurants/234123"
+    }
+  }, {
+    "type": "restaurant",
+    "id": "12412332",
+    "attributes": {
+      "name": "Vår Restaurang",
+      "lat": 56.1234,
+      "lng": 14.1234,
+      "temporary": false
+    },
+    "links": {
+      "self": "/restaurants/12412332"
+    }
+  }, {
+    "type": "user",
+    "id": "7545345",
+    "attributes": {
+      "name": "Per Persson",
+      "photo": "https://imgur.com/erqwfdsco92.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/7545345"
+    }
+  }, {
+    "type": "user",
+    "id": "6663523",
+    "attributes": {
+      "name": "Lukas Lukasson",
+      "photo": "http://photo.com/1234.jpg",
+      "anonymous": false
+    },
+    "links": {
+      "self": "/users/06663523"
+    }
+  }, {
+    "type": "user",
+    "id": "45656855",
+    "attributes": {
+      "name": "Mats Mattsson",
+      "anonymous": true
+    },
+    "links": {
+      "self": "/users/45656855"
+    }
+  }, {
+    "type": "group",
+    "id": "45656855",
+    "attributes": {
+      "name": "Vi som älskar burgare på Odd Hill"
+    },
+    "links": {
+      "self": "/groups/45656855"
+    }
+  }]
+}
 
 ### Add restaurants to poll [PUT]
 
@@ -216,14 +845,325 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 
 ## Only registered users [/polls/:id]
 
-### Retrieve specific poll if user has access [GET]
+### Retrieve specific poll if user has access [GET /polls/51515151]
 
 + Response 200 (application/json)
 
-        Retrieve specific poll if user has access to the poll.
+{
+    "data": {
+        "type": "poll",
+        "id": "51515151",
+        "attributes": {
+            "name": "Odd Hill, team 2",
+            "expires": "2016-02-23T22:49:05Z",
+            "created": "2016-02-01T15:20:05Z",
+            "allowNewRestaurants": false
+        },
+        "relationships": {
+            "creator": {
+                "data": {
+                    "type": "user",
+                    "id": "USER_ID_1"
+                }
+            },
+            "restaurants": {
+                "data": [
+                    {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    },
+                    {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                ]
+            },
+            "users": {
+                "data": [
+                    {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    },
+                    {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                ]
+            },
+            "group": {
+                "data": {
+                    "type": "group",
+                    "id": "GROUP_ID_1"
+                }
+            },
+            "votes": {
+                "data": [
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_1"
+                    },
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_2"
+                    },
+                    {
+                        "type": "vote",
+                        "id": "VOTE_ID_3"
+                    }
+                ]
+            }
+        }
+    },
+    "included": [
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_1",
+            "attributes": {
+                "name": "Din Restaurang",
+                "lat": 56.1234,
+                "lng": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_1"
+            }
+        },
+        {
+            "type": "restaurant",
+            "id": "RESTAURANT_ID_2",
+            "attributes": {
+                "name": "Vår Restaurang",
+                "lat": 56.1234,
+                "lng": 14.1234,
+                "temporary": false
+            },
+            "links": {
+                "self": "/restaurants/RESTAURANT_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Per Persson",
+                "photo": "https://imgur.com/erqwfdsco92.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/USER_ID_1"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_2",
+            "attributes": {
+                "name": "Lukas Lukasson",
+                "photo": "http://photo.com/1234.jpg",
+                "anonymous": false
+            },
+            "links": {
+                "self": "/users/0USER_ID_2"
+            }
+        },
+        {
+            "type": "user",
+            "id": "USER_ID_3",
+            "attributes": {
+                "name": "Mats Mattsson",
+                "anonymous": true
+            },
+            "links": {
+                "self": "/users/USER_ID_3"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_1",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_1"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_1"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_2",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_2"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_2"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_2"
+            }
+        },
+        {
+            "type": "vote",
+            "id": "VOTE_ID_3",
+            "attributes": {
+              "created": "2016-02-23T22:49:05Z",
+              "updated": "2016-02-23T22:49:05Z"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "USER_ID_3"
+                    }
+                },
+                "restaurant": {
+                    "data": {
+                        "type": "restaurant",
+                        "id": "RESTAURANT_ID_1"
+                    }
+                },
+                "poll": {
+                    "data": {
+                        "type": "poll",
+                        "id": "POLL_ID_1"
+                    }
+                }
+            },
+            "links": {
+                "self": "/votes/VOTE_ID_3"
+            }
+        }
+    ]
+}
 
+# Group /polls/:id/restaurants
 
-[comment]: <> (-------------------------break between endpoint--------------------------)
+## Only members of the poll [/polls/:id]
+
+### Add restaurant to poll [POST /polls/51515151/restaurants]
+
+This request will add a restaurant ID to a specific poll, which let you or other users
+vote for that restaurant in that poll.
+
++ Parameters
+
+ + restaurantId (string) - ID of the restaurant to add to
+
++ Request (application/json)
+
+{
+  "restaurantId": "6767676767"
+}
+
++ Response 200(application/json)
+
+{
+  'data': {
+    'type': 'restaurant',
+    'id': '6767676767',
+    'attributes': {
+      'name': 'Bamboo City',
+      'info': ' Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.',
+      'photo': 'http://photo.com/1234.jpg',
+      'priceRate': 3,
+      'rating': 4,
+      'lng': 13.00073,
+      'lat': 55.60587,
+      'status': 'accepted',
+      'temporary': false
+    }
+  },
+  'links': {
+    'self': '/restaurants/6767676767'
+  }
+}
+
+# Group /polls/:id/votes
+
+## Only members of the poll [/polls/:id]
+
+### Add vote to poll [POST /polls/51515151/votes]
+
+This request will create a vote on a restaurant for a specific poll.
+
+Note that the restaurant has to be added to the poll before anyone can vote for it.
+
++ Parameters
+
+ + restaurantId (string) - ID of the restaurant to vote for. The restaurant needs to be a part of
+ the poll before a user can vote for it.
+
++ Request (application/json)
+
+  {
+    "restaurantId": "6767676767"
+  }
+
++ Response 200(application/json)
+
+  {
+    "data": {
+      "type": "vote",
+      "id": "232323232323",
+      "attributes": {
+        "created": "2016-02-23T22:49:05Z",
+        "updated": "2016-02-23T22:49:05Z"
+      }
+    },
+    "links": {
+      "self": "/votes/232323232323"
+    }
+  }
 
 # Group /groups
 
@@ -278,3 +1218,46 @@ An Express/SocketIO-application that functions as a backend API for the Eats cli
 + Response 200 (application/json)
 
         Retrieve specific group if user has access to the group.
+
+# Group /auth
+
+## For authentication of registered user and authorization to restricted endpoints [/auth]
+
+### Authenticate user [POST]
+
++ Parameters
+
+  + email (string, required) - email of registered account
+
+  + password (string, required) - password of registered account
+
+
++ Request (application/json)
+
+{
+  "email":"user_email@mail.com",
+  "password": "yourpassword"
+}
+
++ Response 200 (application/json)
+
+{
+  "authentication": true,
+  "message": "Welcome user_name",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
+}
+
+# Group /auth/anonymous
+
+## For signing anonymous users with json web token [/auth/anonymous]
+
+### Sign anonymous users [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+{
+  "message": "Welcome anonymous frequent-cracker",
+  "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
+}
