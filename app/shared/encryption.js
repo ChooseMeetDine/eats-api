@@ -8,9 +8,4 @@ encrypt.password = function(req, res, next) {
   next();
 };
 
-encrypt.compare = function(req, res, next) {
-  console.log(req);
-  next();
-};
-
 module.exports = encrypt;
