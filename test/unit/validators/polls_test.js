@@ -1001,4 +1001,157 @@ describe('Testing the validators for /polls', function() {
         });
     });
   });
+
+  describe('Testing the validator for POSTs to /polls/:id/votes (polls.js)', function() {
+    var response;
+    var request;
+    var validatorWithMock;
+    var tracker;
+
+    describe('for parameter "restaurantId"', function() {
+      before(function(done) {
+        //Create a mock response object that will be used in all tests.
+        //This is done only once, since we dont actually test how this object is used.
+        response = httpMocks.createResponse();
+
+        //Create a mock request for each test case. Testcases will alter this object, and because of
+        //that it has to be recreated before each test case to avoid them from altering each other
+        request = httpMocks.createRequest({
+          method: 'POST',
+          url: '/polls/15/votes',
+        });
+
+        // Sets a valid poll ID
+        request.validParams = {
+          id: '15'
+        };
+
+        mockDb.mock(db);
+        validatorWithMock = proxyquire(validatorPath, {
+          '../shared/database/knex': db
+        });
+
+        tracker = mockDb.getTracker();
+        tracker.install();
+        tracker.on('query', function gotQuery(query, step) {
+          query.index = step;
+
+          // Different responses from the "DB" depending on which test is being run
+          // The validator has two DB-calls:
+          // 1. checks if restaurant ID is valid
+          // 2. checks if "expires" of the poll is after or before now
+          // (even though the order of these two should be flipped..)
+          //
+          //For test no. 1, 2 and 3, let restaurant ID validation pass
+          if (step === 1 || step === 3 || step === 5) {
+            query.response([{
+              some_data: 'some_data'
+            }]);
+
+            // For test no. 1, set expire date to before now to see if it generates an error
+          } else if (step === 2) {
+            query.response([{
+              expires: '2000-01-01'
+            }]);
+
+            //For test no. 2, 3 and 4, let the expire validation pass
+          } else if (step === 4 || step === 6 || step === 8) {
+            query.response([{
+              expires: '2222-01-01'
+            }]);
+
+            // For test no. 4, let restaurant ID validation fail
+          } else {
+            query.response([]);
+          }
+        });
+        done();
+      });
+
+
+      it.skip('should return error if expires date is before now', function(done) {
+        request.body = {
+          restaurantId: '9007199254740991'
+        };
+
+        var validate = function(err) {
+          expect(err).to.be.an('object');
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+
+      it('should pass for ID "9007199254740991"', function(done) {
+        request.body = {
+          restaurantId: '9007199254740991'
+        };
+
+        var validate = function(err) {
+          expect(err).to.equal(undefined);
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+
+      it('should pass for ID "0"', function(done) {
+        request.body = {
+          restaurantId: '0'
+        };
+
+        var validate = function(err) {
+          expect(err).to.equal(undefined);
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+
+      it.skip('should return error if DB returns no data for query (ID not found)', function(done) {
+        request.body = {
+          restaurantId: '0'
+        };
+
+        var validate = function(err) {
+          expect(err).to.be.an('object');
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+
+      it('should return error for null', function(done) {
+        request.body = {
+          restaurantId: null
+        };
+
+        var validate = function(err) {
+          expect(err).to.be.an('object');
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+
+      it('should return error for empty id string', function(done) {
+        request.body = {
+          restaurantId: ''
+        };
+
+        var validate = function(err) {
+          expect(err).to.be.an('object');
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+
+      it('should return error for true', function(done) {
+        request.body = {
+          restaurantId: true
+        };
+
+        var validate = function(err) {
+          expect(err).to.be.an('object');
+          done();
+        };
+        validatorWithMock.postVote(request, response, validate);
+      });
+    });
+  });
 });

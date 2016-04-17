@@ -5,6 +5,7 @@ var responseModule = require('../json_api/json_api');
 var responseCollectionModule = require('../json_api/json_api_collection');
 var _ = require('underscore');
 var pollsQueries = require('../shared/database/sql_queries/polls');
+var restaurantsQueries = require('../shared/database/sql_queries/restaurants');
 
 // Handles POST requests to endpoint /poll
 // Inserts data to database with a transaction and then selects data based on the
@@ -34,8 +35,18 @@ pollsDatahandler.get = function(req) {
 
 // Handles requests for POSTing a new restaurant to a poll ID
 pollsDatahandler.postRestaurant = function(req) {
-  return executeInsertRestaurantToPoll(req)
-    .then(createPollResponse);
+  return executeInsertRestaurantToPoll(req) // returns JSON-API-restaurant-object
+    .then(function(restaurant) {
+      return new responseModule(restaurant); // creates JSON-API-response
+    });
+};
+
+// Handles requests for POSTing a new vote to a poll ID
+pollsDatahandler.postVote = function(req) {
+  return executeInsertVoteToPoll(req) // returns JSON-API-vote-object
+    .then(function(vote) {
+      return new responseModule(vote); // creates JSON-API-response
+    });
 };
 
 // Executes several INSERT to the database as a transaction,
@@ -148,18 +159,30 @@ var createPollResponseAll = function(req) {
 };
 
 // Executes an INSERT query to add restaurant ID and poll ID to the
-// table restaurant_polls in the DB
+// table restaurant_polls in the DB and returns DB-data for the restaurant
 var executeInsertRestaurantToPoll = function(req) {
   var pollId = req.validParams.id;
 
   return pollsQueries.insertSingleRestaurant(req, pollId)
-    .then(function() {
-      return Promise.resolve(pollId); // send pollId to next function
-    })
+    .then(restaurantsQueries.selectRestaurantData)
     .catch(function(error) {
       console.log(error.stack);
       return Promise.reject(new Error('Could not insert restaurant with ID ' +
         req.validBody.restaurantId + ' to poll with ID ' + pollId + ' into the database'));
+    });
+};
+
+// Executes an INSERT query to add restaurant ID, user ID and poll ID to the
+// table "vote" in the DB
+var executeInsertVoteToPoll = function(req) {
+  var pollId = req.validParams.id;
+
+  return pollsQueries.insertVote(req, pollId)
+    .catch(function(error) {
+      console.log(error.stack);
+      return Promise.reject(new Error('Could not insert vote for restaurant ' +
+        req.validBody.restaurantId + ' and user ' + req.validUser.id + ' to poll with ID ' +
+        pollId + ' into the database'));
     });
 };
 

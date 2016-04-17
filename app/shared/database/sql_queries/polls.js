@@ -47,12 +47,42 @@ pollsQueries.insertUsers = function(trx, req, pollid) {
 };
 
 // Inserts one RESTAURANT into restaurant_polls table (NOTE: not using transaction-object)
+// Returns the restaurant id
 pollsQueries.insertSingleRestaurant = function(req, pollid) {
   return knex.insert({
       restaurant_id: req.validBody.restaurantId,
       poll_id: pollid.toString(),
     })
-    .into('restaurant_polls');
+    .into('restaurant_polls')
+    .returning('restaurant_id')
+    .then(function(restaurantId) {
+      return restaurantId[0];
+    });
+};
+
+// Inserts one VOTE into vote table (NOTE: not using transaction-object)
+// and returns vote data as JSON-API object
+pollsQueries.insertVote = function(req, pollid) {
+  return knex.insert({
+      user_id: req.validUser.id,
+      restaurant_id: req.validBody.restaurantId,
+      poll_id: pollid.toString(),
+      created: knex.raw('now()'),
+      updated: knex.raw('now()')
+    })
+    .into('vote')
+    .returning('*')
+    .then(function(res) {
+      return {
+        type: 'vote',
+        resource: 'votes',
+        data: {
+          id: res[0].id.toString(),
+          created: res[0].created,
+          updated: res[0].updated
+        }
+      };
+    });
 };
 
 // Returns STANDARD POLL data as JSON-API object

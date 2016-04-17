@@ -427,7 +427,6 @@ The data sent through the socket is identical to the response from a GET-request
     ]
 }
 
-
 # Group /polls/:id/restaurants
 
 ## Only members of the poll [/polls/:id]
@@ -450,128 +449,235 @@ vote for that restaurant in that poll.
 + Response 200(application/json)
 
 {
+  'data': {
+    'type': 'restaurant',
+    'id': '6767676767',
+    'attributes': {
+      'name': 'Bamboo City',
+      'info': ' Här kan du njuta av Thaibuffé, Kinabuffé, Sushi och Mongolian barbeque.',
+      'photo': 'http://photo.com/1234.jpg',
+      'priceRate': 3,
+      'rating': 4,
+      'lng': 13.00073,
+      'lat': 55.60587,
+      'status': 'accepted',
+      'temporary': false
+    }
+  },
+  'links': {
+    'self': '/restaurants/6767676767'
+  }
+}
+
+# Group /polls/:id/votes
+
+## Only members of the poll [/polls/:id]
+
+### Add vote to poll [POST /polls/51515151/votes]
+
+This request will create a vote on a restaurant for a specific poll.
+
+Note that the restaurant has to be added to the poll before anyone can vote for it.
+
++ Parameters
+
+ + restaurantId (string) - ID of the restaurant to vote for. The restaurant needs to be a part of
+ the poll before a user can vote for it.
+
++ Request (application/json)
+
+  {
+    "restaurantId": "6767676767"
+  }
+
++ Response 200(application/json)
+
+  {
     "data": {
-        "type": "poll",
-        "id": "51515151",
-        "attributes": {
-            "name": "Odd Hill, team 2",
-            "expires": "2016-02-23T22:49:05Z",
-            "created": "2016-02-01T15:20:05Z",
-            "allowNewRestaurants": true
-        },
-        "relationships": {
-            "creator": {
-                "data": {
-                    "type": "user",
-                    "id": "999999999"
-                }
-            },
-            "restaurants": {
-                "data": [
-                    {
-                        "type": "restaurant",
-                        "id": "123123123123"
-                    },
-                    {
-                        "type": "restaurant",
-                        "id": "6767676767"
-                    }
-                ]
-            },
-            "users": {
-                "data": [
-                    {
-                        "type": "user",
-                        "id": "USER_ID_1"
-                    },
-                    {
-                        "type": "user",
-                        "id": "USER_ID_2"
-                    },
-                    {
-                        "type": "user",
-                        "id": "USER_ID_3"
-                    }
-                ]
-            },
-            "group": {
-                "data": {
-                    "type": "group",
-                    "id": "GROUP_ID_1"
-                }
-            },
-            "votes": {
-                "data": [
-                    {
-                        "type": "vote",
-                        "id": "VOTE_ID_1"
-                    }
-                ]
-            }
-        }
+      "type": "vote",
+      "id": "232323232323",
+      "attributes": {
+        "created": "2016-02-23T22:49:05Z",
+        "updated": "2016-02-23T22:49:05Z"
+      }
     },
-    "included": [
-        {
-            "type": "restaurant",
-            "id": "RESTAURANT_ID_1",
-            "attributes": {
-                "name": "Din Restaurang",
-                "lat": 56.1234,
-                "lng": 14.1234,
-                "temporary": false
-            },
-            "links": {
-                "self": "/restaurants/RESTAURANT_ID_1"
-            }
-        },
-        {
-            "type": "restaurant",
-            "id": "6767676767",
-            "attributes": {
-                "name": "Vår Restaurang",
-                "lat": 56.1234,
-                "lng": 14.1234,
-                "temporary": false
-            },
-            "links": {
-                "self": "/restaurants/6767676767"
-            }
-        },
+    "links": {
+      "self": "/votes/232323232323"
+    }
+  }
+
+# Group /users
+
+## All users [/users]
+
+### Retrieve users with basic info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": [
         {
             "type": "user",
             "id": "USER_ID_1",
             "attributes": {
-                "name": "Per Persson",
-                "photo": "https://imgur.com/erqwfdsco92.jpg",
-                "anonymous": false
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg"
             },
             "links": {
-                "self": "/users/USER_ID_1"
+                "self": "/user/user_ID_1"
             }
         },
         {
             "type": "user",
             "id": "USER_ID_2",
             "attributes": {
-                "name": "Lukas Lukasson",
-                "photo": "http://photo.com/1234.jpg",
-                "anonymous": false
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg"
             },
             "links": {
-                "self": "/users/0USER_ID_2"
+                "self": "/user/user_ID_2"
+            }
+        }
+    ],
+    "links": {
+      "self": "/users"
+    }
+}
+
+## Only admin [/users]
+
+### Retrieve users with full info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": [
+        {
+            "type": "user",
+            "id": "USER_ID_1",
+            "attributes": {
+                "name": "Lars",
+                "photo": "http://photo.com/9876.jpg",
+                "email": "qaz@eats-api.se",
+                "phone": "03-23142312",
+                "admin": false,
+                "anon": false
+            },
+            "links": {
+                "self": "/user/user_ID_1"
             }
         },
         {
             "type": "user",
-            "id": "USER_ID_3",
+            "id": "USER_ID_2",
             "attributes": {
-                "name": "Mats Mattsson",
-                "anonymous": true
+                "name": "Anders",
+                "photo": "http://photo.com/8765.jpg",
+                "email": "wsx@eats-api.se",
+                "phone": "03-23142312",
+                "admin": true,
+                "anon": false
             },
             "links": {
-                "self": "/users/USER_ID_3"
+                "self": "/user/user_ID_2"
+            }
+        }
+    ],
+    "links": {
+      "self": "/users"
+    }
+}
+
+
+## Unregistered user [/users]
+
+### Register for user account [POST]
+
++ Parameters
+
+  + name (string, required) - Name of the user
+
+  + password (string, required) - user's password
+
+  + email (string, required) - email-address of the user
+
+  + phone (string, optional) - telephone number of the user
+      + Default: null
+
+  + photo (string, optional) - link to the photo of the user
+		  + Default: null
+
++ Request (application/json)
+
+{
+  "name": "User's name",
+  "password": "Qwerty1",
+  "email": "lalala@eats.se",
+  "phone": "076123123",
+  "photo":"http://photo.com/1234.jpg"
+}
+
++ Response 201 (application/json)
+
+{
+  "data": {
+    "type": "user",
+    "id": "1125207747229322",
+    "attributes": {
+      "name": "User's name",
+      "email": "lalala@eats.se",
+      "phone": "076123123",
+      "photo": "http://photo.com/1234.jpg",
+      "admin": false,
+      "anon": false
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/users/1125207747229322"
+  }
+}
+
+
+# Group /users/:id
+
+## Any user [/users/:id]
+
+### Retrieve own user info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
             }
         },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
         {
             "type": "group",
             "id": "GROUP_ID_1",
@@ -583,39 +689,96 @@ vote for that restaurant in that poll.
             }
         },
         {
-            "type": "vote",
-            "id": "VOTE_ID_1",
+            "type": "group",
+            "id": "GROUP_ID_3",
             "attributes": {
-              "created": "2016-02-23T22:49:05Z",
-              "updated": "2016-02-23T22:49:05Z"
-            },
-            "relationships": {
-                "user": {
-                    "data": {
-                        "type": "user",
-                        "id": "USER_ID_1"
-                    }
-                },
-                "restaurant": {
-                    "data": {
-                        "type": "restaurant",
-                        "id": "RESTAURANT_ID_1"
-                    }
-                },
-                "poll": {
-                    "data": {
-                        "type": "poll",
-                        "id": "POLL_ID_1"
-                    }
-                }
+                "name": "EATS-API project-team på MAH"
             },
             "links": {
-                "self": "/votes/VOTE_ID_1"
+                "self": "/groups/GROUP_ID_3"
             }
         }
     ]
 }
 
+### Retrieve other users info [GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Klasse",
+            "photo": "http://photo.com/9876.jpg",
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    }
+}
+
+## Only admin [/users/:id]
+
+### Retrieve full info from any user[GET]
+
++ Response 200 (application/json)
+
+{
+    "data": {
+        "type": "user",
+        "id": "USER_ID_1",
+        "attributes": {
+            "name": "Lars",
+            "email": "lars@eats.se",
+            "photo": "http://photo.com/9876.jpg",
+            "phone": "0761234567",
+            "admin": false,
+            "anon": false,
+            "registrationDate": "2016-02-23T22:49:05Z"
+        },
+        "relationships": {
+            "groups": {
+                "data": [
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_1"
+                    },
+                    {
+                        "type": "group",
+                        "id": "GROUP_ID_3"
+                    }
+                ]
+            }
+        },
+        "links": {
+            "self": "/user/user_ID_1"
+        }
+    },
+    "included": [
+        {
+            "type": "group",
+            "id": "GROUP_ID_1",
+            "attributes": {
+                "name": "Vi som älskar burgare på Odd Hill"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_1"
+            }
+        },
+        {
+            "type": "group",
+            "id": "GROUP_ID_3",
+            "attributes": {
+                "name": "EATS-API project-team på MAH"
+            },
+            "links": {
+                "self": "/groups/GROUP_ID_3"
+            }
+        }
+    ]
+}
 
 
 # Group /restaurants

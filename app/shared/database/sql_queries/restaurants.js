@@ -34,6 +34,7 @@ restaurantsQueries.insertRestaurant = function(trx, req) {
   }
 };
 
+
 restaurantsQueries.insertCategories = function(trx, req, restaurantID) {
   return Promise.map(req.validBody.categories, function(categoryID) {
     return trx.insert({
@@ -71,7 +72,6 @@ restaurantsQueries.selectRatingData = function(restaurantID) {
 
 
 restaurantsQueries.selectRestaurantData = function(restaurantID) {
-
   return knex.select('id', 'name', 'lat', 'info', 'photo', 'temporary',
       'lng', 'price_rate as priceRate', 'status')
     .from('restaurant')
