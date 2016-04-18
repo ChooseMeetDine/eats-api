@@ -37,7 +37,11 @@ pollsQueries.insertRestaurants = function(trx, req, pollid) {
 
 // Inserts USER data into poll_users table
 pollsQueries.insertUsers = function(trx, req, pollid) {
-  return Promise.map(req.validBody.users, function(userid) {
+  // Adds creator as a user
+  var usersAndCreator = req.validBody.users;
+  usersAndCreator.push(req.validUser.id);
+
+  return Promise.map(usersAndCreator, function(userid) {
     return trx.insert({
       user_id: userid,
       poll_id: pollid.toString(),
