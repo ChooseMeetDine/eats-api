@@ -438,7 +438,36 @@ socket.on(pollID, <span class="hljs-function"><span class="hljs-keyword">functio
   <span class="hljs-built_in">console</span>.log(data);
 });</code></pre>
 <p>The data sent through the socket is identical to the response from a GET-request for /polls/:id for the corresponding poll ID</p>
-</section><section id="polls" class="resource-group"><h2 class="group-heading">/polls <a href="#polls" class="permalink">&para;</a></h2><div id="polls-only-registered-users" class="resource"><h3 class="resource-heading">Only registered users <a href="#polls-only-registered-users" class="permalink">&nbsp;&para;</a></h3><div id="polls-only-registered-users-get" class="action get"><h4 class="action-heading"><div class="name">Retrieve all user accessed polls</div><a href="#polls-only-registered-users-get" class="method get">GET</a><code class="uri">/polls</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls</span></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>Retrieve all the polls that you can access.</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="polls-any-users" class="resource"><h3 class="resource-heading">Any users <a href="#polls-any-users" class="permalink">&nbsp;&para;</a></h3><div id="polls-any-users-post" class="action post"><h4 class="action-heading"><div class="name">Create poll</div><a href="#polls-any-users-post" class="method post">POST</a><code class="uri">/polls</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>name</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Name of the poll</p>
+</section><section id="polls" class="resource-group"><h2 class="group-heading">/polls <a href="#polls" class="permalink">&para;</a></h2><div id="polls-only-registered-users" class="resource"><h3 class="resource-heading">Only registered users <a href="#polls-only-registered-users" class="permalink">&nbsp;&para;</a></h3><div id="polls-only-registered-users-get" class="action get"><h4 class="action-heading"><div class="name">Retrieve all user accessed polls</div><a href="#polls-only-registered-users-get" class="method get">GET</a><code class="uri">/polls</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls</span></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+  "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"poll"</span></span>,
+      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"52525252"</span></span>,
+      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Odd Hill, team LMS"</span></span>,
+        "<span class="hljs-attribute">expires</span>": <span class="hljs-value"><span class="hljs-string">"2016-04-25T22:49:05Z"</span></span>,
+        "<span class="hljs-attribute">created</span>": <span class="hljs-value"><span class="hljs-string">"2016-04-05T15:20:05Z"</span></span>,
+        "<span class="hljs-attribute">allowNewRestaurants</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/polls/52525252"</span>
+      </span>}
+    </span>},
+    {
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"poll"</span></span>,
+      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"71717171"</span></span>,
+      "<span class="hljs-attribute">attributes</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Odd Hill, team EATS"</span></span>,
+        "<span class="hljs-attribute">expires</span>": <span class="hljs-value"><span class="hljs-string">"2016-04-23T22:49:05Z"</span></span>,
+        "<span class="hljs-attribute">created</span>": <span class="hljs-value"><span class="hljs-string">"2016-04-01T15:20:05Z"</span></span>,
+        "<span class="hljs-attribute">allowNewRestaurants</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">links</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">self</span>": <span class="hljs-value"><span class="hljs-string">"/polls/71717171"</span>
+      </span>}
+    </span>}
+  ]
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="polls-any-users" class="resource"><h3 class="resource-heading">Any users <a href="#polls-any-users" class="permalink">&nbsp;&para;</a></h3><div id="polls-any-users-post" class="action post"><h4 class="action-heading"><div class="name">Create poll</div><a href="#polls-any-users-post" class="method post">POST</a><code class="uri">/polls</code></h4><h4>Example URI</h4><div class="definition"><span class="method post">POST</span>&nbsp;<span class="uri"><span class="hostname"></span>/polls</span></div><div class="title"><strong>Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>name</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>Name of the poll</p>
 </dd><dt>restaurants</dt><dd><code>array</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>[]</span></span>&nbsp;<p>Restaurant ID’s as strings to add to this poll</p>
 </dd><dt>users</dt><dd><code>array</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>[]</span></span>&nbsp;<p>User ID’s as strings to add to this poll</p>
 </dd><dt>expires</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>20 minutes after request is received</span></span>&nbsp;<p>Time of expiry, formatted as ISO 8601</p>
