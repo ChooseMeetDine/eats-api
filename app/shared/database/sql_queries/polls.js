@@ -106,7 +106,7 @@ pollsQueries.selectPollData = function(pollId) {
 
 // Returns CREATOR data as JSON-API object
 pollsQueries.selectCreatorData = function(pollId) {
-  return knex.select('user.id', 'user.name', 'photo', 'anon')
+  return knex.select('user.id', 'user.name', 'photo', 'anon as anonymous')
     .from('user')
     .join('poll', {
       'poll.creator_id': 'user.id'
