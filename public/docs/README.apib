@@ -506,6 +506,38 @@ Note that the restaurant has to be added to the poll before anyone can vote for 
     }
   }
 
+# Group /polls/:id/users
+
+## Any valid user, i.e. anyone with a valid token [/polls/:id]
+
+### Join the poll [POST /polls/51515151/users]
+
+This request will add the user to a specific poll. The user is identified by the required token in the request.
+
+Note that the POST body is required to be empty.
+
++ Request (application/json)
+
+  {
+    
+  }
+
++ Response 200(application/json)
+
+{
+  "data": {
+    "type": "user",
+    "id": "8787878787",
+    "attributes": {
+      "pollId": "32323223",
+      "joinedPoll": "2016-04-22T12:48:41.849Z"
+    }
+  },
+  "links": {
+    "self": "http://localhost:5000/users/8787878787"
+  }
+}
+
 # Group /users
 
 ## All users [/users]

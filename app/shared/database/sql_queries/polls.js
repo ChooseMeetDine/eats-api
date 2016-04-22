@@ -89,6 +89,29 @@ pollsQueries.insertVote = function(req, pollid) {
     });
 };
 
+// Inserts a USER into poll_users table (NOTE: not using transaction-object)
+// and returns user data as JSON-API object
+pollsQueries.insertUser = function(req, pollid) {
+  return knex.insert({
+      user_id: req.validUser.id,
+      poll_id: pollid.toString(),
+      joined: knex.raw('now()')
+    })
+    .into('poll_users')
+    .returning('*')
+    .then(function(res) {
+      return {
+        type: 'user',
+        resource: 'users',
+        data: {
+          id: res[0].user_id.toString(),
+          pollId: res[0].poll_id.toString(),
+          joinedPoll: res[0].joined
+        }
+      };
+    });
+};
+
 // Returns STANDARD POLL data as JSON-API object
 pollsQueries.selectPollData = function(pollId) {
   return knex.select('id', 'name', 'expires', 'created',

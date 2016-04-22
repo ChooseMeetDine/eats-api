@@ -62,7 +62,7 @@ router.post('/:id/restaurants',
   });
 
 // Router that handles POSTs to add a vote to a poll
-// Sends the updated poll-data via socketio when succesful
+// Sends the updated poll-data via socketio when successful
 router.post('/:id/votes',
   pollValidator.checkPollId,
   pollValidator.checkPollHasntExpired,
@@ -72,6 +72,31 @@ router.post('/:id/votes',
   function(req, res) {
     return pollHandler
       .postVote(req)
+      .then(function(response) {
+        // console.log('Sending data through HTTP... ' + JSON.stringify(response));
+        socketio.fetchAndSendNewPollData(req.validParams.id); // send new poll data via socketio
+
+        res.send(response);
+      })
+      .catch(function(err) {
+        res.status(500).send({
+          httpStatus: 500,
+          error: err.message,
+          stack: err.stack
+        });
+      });
+  });
+
+// Router that handles POSTs to add a user to a poll
+// Sends the updated poll-data via socketio when successful
+router.post('/:id/users',
+  pollValidator.checkPollId,
+  pollValidator.checkPollHasntExpired,
+  pollValidator.checkUserHasntBeenAddedBefore,
+  pollValidator.postUser, // validates that the POST body for users is empty
+  function(req, res) {
+    return pollHandler
+      .postUser(req)
       .then(function(response) {
         // console.log('Sending data through HTTP... ' + JSON.stringify(response));
         socketio.fetchAndSendNewPollData(req.validParams.id); // send new poll data via socketio

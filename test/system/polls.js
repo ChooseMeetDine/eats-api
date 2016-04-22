@@ -194,6 +194,76 @@ module.exports = function(app, tokens) {
           });
       });
     });
+    describe('Testing POST /polls/:id/users', function() {
+      it('should return error when no token is used', function(done) {
+        request(app)
+          .post('/polls/1135/users')
+          .send({})
+          .expect(403, done);
+      });
+      it('should return error when an invalid poll ID is used', function(done) {
+        request(app)
+          .post('/polls/9999/users')
+          .send({})
+          .set('x-access-token', tokens.user2)
+          .expect(404, done);
+      });
+      it('should return error if poll has expired', function(done) {
+        request(app)
+          .post('/polls/1115/users')
+          .send({})
+          .set('x-access-token', tokens.user2)
+          .expect(400, done);
+      });
+      it('should return error if the POST-body is invalid (not empty)', function(done) {
+        request(app)
+          .post('/polls/1135/users')
+          .send({
+            name: 'adsfasdf'
+          })
+          .set('x-access-token', tokens.user2)
+          .expect(400, done);
+      });
+      it('should return error if the user has already been added to the poll', function(done) {
+        request(app)
+          .post('/polls/1135/users')
+          .send()
+          .set('x-access-token', tokens.user3)
+          .expect(400, done);
+      });
+      // TODO: Fixa gör ett nästlat GET-anrop mot /polls/:id för poll ID 1135 och kontrollera
+      // att användaren verkligen är tillagd
+      // Exempelkod:
+      //
+      // request(app)
+      // .post()....
+      // .end(function(err, res){
+      //  expect(res.data.type).to.equal('restaurant');
+      //  var id = res.data.id;
+      //  request(app)
+      //  .get(/polls/:id)....
+      //  .end(function(err, res){
+      //    expect(schema)
+      //    var votes = []
+      //    for (let i = 0; i < res.data.relationships.restaurants.length; i++) {
+      //      votes.push(res.data.relationships.restaurants[i].id)
+      //    }
+      //    expect(restaurants.indexOf(id)).to.not.equal(-1);
+      //
+      // });
+      it('should return valid json for valid POST', function(done) {
+        request(app)
+          .post('/polls/1135/users')
+          .send()
+          .set('x-access-token', tokens.user2)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .end(function(err, res) {
+            expect(res.body).to.be.jsonSchema(jsonSchemaPollIdUsersPost());
+            done(err);
+          });
+      });
+    });
   });
 
   describe('Testing POST /polls', function() {
@@ -822,6 +892,53 @@ var jsonSchemaPollPost = function() {
       'data',
       'links',
       'included'
+    ]
+  };
+};
+var jsonSchemaPollIdUsersPost = function()  {
+  return {
+    '$schema': 'http://json-schema.org/draft-04/schema#',
+    'type': 'object',
+    'properties': {
+      'data': {
+        'type': 'object',
+        'properties': {
+          'type': {
+            'type': 'string'
+          },
+          'id': {
+            'type': 'string'
+          },
+          'attributes': {
+            'type': 'object',
+            'properties': {
+              'pollId': {
+                'type': 'string'
+              },
+              'joinedPoll': {
+                'type': 'string'
+              }
+            }
+          }
+        },
+        'required': [
+          'type',
+          'id',
+          'attributes'
+        ]
+      },
+      'links': {
+        'type': 'object',
+        'properties': {
+          'self': {
+            'type': 'string'
+          }
+        }
+      }
+    },
+    'required': [
+      'data',
+      'links'
     ]
   };
 };

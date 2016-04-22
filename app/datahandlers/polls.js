@@ -5,6 +5,7 @@ var responseModule = require('../json_api/json_api');
 var _ = require('underscore');
 var pollsQueries = require('../shared/database/sql_queries/polls');
 var restaurantsQueries = require('../shared/database/sql_queries/restaurants');
+var usersQueries = require('../shared/database/sql_queries/users');
 
 // Handles POST requests to endpoint /poll
 // Inserts data to database with a transaction and then selects data based on the
@@ -34,6 +35,14 @@ pollsDatahandler.postVote = function(req) {
   return executeInsertVoteToPoll(req) // returns JSON-API-vote-object
     .then(function(vote) {
       return new responseModule(vote); // creates JSON-API-response
+    });
+};
+
+// Handles requests for POSTing a new user to a poll ID
+pollsDatahandler.postUser = function(req) {
+  return executeInsertUserToPoll(req) // returns JSON-API-vote-object
+    .then(function(user) {
+      return new responseModule(user); // creates JSON-API-response
     });
 };
 
@@ -134,6 +143,19 @@ var executeInsertVoteToPoll = function(req) {
       console.log(error.stack);
       return Promise.reject(new Error('Could not insert vote for restaurant ' +
         req.validBody.restaurantId + ' and user ' + req.validUser.id + ' to poll with ID ' +
+        pollId + ' into the database'));
+    });
+};
+
+// Executes an INSERT query to add user ID and poll ID to the
+// table "poll_users" in the DB
+var executeInsertUserToPoll = function(req) {
+  var pollId = req.validParams.id;
+
+  return pollsQueries.insertUser(req, pollId)
+    .catch(function(error) {
+      console.log(error.stack);
+      return Promise.reject(new Error('Could not insert user ' + req.validUser.id + ' to poll with ID ' +
         pollId + ' into the database'));
     });
 };
