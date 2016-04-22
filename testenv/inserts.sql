@@ -8,6 +8,7 @@ VALUES(1110, 'konny', 'konny@mail.se', 'password123', now(), now(), false, 'test
       (1140, 'kenny', 'kenny@mail.se', 'password123', now(), now(), true, 'testdata', false),
       (1150, 'admin', 'admin@admin.se', 'password123', now(), now(), true, 'testdata', false),
       (1160, 'anon', 'anon@mail.se', 'password123', now(), now(), false, 'testdata', true),
+      (1161, 'anon2', 'anon@mail.se', 'password123', now(), now(), false, 'testdata', true),
       (1170, 'peter', 'peter@mail.se', 'password123', now(), now(), true, 'testdata', false),
       (1180, 'mia', 'mia@mail.se', 'password123', now(), now(), true, 'testdata', false);
 
@@ -16,6 +17,7 @@ VALUES(1111, 'Tusen och 22', 123.1, 124.5, 1110, now(), 1, false, 'accepted'),
       (1121, 'Surf chakk', 123.1, 124.5, 1130, now(), 2, false, 'accepted'),
       (1131, 'Kaffestället', 123.1, 124.5, 1130, now(), 5, false, 'accepted'),
       (1141, 'Det där stället med bra mat!', 123.1, 125.6, 1140, now(), 2, false, 'accepted'),
+      (148347983094076, 'Det där stället med bra mat!', 123.1, 125.6, 1140, now(), 2, false, 'accepted'),
       (1151, 'Wiggos bar', 123.1, 125.6, 1120, now(), 3, false, 'accepted');
 
 

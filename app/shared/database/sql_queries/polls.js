@@ -37,7 +37,11 @@ pollsQueries.insertRestaurants = function(trx, req, pollid) {
 
 // Inserts USER data into poll_users table
 pollsQueries.insertUsers = function(trx, req, pollid) {
-  return Promise.map(req.validBody.users, function(userid) {
+  // Adds creator as a user
+  var usersAndCreator = req.validBody.users;
+  usersAndCreator.push(req.validUser.id);
+
+  return Promise.map(usersAndCreator, function(userid) {
     return trx.insert({
       user_id: userid,
       poll_id: pollid.toString(),
@@ -88,7 +92,7 @@ pollsQueries.insertVote = function(req, pollid) {
 // Returns STANDARD POLL data as JSON-API object
 pollsQueries.selectPollData = function(pollId) {
   return knex.select('id', 'name', 'expires', 'created',
-      'group_id as group', 'allow_new_restaurants as allowNewRestaurants')
+      'allow_new_restaurants as allowNewRestaurants')
     .from('poll')
     .where('id', pollId.toString())
     .then(function(res) {
@@ -150,7 +154,7 @@ pollsQueries.selectAllPollsAdmin = function(req) {
 
 // Returns CREATOR data as JSON-API object
 pollsQueries.selectCreatorData = function(pollId) {
-  return knex.select('user.id', 'user.name', 'photo', 'anon')
+  return knex.select('user.id', 'user.name', 'photo', 'anon as anonymous')
     .from('user')
     .join('poll', {
       'poll.creator_id': 'user.id'
