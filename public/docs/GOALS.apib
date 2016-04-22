@@ -667,7 +667,9 @@ The data sent through the socket is identical to the response from a GET-request
 
 + Response 200 (application/json)
 
-{
+{ "links": {
+    "self": "http://localhost:5000/polls"
+  },
 "data": [
 {
     "type": "poll",
