@@ -92,7 +92,7 @@ pollsQueries.insertVote = function(req, pollid) {
 // Returns STANDARD POLL data as JSON-API object
 pollsQueries.selectPollData = function(pollId) {
   return knex.select('id', 'name', 'expires', 'created',
-      'group_id as group', 'allow_new_restaurants as allowNewRestaurants')
+      'allow_new_restaurants as allowNewRestaurants')
     .from('poll')
     .where('id', pollId.toString())
     .then(function(res) {
@@ -106,7 +106,7 @@ pollsQueries.selectPollData = function(pollId) {
 
 // Returns CREATOR data as JSON-API object
 pollsQueries.selectCreatorData = function(pollId) {
-  return knex.select('user.id', 'user.name', 'photo', 'anon')
+  return knex.select('user.id', 'user.name', 'photo', 'anon as anonymous')
     .from('user')
     .join('poll', {
       'poll.creator_id': 'user.id'
