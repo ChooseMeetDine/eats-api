@@ -19,7 +19,13 @@ var env = process.env.NODE_ENV || 'development';
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, accept, x-access-token');
-  next();
+
+  // To allow the OPTIONS-method that browsers send to get a 200 OK without token
+  if (req.method === 'OPTIONS') {
+    res.send();
+  } else  {
+    next();
+  }
 });
 // }
 
