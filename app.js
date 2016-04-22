@@ -18,7 +18,7 @@ var env = process.env.NODE_ENV || 'development';
 // if (env === 'development') {   // TODO: Sätt på CORS för production när vi gör vår överlämning!
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, accept, x-access-token');
   next();
 });
 // }
