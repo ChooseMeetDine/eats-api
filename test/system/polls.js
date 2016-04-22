@@ -206,9 +206,6 @@ module.exports = function(app, tokens) {
           'restaurants': [
             '148347983094076'
           ],
-          'users': [
-            '1161'
-          ],
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
@@ -231,9 +228,6 @@ module.exports = function(app, tokens) {
           'restaurants': [
             '148347983094076'
           ],
-          'users': [
-            '1161'
-          ],
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
@@ -248,9 +242,6 @@ module.exports = function(app, tokens) {
           'expires': '2017-08-07T10:46:40+00:00',
           'restaurants': [
             '148347983094076'
-          ],
-          'users': [
-            '1161'
           ],
           'allowNewRestaurants': true
         })
@@ -274,9 +265,6 @@ module.exports = function(app, tokens) {
           'restaurants': [
             '148347983094076'
           ],
-          'users': [
-            '1161'
-          ],
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
@@ -291,6 +279,56 @@ module.exports = function(app, tokens) {
     });
   });
 
+  describe('Testing GET /polls', function() {
+    it('should return valid JSON for GET /polls with user-token', function(done) {
+      request(app)
+        .get('/polls')
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', tokens.user)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.be.jsonSchema(jsonSchemaPollGet());
+          done(err);
+        });
+    });
+
+    it('should return error for GET /polls without token', function(done) {
+      request(app)
+        .get('/polls')
+        .set('Content-Type', 'application/json')
+        .expect(403, done);
+    });
+
+    it('should return valid JSON for GET /polls with admin-token', function(done) {
+      request(app)
+        .get('/polls')
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', tokens.admin)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.be.jsonSchema(jsonSchemaPollGet());
+          done(err);
+        });
+    });
+
+    it('should returnvalid json answer for GET /polls with anonymous-token', function(done) {
+      request(app)
+        .get('/polls')
+        .set('Content-Type', 'application/json')
+        .set('x-access-token', tokens.anon)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.be.jsonSchema(jsonSchemaPollGet());
+          done(err);
+        });
+    });
+  });
 };
 
 
@@ -427,78 +465,76 @@ var jsonSchemaPollIdRestaurantsPost = function()  {
 var jsonSchemaPollGet = function() {
   return {
     '$schema': 'http://json-schema.org/draft-04/schema#',
+    'id': 'http://jsonschema.net',
     'type': 'object',
     'properties': {
-      'data': {
-        'type': 'object',
-        'properties': {
-          'type': {
-            'type': 'string'
-          },
-          'id': {
-            'type': 'string'
-          },
-          'attributes': {
-            'type': 'object',
-            'properties': {
-              'name': {
-                'type': 'string'
-              },
-              'expires': {
-                'type': 'string'
-              },
-              'created': {
-                'type': 'string'
-              },
-              'allowNewRestaurants': {
-                'type': 'boolean'
-              }
-            }
-          },
-          'relationships': {
-            'type': 'object',
-            'properties': {
-              'creator': {
-                'type': 'object',
-              },
-              'restaurants': {
-                'type': 'object',
-              },
-              'users': {
-                'type': 'object',
-              },
-              'group': {
-                'type': 'object',
-              },
-              'votes': {
-                'type': 'object',
-              }
-            }
-          }
-        },
-        'required': [
-          'type',
-          'id',
-          'attributes',
-          'relationships'
-        ]
-      },
-      'included': {
-        'type': 'array',
-      },
       'links': {
+        'id': 'http://jsonschema.net/links',
         'type': 'object',
         'properties': {
           'self': {
+            'id': 'http://jsonschema.net/links/self',
             'type': 'string'
+          }
+        },
+        'required': [
+          'self'
+        ]
+      },
+      'data': {
+        'id': 'http://jsonschema.net/data',
+        'type': 'array',
+        'items': {
+          'id': 'http://jsonschema.net/data/0',
+          'type': 'object',
+          'properties': {
+            'type': {
+              'id': 'http://jsonschema.net/data/0/type',
+              'type': 'string'
+            },
+            'id': {
+              'id': 'http://jsonschema.net/data/0/id',
+              'type': 'string'
+            },
+            'attributes': {
+              'id': 'http://jsonschema.net/data/0/attributes',
+              'type': 'object',
+              'properties': {
+                'name': {
+                  'id': 'http://jsonschema.net/data/0/attributes/name',
+                  'type': 'string'
+                },
+                'expires': {
+                  'id': 'http://jsonschema.net/data/0/attributes/expires',
+                  'type': 'string'
+                },
+                'created': {
+                  'id': 'http://jsonschema.net/data/0/attributes/created',
+                  'type': 'string'
+                },
+                'allowNewRestaurants': {
+                  'id': 'http://jsonschema.net/data/0/attributes/allowNewRestaurants',
+                  'type': 'boolean'
+                }
+              }
+            },
+            'links': {
+              'id': 'http://jsonschema.net/data/0/links',
+              'type': 'object',
+              'properties': {
+                'self': {
+                  'id': 'http://jsonschema.net/data/0/links/self',
+                  'type': 'string'
+                }
+              }
+            }
           }
         }
       }
     },
     'required': [
-      'data',
-      'included',
-      'links'
+      'links',
+      'data'
     ]
   };
 };
