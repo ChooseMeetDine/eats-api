@@ -2,6 +2,7 @@ var knex = require('../shared/database/knex');
 var pollsDatahandler = {};
 var Promise = require('bluebird');
 var responseModule = require('../json_api/json_api');
+var responseCollectionModule = require('../json_api/json_api_collection');
 var _ = require('underscore');
 var pollsQueries = require('../shared/database/sql_queries/polls');
 var restaurantsQueries = require('../shared/database/sql_queries/restaurants');
@@ -20,6 +21,15 @@ pollsDatahandler.post = function(req) {
 
 pollsDatahandler.getID = function(req) {
   return createPollResponse(req.validParams.id);
+};
+
+pollsDatahandler.get = function(req) {
+  if (req.validUser.role === 'admin') {
+    return createPollResponseAll(req);
+  } else {
+    return createPollResponseMultiple(req);
+  }
+
 };
 
 // Handles requests for POSTing a new restaurant to a poll ID
@@ -117,6 +127,42 @@ var createPollResponse = function(pollId) {
     console.log(err.stack);
     return Promise.reject(new Error('Could insert but not retrieve poll data from database'));
   });
+};
+
+//Create a response for /GET Polls where all polls this user has access to are returned
+var createPollResponseMultiple = function(req) {
+  return pollsQueries.selectAllPolls(req)
+    .then(function(polls) {
+      var i;
+      var response = new responseCollectionModule({
+        resource: 'polls'
+      });
+      for (i = 0; i < polls.length; i++) {
+        response.addObject(polls[i]);
+      }
+      return response;
+    }).catch(function(err) {
+      console.log(err.stack);
+      return Promise.reject(new Error('Could not retrieve poll data from database'));
+    });
+};
+
+//Create a response for /GET Polls where all polls are returned for admin
+var createPollResponseAll = function(req) {
+  return pollsQueries.selectAllPollsAdmin(req)
+    .then(function(polls) {
+      var i;
+      var response = new responseCollectionModule({
+        resource: 'polls'
+      });
+      for (i = 0; i < polls.length; i++) {
+        response.addObject(polls[i]);
+      }
+      return response;
+    }).catch(function(err) {
+      console.log(err.stack);
+      return Promise.reject(new Error('Could not retrieve poll data from database'));
+    });
 };
 
 // Executes an INSERT query to add restaurant ID and poll ID to the

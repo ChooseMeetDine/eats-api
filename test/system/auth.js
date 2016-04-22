@@ -31,17 +31,46 @@ module.exports = function(app) {
             'title': 'auth valid schema',
             'type': 'object',
             'properties': {
+              'id': {
+                'type': 'string'
+              },
+              'name': {
+                'type': 'string'
+              },
               'admin': {
                 'type': 'boolean'
               },
               'anon': {
                 'type': 'boolean'
               },
+              'token': {
+                'type': 'string'
+              }
+            }
+          });
+          done(err);
+        });
+    });
+
+    it('Should return valid data for GET /auth/anonymous', function(done) {
+      request(app)
+        .get('/auth/anonymous')
+        .expect(200)
+        .set('Content-Type', 'application/json')
+        .end(function(err, res) {
+          var response = res.body;
+          expect(response).to.be.jsonSchema({
+            'title': 'auth valid schema',
+            'type': 'object',
+            'properties': {
+              'id': {
+                'type': 'string'
+              },
               'name': {
                 'type': 'string'
               },
-              'id': {
-                'type': 'string'
+              'anon': {
+                'type': 'boolean'
               },
               'token': {
                 'type': 'string'
