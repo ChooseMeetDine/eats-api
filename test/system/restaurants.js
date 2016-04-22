@@ -161,7 +161,7 @@ module.exports = function(app, tokens) {
 
 
 
-    describe('with PUT /restaurants/:id', function() {
+    describe.skip('with PUT /restaurants/:id', function() {
       it('should return error when no token is used for PUT /restaurants/:id', function(done) {
         request(app)
           .put('/restaurants/1111')

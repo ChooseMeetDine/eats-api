@@ -9,7 +9,7 @@ chai.use(require('chai3-json-schema'));
 chai.tv4.banUnknown = true;
 
 module.exports = function(app, tokens) {
-  describe.skip('Testing polls endpoint', function() {
+  describe('Testing polls endpoint', function() {
     describe('Testing POST /polls/:id/votes', function() {
       // valid poll: 1135
       // valid user: 1180 / mia / user3
@@ -207,10 +207,8 @@ module.exports = function(app, tokens) {
             '148347983094076'
           ],
           'users': [
-            '20',
-            '10'
+            '1161'
           ],
-          'group': '14',
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
@@ -234,10 +232,8 @@ module.exports = function(app, tokens) {
             '148347983094076'
           ],
           'users': [
-            '20',
-            '10'
+            '1161'
           ],
-          'group': '14',
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
@@ -248,16 +244,14 @@ module.exports = function(app, tokens) {
       request(app)
         .post('/polls')
         .send({
-          'name': '!!!Name of poll',
+          'name': '!!!Name of the poll',
           'expires': '2017-08-07T10:46:40+00:00',
           'restaurants': [
             '148347983094076'
           ],
           'users': [
-            '20',
-            '10'
+            '1161'
           ],
-          'group': '14',
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
@@ -275,16 +269,14 @@ module.exports = function(app, tokens) {
       request(app)
         .post('/polls')
         .send({
-          'name': '!!!Name of poll',
+          'name': '!!!Name of the poll',
           'expires': '2017-08-07T10:46:40+00:00',
           'restaurants': [
             '148347983094076'
           ],
           'users': [
-            '20',
-            '10'
+            '1161'
           ],
-          'group': '14',
           'allowNewRestaurants': true
         })
         .set('Content-Type', 'application/json')
