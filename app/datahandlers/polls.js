@@ -19,12 +19,10 @@ pollsDatahandler.post = function(req) {
 };
 
 pollsDatahandler.getID = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
   return createPollResponse(req.validParams.id);
 };
 
 pollsDatahandler.get = function(req) {
-  req.validUser = 10; //TODO: Remove once auth works
   if (req.validUser.role === 'admin') {
     return createPollResponseAll(req);
   } else {
