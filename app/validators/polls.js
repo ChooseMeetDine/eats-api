@@ -140,6 +140,32 @@ pollValidator.checkUserHasntVotedAlready = function(req, res, next) {
     });
 };
 
+// Exported middleware that validates if a user has been added to a poll before,
+// for POSTs to /polls/:id/users
+pollValidator.checkUserHasntBeenAddedBefore = function(req, res, next) {
+  //No schema needed to validate a single parameter
+  validateThatUserHasntBeenAdded(req.params.id, req.validUser.id)
+    .then(function() {
+      next();
+    })
+    .catch(function(error) {
+      error.status = 400;
+      next(error);
+    });
+};
+
+// Exported middleware that validates the POST body for POSTs to /polls/:id/users
+// This validator is a bit special: the POST body needs to be empty for this request to be valid
+pollValidator.postUser = function(req, res, next) {
+  if (_.isEmpty(req.body)) {
+    next();
+  } else {
+    var error = new Error('The POST body has to be empty for this request.');
+    error.status = 400;
+    next(error);
+  }
+};
+
 //Schema that defines the accepted variations of a post body
 var getPollPostSchema = function() {
   return {
@@ -492,6 +518,26 @@ var validateThatUserHasntVoted = function(pollId, userId) {
         return true;
       }
       return Promise.reject(new Error('User ID ' + userId + ' has already voted in poll ID ' +
+        pollId));
+    });
+};
+
+// Check if user hasn't been added to the poll before
+// Returns true if user isn't added before, otherwise throws error
+var validateThatUserHasntBeenAdded = function(pollId, userId) {
+  return pg.schema //Returns rows-object as either: [{canBeAdded:true}] or [{canBeAdded:false}]
+    .raw('SELECT NOT EXISTS(SELECT 1 FROM "poll_users" WHERE poll_id=' +
+      pollId + ' AND user_id=' + userId + ' ) AS "canBeAdded"')
+    .catch(function() {
+      return Promise.reject(new Error('Something went wrong with the database when trying to  ' +
+        'validate if user ' + userId + ' could be added to poll ID ' +
+        pollId));
+    })
+    .then(function(res) {
+      if (res.rows[0] && res.rows[0].canBeAdded) {
+        return true;
+      }
+      return Promise.reject(new Error('User ID ' + userId + ' has already been added to poll ID ' +
         pollId));
     });
 };
