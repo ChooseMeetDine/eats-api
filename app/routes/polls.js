@@ -122,6 +122,8 @@ router.post('/:id/votes',
 // Router that handles POSTs to add a user to a poll
 // Sends the updated poll-data via socketio when successful
 router.post('/:id/users',
+  auth.validate,
+  access.setRoleForUser,
   pollValidator.checkPollId,
   pollValidator.checkPollHasntExpired,
   pollValidator.checkUserHasntBeenAddedBefore,
