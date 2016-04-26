@@ -27,11 +27,10 @@ if (env === 'development') {
     res.send('Welcome ' + req.decoded.name +
       ' your token has been validated and your email is ' + req.decoded.email);
   });
-} else {
-  router.use('/polls', pollRouter);
-  router.use('/restaurants', restaurantRouter);
 }
 
+router.use('/polls', pollRouter);
+router.use('/restaurants', restaurantRouter);
 router.use('/users', userRouter);
 router.use('/auth', authRouter);
 
