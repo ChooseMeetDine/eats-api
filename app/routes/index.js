@@ -23,15 +23,13 @@ if (env === 'development') {
     next();
   });
 
-  router.use('/restaurants', restaurantRouter);
-  router.use('/polls', pollRouter);
   router.get('/testauth', auth.validate, function(req, res) {
     res.send('Welcome ' + req.decoded.name +
       ' your token has been validated and your email is ' + req.decoded.email);
   });
 } else {
-  router.use('/polls', auth.validate, access.setRoleForUser, pollRouter);
-  router.use('/restaurants', auth.validate, access.setRoleForUser, restaurantRouter);
+  router.use('/polls', pollRouter);
+  router.use('/restaurants', restaurantRouter);
 }
 
 router.use('/users', userRouter);
