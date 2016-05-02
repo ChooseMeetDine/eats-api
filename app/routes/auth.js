@@ -42,7 +42,7 @@ router.post('/', authRequest.checkData, function(req, res) {
           });
         } else {
           token = jwt.sign(user, cert, {
-            expiresIn: '20m' //NOTE expires in 20m
+            expiresIn: '168h' //NOTE expires in one week (168 hours)
           });
         }
 

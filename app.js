@@ -15,13 +15,19 @@ var pollsSocket = require('./app/socketio/polls_socket');
 var env = process.env.NODE_ENV || 'development';
 
 // Enables CORS for development (to allow sites not hosted on same server to reach the API)
-if (env === 'development') {
-  app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token');
+// if (env === 'development') {   // TODO: Sätt på CORS för production när vi gör vår överlämning!
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, accept, x-access-token');
+
+  // To allow the OPTIONS-method that browsers send to get a 200 OK without token
+  if (req.method === 'OPTIONS') {
+    res.send();
+  } else  {
     next();
-  });
-}
+  }
+});
+// }
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

@@ -37,7 +37,11 @@ pollsQueries.insertRestaurants = function(trx, req, pollid) {
 
 // Inserts USER data into poll_users table
 pollsQueries.insertUsers = function(trx, req, pollid) {
-  return Promise.map(req.validBody.users, function(userid) {
+  // Adds creator as a user
+  var usersAndCreator = req.validBody.users;
+  usersAndCreator.push(req.validUser.id);
+
+  return Promise.map(usersAndCreator, function(userid) {
     return trx.insert({
       user_id: userid,
       poll_id: pollid.toString(),
@@ -85,10 +89,33 @@ pollsQueries.insertVote = function(req, pollid) {
     });
 };
 
+// Inserts a USER into poll_users table (NOTE: not using transaction-object)
+// and returns user data as JSON-API object
+pollsQueries.insertUser = function(req, pollid) {
+  return knex.insert({
+      user_id: req.validUser.id,
+      poll_id: pollid.toString(),
+      joined: knex.raw('now()')
+    })
+    .into('poll_users')
+    .returning('*')
+    .then(function(res) {
+      return {
+        type: 'user',
+        resource: 'users',
+        data: {
+          id: res[0].user_id.toString(),
+          pollId: res[0].poll_id.toString(),
+          joinedPoll: res[0].joined
+        }
+      };
+    });
+};
+
 // Returns STANDARD POLL data as JSON-API object
 pollsQueries.selectPollData = function(pollId) {
   return knex.select('id', 'name', 'expires', 'created',
-      'group_id as group', 'allow_new_restaurants as allowNewRestaurants')
+      'allow_new_restaurants as allowNewRestaurants')
     .from('poll')
     .where('id', pollId.toString())
     .then(function(res) {
@@ -100,9 +127,57 @@ pollsQueries.selectPollData = function(pollId) {
     });
 };
 
+// Returns all polls from a specific id
+pollsQueries.selectAllPolls = function(req) {
+  var userQuery = '(select id as t1id from poll join poll_users on poll.id = poll_users.poll_id ' +
+    'where poll_users.user_id = ' + req.validUser.id + ' ) as t1';
+
+  return knex.select('id as id', 'name', 'expires', 'created',
+      'allow_new_restaurants as allowNewRestaurants')
+    .from('poll')
+    .join(knex.raw(userQuery), 'id', 't1.t1id')
+    .then(function(res) {
+      var polls = [];
+      for (var i = 0; i < res.length; i++) {
+        var poll = {
+          data: res[i],
+          relation: 'polls',
+          multiple: true,
+          type: 'poll',
+          resource: 'polls'
+        };
+        polls.push(poll);
+      }
+      return polls;
+    });
+};
+
+// Returns all polls for admin
+pollsQueries.selectAllPollsAdmin = function(req) {
+  return knex.select('id as id', 'name', 'expires', 'created',
+      'allow_new_restaurants as allowNewRestaurants')
+    .from('poll')
+    .then(function(res) {
+      var polls = [];
+      for (var i = 0; i < res.length; i++) {
+        var poll = {
+          data: res[i],
+          relation: 'polls',
+          multiple: true,
+          type: 'poll',
+          resource: 'polls'
+        };
+        polls.push(poll);
+      }
+      return polls;
+    });
+};
+
+
+
 // Returns CREATOR data as JSON-API object
 pollsQueries.selectCreatorData = function(pollId) {
-  return knex.select('user.id', 'user.name', 'photo', 'anon')
+  return knex.select('user.id', 'user.name', 'photo', 'anon as anonymous')
     .from('user')
     .join('poll', {
       'poll.creator_id': 'user.id'
