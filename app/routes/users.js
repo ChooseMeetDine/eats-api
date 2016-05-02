@@ -6,7 +6,7 @@ var env = process.env.NODE_ENV || 'development';
 var access = require('../validators/access');
 var encrypt = require('../shared/encryption');
 
-router.post('/', userValidator.post, encrypt.password, function(req, res) {
+router.post('/', userValidator.post, encrypt.encryptPassword, function(req, res) {
   return userHandler
     .post(req)
     .then(function(response) {
