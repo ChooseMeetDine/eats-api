@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var cert = process.env.JWTSECRET;
 var authRequest = require('../validators/auth');
 var moniker = require('moniker');
+var bcrypt = require('bcryptjs');
 
 router.use(bodyParser.urlencoded({
   extended: true
@@ -23,7 +24,10 @@ router.post('/', authRequest.checkData, function(req, res) {
 
   knex.select('*').from('user').where('email', '=', req.body.email)
     .then(function(result) {
-      if (req.body.email === result[0].email && req.body.password === result[0].password) {
+      // req.body.email === result[0].email && req.body.password === result[0].password
+      //bcrypt.compareSync(req.body.password, result[0].password);
+      //var userBool = true;
+      if (bcrypt.compareSync(req.body.password, result[0].password)) {
         user.id = result[0].id;
         user.name = result[0].name;
         user.email = result[0].email;
