@@ -519,7 +519,7 @@ Note that the POST body is required to be empty.
 + Request (application/json)
 
   {
-    
+
   }
 
 + Response 200(application/json)
@@ -1051,8 +1051,10 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 + Response 200 (application/json)
 
 {
-  "authentication": true,
-  "message": "Welcome user_name",
+  "id": "25",
+  "name": "jack",
+  "admin": false,
+  "anon": false,
   "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
 }
 
@@ -1067,6 +1069,8 @@ Once an admin examines a restaurant, the status will be changed to either "accep
 + Response 200 (application/json)
 
 {
-  "message": "Welcome anonymous frequent-cracker",
+  "id": "606879255637076",
+  "name": "anonymous abounding-destruction",
+  "anon": true,
   "token": "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc"
 }
