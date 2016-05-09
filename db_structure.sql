@@ -1,5 +1,5 @@
 --
--- PostgreSQL database dump 2016-05-09
+-- PostgreSQL database structure dump (no data) 2016-05-09
 --
 
 -- sequences
