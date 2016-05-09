@@ -9,7 +9,11 @@ var env = process.env.NODE_ENV || 'development';
 var access = require('../validators/access');
 
 router.get('/', function(req, res) {
-  res.send('Welcome to Eats-API. Visit /docs for our documentation');
+  res.sendFile(path.join(__dirname, '../../public/docs', 'documentation.html'));
+});
+
+router.get('/goaldocs', function(req, res) {
+  res.sendFile(path.join(__dirname, '../../public/docs', 'goaldocs.html'));
 });
 
 if (env === 'development') {
@@ -43,15 +47,6 @@ router.get('/users', function(req, res) {
     name: 'Musse',
     age: 30
   });
-});
-
-router.get('/docs', function(req, res) {
-  res.sendFile(path.join(__dirname, '../../public/docs', 'documentation.html'));
-});
-
-
-router.get('/goaldocs', function(req, res) {
-  res.sendFile(path.join(__dirname, '../../public/docs', 'goaldocs.html'));
 });
 
 
