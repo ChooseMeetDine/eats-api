@@ -25,7 +25,7 @@ usersQueries.insertUser = function(req) {
 usersQueries.selectUserById = function(req, userId) {
   var columns;
   if (req.validUser.role === 'admin' || req.validUser.isRequestingSelf) {
-    columns = ['id', 'name', 'photo', 'phone', 'admin',
+    columns = ['id', 'name', 'photo', 'phone', 'admin', 'email',
       'anon', 'registration_date as registrationDate'
     ];
   } else {
