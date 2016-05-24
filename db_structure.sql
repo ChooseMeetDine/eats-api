@@ -2,9 +2,6 @@
 -- PostgreSQL database structure dump (no data) 2016-05-09
 --
 
--- sequences
-CREATE SEQUENCE public.global_id_seq;
-
 --     NUMBER SIZES:
 --     4294967295 (2^32-1)
 --     9007199254740992 (javascript 2^53)
@@ -36,6 +33,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql strict immutable;
 
+ALTER FUNCTION public.clone_schema(source_schema text, dest_schema text) OWNER TO eats;
 
 
 SET statement_timeout = 0;
@@ -82,38 +80,6 @@ BEGIN
  
 END;
 $$;
-
-
-ALTER FUNCTION public.clone_schema(source_schema text, dest_schema text) OWNER TO eats;
-
---
--- Name: pseudo_encrypt50(bigint); Type: FUNCTION; Schema: public; Owner: eats
---
-
-CREATE FUNCTION pseudo_encrypt50(value bigint) RETURNS bigint
-    LANGUAGE plpgsql IMMUTABLE STRICT
-    AS $$
-DECLARE
-  l1 bigint;
-  l2 bigint;
-  r1 bigint;
-  r2 bigint;
-  i int:=0;
-  b25 int:=(1<<25)-1; -- 25 bits mask for a half-number => 50 bits total
-BEGIN
-  l1:= (VALUE >> (64-25)) & b25;
-  r1:= VALUE & b25;
-  WHILE i < 3 LOOP
-    l2 := r1;
-    r2 := l1 # (((((1366*r1+150889)%714025)/714025.0)*32767*32767)::int & b25);
-    l1 := l2;
-    r1 := r2;
-    i := i + 1;
-  END LOOP;
-  RETURN ((l1::bigint << 25) + r1);
-END;
-$$;
-
 
 ALTER FUNCTION public.pseudo_encrypt50(value bigint) OWNER TO eats;
 
@@ -624,8 +590,28 @@ ALTER TABLE ONLY vote
     ADD CONSTRAINT vote_user FOREIGN KEY (user_id) REFERENCES "user"(id);
 
 
+-- 
+-- Insert restaurant categories
+-- 
+
+INSERT INTO category VALUES 
+(1, 'Sushi'),
+(2, 'Fastfood'),
+(3, 'Hamburgers'),
+(4, 'Vegetarian'),
+(5, 'Salad'),
+(6, 'Pizza'),
+(7, 'Indian'),
+(8, 'Pasta'),
+(9, 'Asian'),
+(10, 'Other'),
+(11, 'Café'),
+(12, 'Meat'),
+(13, 'Seafood'),
+(14, 'Mexican');
+
+
 --
 -- PostgreSQL database dump complete
 --
-
 
